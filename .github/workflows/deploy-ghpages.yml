@@ -1,0 +1,74 @@
+# Deploy apps to GitHub Pages
+name: Deploy to GHPages
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  BASE_URL: "https://${{github.repository_owner}}.github.io/${{github.event.repository.name}}"
+  APP_PROFILE_HOST: "$BASE_URL/profile"
+  APP_RANDOM_EVENT_COUNTER_HOST: "$BASE_URL/random-event-counter"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Read .nvmrc
+        run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
+        id: nvm
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "${{ steps.nvm.outputs.NVMRC }}"
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        env:
+          cache-name: node_modules
+        with:
+          path: "./**/node_modules"
+          key: ${{env.cache-name}}-${{hashFiles('./yarn.lock')}}
+          restore-keys: |
+            ${{env.cache-name}}-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+  deploy-shell:
+    runs-on: ubuntu-latest
+    needs: prepare
+    steps:
+      - name: Build
+        run: yarn workspace @genshin-utils/shell build
+      - name: Clean deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/shell/dist
+
+  deploy-profile:
+    runs-on: ubuntu-latest
+    needs: [prepare, deploy-shell]
+    steps:
+      - name: Build
+        run: yarn workspace @genshin-utils/app-profile build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/app-profile/dist
+          destination_dir: profile
+
+  deploy-random-event-counter:
+    runs-on: ubuntu-latest
+    needs: [prepare, deploy-shell]
+    steps:
+      - name: Build
+        run: yarn workspace @genshin-utils/app-random-event-counter build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./packages/app-random-event-counter/dist
+          destination_dir: random-event-counter
