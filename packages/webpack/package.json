@@ -1,0 +1,17 @@
+{
+  "name": "@genshin-utils/webpack",
+  "version": "1.0.0",
+  "description": "Webpack config utilities",
+  "private": true,
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "webpack": "^5.34.0"
+  },
+  "dependencies": {
+    "css-loader": "^5.2.1",
+    "esbuild-loader": "^2.11.0",
+    "license-checker-webpack-plugin": "^0.2.1",
+    "postcss-loader": "^5.2.0",
+    "style-loader": "^2.0.0"
+  }
+}

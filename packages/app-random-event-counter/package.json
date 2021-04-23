@@ -1,0 +1,29 @@
+{
+  "name": "@genshin-utils/app-random-event-counter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Count how many times will you get rewards for random events or random quests",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "@genshin-utils/module-federation": "^1.0.0",
+    "@genshin-utils/styles": "^1.0.0",
+    "date-fns": "^2.21.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-is": "^17.0.2",
+    "styled-components": "^5.2.3"
+  },
+  "devDependencies": {
+    "@genshin-utils/app-profile": "^1.0.0",
+    "@genshin-utils/webpack": "^1.0.0",
+    "@storybook/react": "6.2.8",
+    "@types/react": "^17.0.3",
+    "@types/react-dom": "^17.0.3",
+    "@types/styled-components": "^5.1.9"
+  },
+  "scripts": {
+    "dev": "webpack serve --mode=development",
+    "build": "webpack --mode=production",
+    "storybook": "start-storybook -p 9002"
+  }
+}

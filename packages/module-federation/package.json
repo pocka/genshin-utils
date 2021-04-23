@@ -1,0 +1,9 @@
+{
+  "name": "@genshin-utils/module-federation",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.mjs",
+  "types": "index.d.ts",
+  "license": "Apache-2.0"
+}
