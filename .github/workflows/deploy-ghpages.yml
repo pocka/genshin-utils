@@ -8,8 +8,6 @@ on:
 
 env:
   BASE_URL: "https://${{github.repository_owner}}.github.io/${{github.event.repository.name}}"
-  APP_PROFILE_HOST: "${{env.BASE_URL}}/profile"
-  APP_RANDOM_EVENT_COUNTER_HOST: "${{env.BASE_URL}}/random-event-counter"
 
 jobs:
   # This job installs deps and cache them when lockfiles is updated.
@@ -66,6 +64,9 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build
         run: yarn workspace @genshin-utils/${{matrix.package}} build
+        env:
+          APP_PROFILE_HOST: "${{env.BASE_URL}}/profile"
+          APP_RANDOM_EVENT_COUNTER_HOST: "${{env.BASE_URL}}/random-event-counter"
       - name: Store built files
         uses: actions/upload-artifact@v2
         with:
