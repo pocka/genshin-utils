@@ -12,7 +12,7 @@ env:
   APP_RANDOM_EVENT_COUNTER_HOST: "$BASE_URL/random-event-counter"
 
 jobs:
-  prepare:
+  deploy-shell:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -35,10 +35,6 @@ jobs:
             ${{env.cache-name}}-
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-  deploy-shell:
-    runs-on: ubuntu-latest
-    needs: prepare
-    steps:
       - name: Build
         run: yarn workspace @genshin-utils/shell build
       - name: Clean deploy
@@ -49,8 +45,21 @@ jobs:
 
   deploy-profile:
     runs-on: ubuntu-latest
-    needs: [prepare, deploy-shell]
+    needs: deploy-shell
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        env:
+          cache-name: node_modules
+        with:
+          path: "./**/node_modules"
+          key: ${{env.cache-name}}-${{hashFiles('./yarn.lock')}}
+          restore-keys: |
+            ${{env.cache-name}}-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Build
         run: yarn workspace @genshin-utils/app-profile build
       - name: Deploy
@@ -62,8 +71,21 @@ jobs:
 
   deploy-random-event-counter:
     runs-on: ubuntu-latest
-    needs: [prepare, deploy-shell]
+    needs: deploy-shell
     steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        env:
+          cache-name: node_modules
+        with:
+          path: "./**/node_modules"
+          key: ${{env.cache-name}}-${{hashFiles('./yarn.lock')}}
+          restore-keys: |
+            ${{env.cache-name}}-
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Build
         run: yarn workspace @genshin-utils/app-random-event-counter build
       - name: Deploy
