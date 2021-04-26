@@ -211,8 +211,8 @@ view model =
                             Just profile ->
                                 [ Scene.view model.scene profile
                                 , nav [ class "appbar" ]
-                                    [ a [ class "button button-circle icon-thumbs-up", href "?profile", title "Profile" ] []
-                                    , a [ class "button button-circle icon-thumbs-up", href "?randomevent", title "Random Event Counter" ] []
+                                    [ a [ class "button button-circle shellicons shellicons-profile", href "?profile", title "Profile" ] []
+                                    , a [ class "button button-circle shellicons shellicons-quest", href "?randomevent", title "Random Event Counter" ] []
                                     ]
                                 ]
 

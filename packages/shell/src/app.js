@@ -5,6 +5,7 @@ import { Elm } from "./App.elm";
 
 import "@genshin-utils/styles";
 import "./styles.css";
+import "./icons/index.font";
 
 const remotes = {
   appProfile: {

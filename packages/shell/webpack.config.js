@@ -57,6 +57,19 @@ module.exports = (env, args) => {
           test: /\.(svg|eot|ttf|woff2?)$/,
           type: "asset",
         },
+        {
+          test: /\.font\.js$/,
+          use: [
+            "style-loader",
+            {
+              loader: "css-loader",
+              options: {
+                url: false,
+              },
+            },
+            "webfonts-loader",
+          ],
+        },
       ],
     },
     plugins: [
