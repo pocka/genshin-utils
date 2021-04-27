@@ -8,6 +8,5 @@ export interface RemoteContainer {
  * @param remoteName A name of the remote container.
  */
 export function loadRemoteContainer(
-  remoteEntryUrl: string,
   remoteName: string
 ): Promise<RemoteContainer>;

@@ -1,33 +1,22 @@
 const { licenseTxt } = require("@genshin-utils/webpack/presets");
+const {
+  remoteEnvPreset,
+  sharedModules,
+} = require("@genshin-utils/module-federation/webpack");
 const HtmlPlugin = require("html-webpack-plugin");
 const {
   container: { ModuleFederationPlugin },
   EnvironmentPlugin,
 } = require("webpack");
 
-const { homepage } = require("./package.json");
-const { repository } = require("../../package.json");
+const pkg = require("../../package.json");
 
 const MODULE_NAME = "shell";
-const REMOTES = [
-  {
-    name: "app-profile",
-    port: process.env.APP_PROFILE_PORT || 8081,
-  },
-  {
-    name: "app-random-event-counter",
-    port: process.env.APP_RANDOM_EVENT_COUNTER_PORT || 8082,
-  },
-];
-
-function kebabToSnake(str) {
-  return str.replace(/-/g, "_");
-}
 
 module.exports = (env, args) => {
   const isDev = args.mode === "development";
 
-  const presets = [licenseTxt];
+  const presets = [licenseTxt, remoteEnvPreset];
   const withPreset = (config) =>
     presets.reduce((cfg, preset) => preset(cfg), config);
 
@@ -74,19 +63,11 @@ module.exports = (env, args) => {
     },
     plugins: [
       new EnvironmentPlugin({
-        REPOSITORY_URL: repository.url,
-        ...Object.fromEntries(
-          REMOTES.map(({ name, port }) => [
-            `${kebabToSnake(name).toUpperCase()}_HOST`,
-            isDev
-              ? `//${args.host || "localhost"}:${port}`
-              : `${homepage}${name}`,
-          ])
-        ),
+        REPOSITORY_URL: pkg.repository.url,
       }),
       new ModuleFederationPlugin({
         name: MODULE_NAME,
-        shared: ["uuid"],
+        shared: sharedModules,
       }),
       new HtmlPlugin({
         template: "./src/index.html",

@@ -32,8 +32,10 @@ function loadRemoteEntry(url) {
 /**
  * Load a remote container.
  */
-export async function loadRemoteContainer(remoteEntryUrl, remoteName) {
-  const unloadRemoteEntry = await loadRemoteEntry(remoteEntryUrl);
+export async function loadRemoteContainer(remoteName) {
+  const unloadRemoteEntry = await loadRemoteEntry(
+    JSON.parse(process.env.REMOTE_ENTRIES)[remoteName]
+  );
 
   await __webpack_init_sharing__("default");
 

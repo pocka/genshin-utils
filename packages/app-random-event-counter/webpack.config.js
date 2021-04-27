@@ -6,10 +6,10 @@ const {
   licenseTxt,
 } = require("@genshin-utils/webpack/presets");
 const {
-  remoteEnvPreset,
   remotes,
+  remoteEnvPreset,
   sharedModules,
-} = require("@genshin-utils/module-federation/webpack.cjs");
+} = require("@genshin-utils/module-federation/webpack");
 const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = (env, args) => {
@@ -24,12 +24,12 @@ module.exports = (env, args) => {
   return presets({
     devtool: args.mode === "development" ? "cheap-source-map" : false,
     devServer: {
-      port: remotes.appRandomEventCounter.port,
+      port: 8082,
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: remotes.appRandomEventCounter.name,
-        library: { type: "var", name: remotes.appRandomEventCounter.name },
+        name: remotes.AppRandomEventCounter,
+        library: { type: "var", name: remotes.AppRandomEventCounter },
         filename: "mfre.js",
         exposes: {
           app: "./src/exports/app.tsx",

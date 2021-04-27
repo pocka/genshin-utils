@@ -6,10 +6,9 @@ const {
   licenseTxt,
 } = require("@genshin-utils/webpack/presets");
 const {
-  remoteEnvPreset,
   remotes,
   sharedModules,
-} = require("@genshin-utils/module-federation/webpack.cjs");
+} = require("@genshin-utils/module-federation/webpack");
 const { ModuleFederationPlugin } = require("webpack").container;
 
 module.exports = (env, args) => {
@@ -18,12 +17,12 @@ module.exports = (env, args) => {
   return presets({
     devtool: args.mode === "development" ? "cheap-source-map" : false,
     devServer: {
-      port: remotes.appProfile.port,
+      port: 8081,
     },
     plugins: [
       new ModuleFederationPlugin({
-        name: remotes.appProfile.name,
-        library: { type: "var", name: remotes.appProfile.name },
+        name: remotes.AppProfile,
+        library: { type: "var", name: remotes.AppProfile },
         filename: "mfre.js",
         exposes: {
           app: "./src/exports/app.tsx",

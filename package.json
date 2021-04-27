@@ -4,6 +4,7 @@
   "private": true,
   "description": "A collection of utility apps for Genshin Impact",
   "author": "Shota Fuji <pockawoooh@gmail.com>",
+  "homepage": "https://pocka.github.io/genshin-utils",
   "workspaces": [
     "packages/*"
   ],

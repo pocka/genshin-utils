@@ -28,6 +28,7 @@ import type {
   GenshinServer,
 } from "@genshin-utils/app-profile/exports";
 import { loadRemoteContainer } from "@genshin-utils/module-federation";
+import { Remotes } from "@genshin-utils/module-federation/remotes";
 import {
   addDays,
   addHours,
@@ -126,10 +127,7 @@ export function useCount(profile: Profile) {
 
   // Loads store
   useEffect(() => {
-    loadRemoteContainer(
-      process.env.APP_PROFILE_HOST + "/mfre.js",
-      "app_profile"
-    ).then(async (remote) => {
+    loadRemoteContainer(Remotes.AppProfile).then(async (remote) => {
       const { Store } = await remote.getModule<{
         Store: Store.StoreConstructor;
       }>("store");

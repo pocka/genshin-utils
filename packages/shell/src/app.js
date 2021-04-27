@@ -1,4 +1,5 @@
 import { loadRemoteContainer } from "@genshin-utils/module-federation";
+import { Remotes } from "@genshin-utils/module-federation/remotes";
 
 import { ShellLoading } from "./shell-loading";
 import { Elm } from "./App.elm";
@@ -7,32 +8,21 @@ import "@genshin-utils/styles";
 import "./styles.css";
 import "./icons/index.font";
 
-const remotes = {
-  appProfile: {
-    name: "app_profile",
-    entry: process.env.APP_PROFILE_HOST + "/mfre.js",
-  },
-  appRandomEventCounter: {
-    name: "app_random_event_counter",
-    entry: process.env.APP_RANDOM_EVENT_COUNTER_HOST + "/mfre.js",
-  },
-};
-
 /**
  * Holds references for loaded remote containers.
  */
 const remoteContainerRegistry = new Map();
 
 async function getRemoteContainer(remote) {
-  const loaded = remoteContainerRegistry.get(remote.name);
+  const loaded = remoteContainerRegistry.get(remote);
 
   if (loaded) {
     return loaded;
   }
 
-  const container = await loadRemoteContainer(remote.entry, remote.name);
+  const container = await loadRemoteContainer(remote);
 
-  remoteContainerRegistry.set(remote.name, container);
+  remoteContainerRegistry.set(remote, container);
 
   return container;
 }
@@ -44,7 +34,7 @@ class RemoteRuntimeError extends Error {
 }
 
 async function observeProfile(callback) {
-  const container = await getRemoteContainer(remotes.appProfile);
+  const container = await getRemoteContainer(Remotes.AppProfile);
 
   const { observeCurrentProfile } = await container.getModule("observer");
 
@@ -62,7 +52,7 @@ async function loadCustomElement(tagName) {
 
   switch (tagName) {
     case "app-profile": {
-      const container = await getRemoteContainer(remotes.appProfile);
+      const container = await getRemoteContainer(Remotes.AppProfile);
 
       const { AppProfile } = await container.getModule("app");
 
@@ -70,7 +60,7 @@ async function loadCustomElement(tagName) {
       return;
     }
     case "app-random-event-counter": {
-      const container = await getRemoteContainer(remotes.appRandomEventCounter);
+      const container = await getRemoteContainer(Remotes.AppRandomEventCounter);
 
       const { AppRandomEventCounter } = await container.getModule("app");
 
