@@ -193,6 +193,15 @@ subscriptions _ =
 -- VIEW
 
 
+activeButtonClass : Scene.Scene -> Scene.Scene -> Attribute msg
+activeButtonClass a b =
+    if a == b then
+        class "button-active"
+
+    else
+        class ""
+
+
 view : Model -> Browser.Document Msg
 view model =
     { title = "Genshin Utils"
@@ -211,8 +220,20 @@ view model =
                             Just profile ->
                                 [ Scene.view model.scene profile
                                 , nav [ class "appbar" ]
-                                    [ a [ class "button button-circle shellicons shellicons-profile", href "?profile", title "Profile" ] []
-                                    , a [ class "button button-circle shellicons shellicons-quest", href "?randomevent", title "Random Event Counter" ] []
+                                    [ a
+                                        [ class "button button-circle shellicons shellicons-profile"
+                                        , activeButtonClass Scene.Profile model.scene
+                                        , href "?profile"
+                                        , title "Profile"
+                                        ]
+                                        []
+                                    , a
+                                        [ class "button button-circle shellicons shellicons-quest"
+                                        , activeButtonClass Scene.RandomEventCounter model.scene
+                                        , href "?randomevent"
+                                        , title "Random Event Counter"
+                                        ]
+                                        []
                                     ]
                                 ]
 

@@ -86,6 +86,11 @@ shell-loading {
   margin: 0;
 }
 
+.button-active {
+  background-color: var(--theme-primary);
+  color: var(--theme-fg);
+}
+
 /* === Footer Module === */
 .footer {
   padding: var(--shell-container-padding);
