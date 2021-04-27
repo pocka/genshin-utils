@@ -334,6 +334,18 @@ view model =
                                             )
                                         ]
                                         []
+                                    , case model.repositoryUrl of
+                                        Just url ->
+                                            a
+                                                [ class "button button-circle shellicons shellicons-git-repository-line"
+                                                , href url
+                                                , target "_blank"
+                                                , title "Source code"
+                                                ]
+                                                []
+
+                                        Nothing ->
+                                            text ""
                                     ]
                                 ]
 
