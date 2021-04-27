@@ -257,9 +257,9 @@ subscriptions _ =
 -- VIEW
 
 
-activeButtonClass : Scene.Scene -> Scene.Scene -> Attribute msg
-activeButtonClass a b =
-    if a == b then
+activeButtonClass : Bool -> Attribute msg
+activeButtonClass cond =
+    if cond then
         class "button-active"
 
     else
@@ -286,20 +286,21 @@ view model =
                                 , nav [ class "appbar" ]
                                     [ a
                                         [ class "button button-circle shellicons shellicons-profile"
-                                        , activeButtonClass Scene.Profile model.scene
+                                        , activeButtonClass (model.scene == Scene.Profile)
                                         , href "?profile"
                                         , title "Profile"
                                         ]
                                         []
                                     , a
                                         [ class "button button-circle shellicons shellicons-quest"
-                                        , activeButtonClass Scene.RandomEventCounter model.scene
+                                        , activeButtonClass (model.scene == Scene.RandomEventCounter)
                                         , href "?randomevent"
                                         , title "Random Event Counter"
                                         ]
                                         []
                                     , button
                                         [ class "button button-circle shellicons shellicons-phone-lock-line"
+                                        , activeButtonClass (model.wakeLock == Supported Locked)
                                         , disabled (model.wakeLock == NotSupported || model.wakeLock == Supported Requesting)
                                         , onClick
                                             (case model.wakeLock of
