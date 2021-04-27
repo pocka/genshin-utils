@@ -87,6 +87,25 @@ async function main() {
     },
   });
 
+  app.ports.wakeLockAvailability.send("wakeLock" in navigator);
+
+  let wakeLock = null;
+  app.ports.requestWakeLock.subscribe(async (lock) => {
+    try {
+      if (lock) {
+        wakeLock = await navigator.wakeLock.request("screen");
+
+        app.ports.updateWakeLockStatus.send(true);
+      } else if (wakeLock) {
+        await wakeLock.release();
+        wakeLock = null;
+        app.ports.updateWakeLockStatus.send(false);
+      }
+    } catch (err) {
+      console.warn("Failed to change Wake Lock status", err);
+    }
+  });
+
   let unobserve = null;
 
   const observe = async () => {

@@ -22,7 +22,8 @@
   },
   "dependencies": {
     "@genshin-utils/module-federation": "^1.0.0",
-    "@genshin-utils/styles": "^1.0.0"
+    "@genshin-utils/styles": "^1.0.0",
+    "remixicon": "^2.5.0"
   },
   "scripts": {
     "dev": "webpack serve --mode=development --hot",

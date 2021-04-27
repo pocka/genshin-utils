@@ -1,5 +1,8 @@
 module.exports = {
-  files: ["./*.svg"],
+  files: [
+    "./*.svg",
+    require.resolve("remixicon/icons/Device/phone-lock-line.svg"),
+  ],
   fontName: "shellicons",
   classPrefix: "shellicons-",
   baseSelector: ".shellicons",

@@ -4,6 +4,7 @@ import Browser
 import Browser.Navigation as Nav
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
 import Json.Decode as Decode
 import Profile exposing (..)
 import Scene
@@ -40,6 +41,15 @@ port loadCustomElement : String -> Cmd msg
 port profileObserver : (Decode.Value -> msg) -> Sub msg
 
 
+port wakeLockAvailability : (Decode.Value -> msg) -> Sub msg
+
+
+port updateWakeLockStatus : (Decode.Value -> msg) -> Sub msg
+
+
+port requestWakeLock : Bool -> Cmd msg
+
+
 
 -- MODEL
 
@@ -51,11 +61,24 @@ type Remote a
     | Loaded a -- Resource is loaded (despite of succesful or not)
 
 
+type WakeLockStatus
+    = Locked
+    | Free
+    | Requesting
+
+
+type WakeLockApi
+    = Supported WakeLockStatus
+    | NotSupported
+    | Detecting
+
+
 type alias Model =
     { key : Nav.Key
     , profile : Remote (Result ProfileLoadError (Maybe Profile))
     , scene : Scene.Scene
     , repositoryUrl : Maybe String
+    , wakeLock : WakeLockApi
     }
 
 
@@ -75,7 +98,7 @@ init flags url key =
         scene =
             Scene.route url
     in
-    ( Model key Pending scene (decodeRepositoryUrlFlag flags)
+    ( Model key Pending scene (decodeRepositoryUrlFlag flags) Detecting
     , case Scene.requiredCustomElement scene of
         Just tagName ->
             loadCustomElement tagName
@@ -95,6 +118,8 @@ type Msg
     | SetProfile (Result ProfileLoadError (Maybe Profile)) -- Update current profile
     | SetScene Scene.Scene
     | RetryProfileLoad
+    | SetWakeLockApi WakeLockApi
+    | RequestWakeLock WakeLockStatus
     | Noop
 
 
@@ -138,6 +163,12 @@ update msg model =
 
         RetryProfileLoad ->
             ( { model | profile = Pending }, retryProfileLoad () )
+
+        SetWakeLockApi support ->
+            ( { model | wakeLock = support }, Cmd.none )
+
+        RequestWakeLock status ->
+            ( { model | wakeLock = Supported Requesting }, requestWakeLock (status == Locked) )
 
         Noop ->
             ( model, Cmd.none )
@@ -184,9 +215,42 @@ observeProfile value =
             SetProfile (Err InvalidPayloadError)
 
 
+listenWakeLockAvailability : Decode.Value -> Msg
+listenWakeLockAvailability value =
+    SetWakeLockApi
+        (case Decode.decodeValue Decode.bool value of
+            Ok True ->
+                Supported Free
+
+            _ ->
+                NotSupported
+        )
+
+
+listenWakeLockStatus : Decode.Value -> Msg
+listenWakeLockStatus value =
+    SetWakeLockApi
+        (Supported
+            (case Decode.decodeValue Decode.bool value of
+                Ok True ->
+                    Locked
+
+                Ok False ->
+                    Free
+
+                _ ->
+                    Requesting
+            )
+        )
+
+
 subscriptions : Model -> Sub Msg
 subscriptions _ =
-    profileObserver observeProfile
+    Sub.batch
+        [ profileObserver observeProfile
+        , wakeLockAvailability listenWakeLockAvailability
+        , updateWakeLockStatus listenWakeLockStatus
+        ]
 
 
 
@@ -232,6 +296,41 @@ view model =
                                         , activeButtonClass Scene.RandomEventCounter model.scene
                                         , href "?randomevent"
                                         , title "Random Event Counter"
+                                        ]
+                                        []
+                                    , button
+                                        [ class "button button-circle shellicons shellicons-phone-lock-line"
+                                        , disabled (model.wakeLock == NotSupported || model.wakeLock == Supported Requesting)
+                                        , onClick
+                                            (case model.wakeLock of
+                                                Supported Free ->
+                                                    RequestWakeLock Locked
+
+                                                Supported Locked ->
+                                                    RequestWakeLock Free
+
+                                                _ ->
+                                                    Noop
+                                            )
+                                        , title
+                                            (case model.wakeLock of
+                                                Detecting ->
+                                                    "Checking Wake Lock API support..."
+
+                                                NotSupported ->
+                                                    "Your browser does not support Wake Lock API"
+
+                                                Supported status ->
+                                                    case status of
+                                                        Locked ->
+                                                            "Click to disable Wake Lock"
+
+                                                        Free ->
+                                                            "Click to prevent device from going to sleep"
+
+                                                        Requesting ->
+                                                            "Changing Wake Lock status..."
+                                            )
                                         ]
                                         []
                                     ]

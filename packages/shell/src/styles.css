@@ -65,7 +65,7 @@ shell-loading {
 
   transition: transform 0.15s ease-out, opacity 0.2s ease-out;
 }
-.button:hover {
+.button:hover:not(:disabled) {
   box-shadow: 0 0 0 0.15rem var(--theme-fg);
 }
 .button:active {
@@ -75,6 +75,10 @@ shell-loading {
 .button:focus {
   box-shadow: 0 0 0 0.15rem Highlight;
   outline: none;
+}
+.button:disabled {
+  background-color: var(--theme-fg-sub);
+  color: var(--theme-bg-sub);
 }
 
 .button-circle {
