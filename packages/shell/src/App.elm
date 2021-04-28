@@ -258,12 +258,114 @@ subscriptions _ =
 
 
 activeButtonClass : Bool -> Attribute msg
-activeButtonClass cond =
+activeButtonClass =
+    classIf "button-active"
+
+
+classIf : String -> Bool -> Attribute msg
+classIf className cond =
     if cond then
-        class "button-active"
+        class className
 
     else
         class ""
+
+
+dataDisabled : Bool -> Attribute msg
+dataDisabled disabled =
+    attribute "data-disabled"
+        (if disabled then
+            "disabled"
+
+         else
+            ""
+        )
+
+
+appbar : Model -> Html Msg
+appbar model =
+    let
+        navigatable =
+            case model.profile of
+                Loaded (Ok (Just _)) ->
+                    True
+
+                _ ->
+                    False
+    in
+    footer [ class "appbar" ]
+        [ nav [ class "appbar-grid" ]
+            [ a
+                [ class "button button-circle shellicons shellicons-profile"
+                , activeButtonClass (model.scene == Scene.Profile)
+                , dataDisabled (not navigatable)
+                , href "?profile"
+                , title "Profile"
+                ]
+                []
+            , a
+                [ class "button button-circle shellicons shellicons-quest"
+                , activeButtonClass (model.scene == Scene.RandomEventCounter)
+                , dataDisabled (not navigatable)
+                , href "?randomevent"
+                , title "Random Event Counter"
+                ]
+                []
+            , div
+                [ class "appbar-separator"
+                , attribute "aria-hidden" "true"
+                ]
+                []
+            , button
+                [ class "button button-circle shellicons shellicons-phone-lock-line"
+                , classIf "button-fill" (model.wakeLock == Supported Locked)
+                , disabled (model.wakeLock == NotSupported || model.wakeLock == Supported Requesting)
+                , onClick
+                    (case model.wakeLock of
+                        Supported Free ->
+                            RequestWakeLock Locked
+
+                        Supported Locked ->
+                            RequestWakeLock Free
+
+                        _ ->
+                            Noop
+                    )
+                , title
+                    (case model.wakeLock of
+                        Detecting ->
+                            "Checking Wake Lock API support..."
+
+                        NotSupported ->
+                            "Your browser does not support Wake Lock API"
+
+                        Supported status ->
+                            case status of
+                                Locked ->
+                                    "Click to disable Wake Lock"
+
+                                Free ->
+                                    "Click to prevent device from going to sleep"
+
+                                Requesting ->
+                                    "Changing Wake Lock status..."
+                    )
+                ]
+                []
+            ]
+        , div [ class "appbar-text" ]
+            [ span [ attribute "translate" "no" ] [ text "©︎ 2021 Shota Fuji (pocka)" ]
+            , ul [ class "appbar-text-link-list" ]
+                [ li [] [ a [ href "ThirdPartyNotice.txt", target "_blank" ] [ text "Third party notice" ] ]
+                , case model.repositoryUrl of
+                    Just url ->
+                        li [] [ a [ href url, target "_blank" ] [ text "Source code" ] ]
+
+                    Nothing ->
+                        text ""
+                ]
+            ]
+        ]
 
 
 view : Model -> Browser.Document Msg
@@ -275,82 +377,17 @@ view model =
                 [ node "shell-loading" [] [] ]
 
             Loaded result ->
-                case result of
+                [ case result of
                     Ok maybeProfile ->
                         case maybeProfile of
                             Nothing ->
-                                [ node "app-profile" [] [] ]
+                                node "app-profile" [] []
 
                             Just profile ->
-                                [ Scene.view model.scene profile
-                                , nav [ class "appbar" ]
-                                    [ a
-                                        [ class "button button-circle shellicons shellicons-profile"
-                                        , activeButtonClass (model.scene == Scene.Profile)
-                                        , href "?profile"
-                                        , title "Profile"
-                                        ]
-                                        []
-                                    , a
-                                        [ class "button button-circle shellicons shellicons-quest"
-                                        , activeButtonClass (model.scene == Scene.RandomEventCounter)
-                                        , href "?randomevent"
-                                        , title "Random Event Counter"
-                                        ]
-                                        []
-                                    , button
-                                        [ class "button button-circle shellicons shellicons-phone-lock-line"
-                                        , activeButtonClass (model.wakeLock == Supported Locked)
-                                        , disabled (model.wakeLock == NotSupported || model.wakeLock == Supported Requesting)
-                                        , onClick
-                                            (case model.wakeLock of
-                                                Supported Free ->
-                                                    RequestWakeLock Locked
-
-                                                Supported Locked ->
-                                                    RequestWakeLock Free
-
-                                                _ ->
-                                                    Noop
-                                            )
-                                        , title
-                                            (case model.wakeLock of
-                                                Detecting ->
-                                                    "Checking Wake Lock API support..."
-
-                                                NotSupported ->
-                                                    "Your browser does not support Wake Lock API"
-
-                                                Supported status ->
-                                                    case status of
-                                                        Locked ->
-                                                            "Click to disable Wake Lock"
-
-                                                        Free ->
-                                                            "Click to prevent device from going to sleep"
-
-                                                        Requesting ->
-                                                            "Changing Wake Lock status..."
-                                            )
-                                        ]
-                                        []
-                                    , case model.repositoryUrl of
-                                        Just url ->
-                                            a
-                                                [ class "button button-circle shellicons shellicons-git-repository-line"
-                                                , href url
-                                                , target "_blank"
-                                                , title "Source code"
-                                                ]
-                                                []
-
-                                        Nothing ->
-                                            text ""
-                                    ]
-                                ]
+                                Scene.view model.scene profile
 
                     Err err ->
-                        [ Views.error "Error"
+                        Views.error "Error"
                             (Just RetryProfileLoad)
                             (case err of
                                 NoAvailableRemoteError ->
@@ -367,19 +404,6 @@ view model =
                                 InvalidPayloadError ->
                                     [ text "Unexpected data passed to the application. Please make sure your profile data is not corrupted in profile page. (SH-E-03)" ]
                             )
-                        , footer [ class "footer" ]
-                            [ div [ class "footer-contents" ]
-                                [ span [ attribute "translate" "no" ] [ text "©︎ 2021 Shota Fuji (pocka)" ]
-                                , ul [ class "footer-link-list" ]
-                                    [ li [] [ a [ href "ThirdPartyNotice.txt", target "_blank" ] [ text "Third party notice" ] ]
-                                    , case model.repositoryUrl of
-                                        Just url ->
-                                            li [] [ a [ href url, target "_blank" ] [ text "Repository" ] ]
-
-                                        Nothing ->
-                                            text ""
-                                    ]
-                                ]
-                            ]
-                        ]
+                , appbar model
+                ]
     }

@@ -31,26 +31,73 @@ shell-loading {
   transform: translate(-50%, -50%);
 }
 
+.hidden {
+  display: none;
+}
+
+/* === Appbar Module === */
 .appbar {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: repeat(auto-fill, 2.3em);
-  column-gap: 0.8rem;
   position: sticky;
   right: 0;
   bottom: 0;
   left: 0;
-  padding: 1.6rem 2.4rem;
-  font-size: 1.3em;
-  border-block-start: 2px solid var(--theme-primary);
 
   background-color: var(--color-wet-asphalt);
+  box-shadow: 0 -0.2rem 0.8rem #0001;
   color: var(--color-clouds);
   z-index: 99;
 }
+.appbar-grid,
+.appbar-text {
+  margin: 0 auto;
+  width: 100%;
+  max-width: var(--shell-container-max-width);
+}
+.appbar-grid {
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: repeat(auto-fill, 2.3em);
+  gap: 0.8rem;
+  padding: 1.6rem 2.4rem;
+  padding-block-end: 0.8rem;
+  font-size: 1.3em;
+}
+.appbar-text {
+  font-size: 0.9em;
+  padding: 0.8rem 2.4rem;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8rem;
 
-.hidden {
-  display: none;
+  color: var(--theme-fg-sub);
+}
+.appbar-text-link-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+.appbar-text-link-list > li + li::before {
+  content: "/";
+}
+.appbar-text-link-list a {
+  padding: 0 0.8rem;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.appbar-text-link-list a:hover {
+  color: var(--theme-fg);
+}
+
+.appbar-separator {
+  position: relative;
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: auto;
+
+  background-color: var(--theme-fg-sub);
+  border-radius: 50%;
+
+  opacity: 0.3;
 }
 
 /* === Button Module === */
@@ -62,13 +109,14 @@ shell-loading {
   border-radius: 0.4rem;
   border: 0.2rem solid var(--theme-bg);
   color: var(--theme-bg);
+  cursor: pointer;
 
   transition: transform 0.15s ease-out, opacity 0.2s ease-out;
 }
 .button:hover:not(:disabled) {
   box-shadow: 0 0 0 0.15rem var(--theme-fg);
 }
-.button:active {
+.button:active:not(:disabled) {
   opacity: 0.8;
   transform: scale(0.98);
 }
@@ -76,54 +124,31 @@ shell-loading {
   box-shadow: 0 0 0 0.15rem Highlight;
   outline: none;
 }
-.button:disabled {
+.button:disabled,
+.button[data-disabled="disabled"] {
   background-color: var(--theme-fg-sub);
   color: var(--theme-bg-sub);
 }
+.button[data-disabled="disabled"] {
+  pointer-events: none;
+}
 
 .button-circle {
-  display: inline-flex;
+  display: inline-block;
   padding: 0.5em;
   border-radius: 50%;
+
+  text-align: center;
 }
 .button-circle::before {
   margin: 0;
 }
 
+.button-fill {
+  color: var(--theme-primary);
+}
 .button-active {
   background-color: var(--theme-primary);
-  color: var(--theme-fg);
-}
-
-/* === Footer Module === */
-.footer {
-  padding: var(--shell-container-padding);
-  font-size: 0.9em;
-
-  background-color: var(--theme-bg-sub);
-  color: var(--theme-fg-sub);
-}
-
-.footer-contents {
-  margin: 0 auto;
-  width: 100%;
-  max-width: var(--shell-container-max-width);
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.footer-link-list {
-  display: flex;
-}
-.footer-link-list > li + li::before {
-  content: "/";
-}
-.footer-link-list a {
-  padding: 0 0.8rem;
-  text-decoration: underline;
-}
-.footer-link-list a:hover {
   color: var(--theme-fg);
 }
 

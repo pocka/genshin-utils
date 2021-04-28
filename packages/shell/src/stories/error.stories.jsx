@@ -23,10 +23,14 @@ const Template = ({ title, details, retry }) => (
         </button>
       )}
     </div>
-    <footer className="footer">
-      <div className="footer-contents">
+    <footer className="appbar">
+      <nav className="appbar-grid">
+        <button class="button button-circle">A</button>
+        <button class="button button-circle">B</button>
+      </nav>
+      <div className="appbar-text">
         <span>&copy; Foo Bar</span>
-        <ul className="footer-link-list">
+        <ul className="appbar-text-link-list">
           <li>
             <a href="#">Foo</a>
           </li>
