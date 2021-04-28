@@ -90,16 +90,24 @@ async function main() {
   app.ports.wakeLockAvailability.send("wakeLock" in navigator);
 
   let wakeLock = null;
+
+  const releaseWakeLock = async () => {
+    await wakeLock.release();
+    wakeLock = null;
+    app.ports.updateWakeLockStatus.send(false);
+  };
+
   app.ports.requestWakeLock.subscribe(async (lock) => {
     try {
       if (lock) {
         wakeLock = await navigator.wakeLock.request("screen");
+        wakeLock.addEventListener("release", () => {
+          releaseWakeLock();
+        });
 
         app.ports.updateWakeLockStatus.send(true);
       } else if (wakeLock) {
-        await wakeLock.release();
-        wakeLock = null;
-        app.ports.updateWakeLockStatus.send(false);
+        await releaseWakeLock();
       }
     } catch (err) {
       console.warn("Failed to change Wake Lock status", err);
