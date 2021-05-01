@@ -1,4 +1,4 @@
 export const Remotes: Record<
-  "AppProfile" | "AppRandomEventCounter" | "Shell",
+  "AppProfile" | "AppRandomEventCounter" | "AppTimer" | "Shell",
   string
 >;

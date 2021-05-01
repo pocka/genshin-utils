@@ -27,6 +27,7 @@ import type {
   Profile,
   GenshinServer,
 } from "@genshin-utils/app-profile/exports";
+import type { timer } from "@genshin-utils/app-timer/exports";
 import { loadRemoteContainer } from "@genshin-utils/module-federation";
 import { Remotes } from "@genshin-utils/module-federation/remotes";
 import {
@@ -80,6 +81,9 @@ export function getNextServerResetDate(date: Date, server: GenshinServer) {
 export function useCount(profile: Profile) {
   const [state, setState] = useState<CountState>({ type: "loading" });
   const [store, setStore] = useState<Store.Store | null>(null);
+  const [schedule, setScheduleFn] = useState<typeof timer.schedule | null>(
+    null
+  );
 
   const nextReset = useMemo(() => {
     return getNextServerResetDate(new Date(), profile.server);
@@ -96,11 +100,24 @@ export function useCount(profile: Profile) {
     [store]
   );
 
+  // Load the external schedule function from timer app
+  useEffect(() => {
+    loadRemoteContainer(Remotes.AppTimer).then(async (remote) => {
+      const mod = await remote.getModule<{
+        schedule: typeof timer.schedule;
+      }>("timer");
+
+      setScheduleFn(() => mod.schedule);
+    });
+  }, []);
+
   // Resets count on server reset time
   useEffect(() => {
-    const timeout = nextReset.valueOf() - new Date().valueOf();
+    if (!schedule) {
+      return;
+    }
 
-    const id = setTimeout(() => {
+    return schedule(nextReset, () => {
       setState((prev) => {
         if (prev.type !== "loaded") {
           return prev;
@@ -118,12 +135,8 @@ export function useCount(profile: Profile) {
           data: next,
         };
       });
-    }, timeout);
-
-    return () => {
-      clearTimeout(id);
-    };
-  }, [nextReset.valueOf(), saveState]);
+    });
+  }, [schedule, nextReset.valueOf(), saveState]);
 
   // Loads store
   useEffect(() => {

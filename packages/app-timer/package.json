@@ -1,0 +1,21 @@
+{
+  "name": "@genshin-utils/app-timer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Set your timers",
+  "license": "GPL-3.0-only",
+  "dependencies": {
+    "@genshin-utils/module-federation": "^1.0.0",
+    "@genshin-utils/styles": "^1.0.0",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@genshin-utils/webpack": "^1.0.0",
+    "@types/uuid": "^8.3.0",
+    "worker-loader": "^3.0.8"
+  },
+  "scripts": {
+    "dev": "webpack serve --mode=development",
+    "build": "webpack --mode=production"
+  }
+}

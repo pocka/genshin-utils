@@ -40,7 +40,7 @@ jobs:
     needs: prepare
     strategy:
       matrix:
-        package: [shell, app-profile, app-random-event-counter]
+        package: [shell, app-profile, app-random-event-counter, app-timer]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -90,6 +90,11 @@ jobs:
         with:
           name: dist-app-profile
           path: dist/profile
+      - name: Download timer app
+        uses: actions/download-artifact@v2
+        with:
+          name: dist-app-timer
+          path: dist/timer
       - name: Download random event counter app
         uses: actions/download-artifact@v2
         with:
