@@ -18,7 +18,6 @@ Less likely to accept your feature request.
 ### As a developer
 
 - [x] Try Module Federation
-- [ ] Make a PWA
 - [ ] Configure CI to only build changed packages, with Module Federation
   - Probably Lerna is needed
 
