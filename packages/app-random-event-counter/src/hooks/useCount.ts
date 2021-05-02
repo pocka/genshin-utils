@@ -25,58 +25,17 @@
 import type {
   store as Store,
   Profile,
-  GenshinServer,
 } from "@genshin-utils/app-profile/exports";
 import type { timer } from "@genshin-utils/app-timer/exports";
 import { loadRemoteContainer } from "@genshin-utils/module-federation";
 import { Remotes } from "@genshin-utils/module-federation/remotes";
-import {
-  addDays,
-  addHours,
-  isAfter,
-  parseISO,
-  formatISO,
-  subMinutes,
-} from "date-fns";
+import { isAfter, parseISO, formatISO } from "date-fns";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  APP_ID,
-  REMAINS_TABLE_ID,
-  REMAINS_MAX,
-  SERVER_RESET_HOUR,
-} from "../constants";
+import { APP_ID, REMAINS_TABLE_ID, REMAINS_MAX } from "../constants";
 import { CountState, RewardRemains } from "../states/CountState";
 
-export function getServerDate(date: Date, server: GenshinServer) {
-  const utcDate = subMinutes(date, date.getTimezoneOffset());
-
-  return addHours(utcDate, server.tzOffset);
-}
-
-export function getNextServerResetDate(date: Date, server: GenshinServer) {
-  const utcDate = subMinutes(date, date.getTimezoneOffset());
-
-  const serverDate = addHours(utcDate, server.tzOffset);
-
-  const tz =
-    (server.tzOffset < 0 ? "-" : "+") +
-    ("00" + server.tzOffset).slice(-2) +
-    ":00";
-
-  return parseISO(
-    formatISO(
-      serverDate.getHours() < SERVER_RESET_HOUR
-        ? addDays(serverDate, 1)
-        : serverDate,
-      { representation: "date" }
-    ) +
-      "T" +
-      ("00" + SERVER_RESET_HOUR).slice(-2) +
-      ":00:00" +
-      tz
-  );
-}
+import { getNextServerResetDate } from "./helpers";
 
 export function useCount(profile: Profile) {
   const [state, setState] = useState<CountState>({ type: "loading" });

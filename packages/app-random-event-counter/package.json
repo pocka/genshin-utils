@@ -19,13 +19,17 @@
     "@genshin-utils/app-timer": "^1.0.0",
     "@genshin-utils/webpack": "^1.0.0",
     "@storybook/react": "6.2.8",
+    "@types/jest": "^26.0.23",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
-    "@types/styled-components": "^5.1.9"
+    "@types/styled-components": "^5.1.9",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.5"
   },
   "scripts": {
     "dev": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "storybook": "start-storybook -p 9002"
+    "storybook": "start-storybook -p 9002",
+    "test": "TZ=UTC jest"
   }
 }
