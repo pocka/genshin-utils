@@ -257,11 +257,6 @@ subscriptions _ =
 -- VIEW
 
 
-activeButtonClass : Bool -> Attribute msg
-activeButtonClass =
-    classIf "button-active"
-
-
 classIf : String -> Bool -> Attribute msg
 classIf className cond =
     if cond then
@@ -297,7 +292,7 @@ appbar model =
         [ nav [ class "appbar-grid" ]
             [ a
                 [ class "button button-circle shellicons shellicons-profile"
-                , activeButtonClass (model.scene == Scene.Profile)
+                , classIf "button-fill" (model.scene == Scene.Profile)
                 , dataDisabled (not navigatable)
                 , href "?profile"
                 , title "Profile"
@@ -305,7 +300,7 @@ appbar model =
                 []
             , a
                 [ class "button button-circle shellicons shellicons-quest"
-                , activeButtonClass (model.scene == Scene.RandomEventCounter)
+                , classIf "button-fill" (model.scene == Scene.RandomEventCounter)
                 , dataDisabled (not navigatable)
                 , href "?randomevent"
                 , title "Random Event Counter"

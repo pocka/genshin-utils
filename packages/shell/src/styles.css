@@ -145,9 +145,6 @@ shell-loading {
 }
 
 .button-fill {
-  color: var(--theme-primary);
-}
-.button-active {
   background-color: var(--theme-primary);
   color: var(--theme-primary-contrast);
 }
