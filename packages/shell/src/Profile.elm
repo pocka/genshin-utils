@@ -13,6 +13,7 @@ type alias GenshinServer =
 type alias Profile =
     { id : String
     , name : String
+    , color : Maybe String
     , server : GenshinServer
     }
 
@@ -25,9 +26,10 @@ type ProfileLoadError
 
 decodeProfile : Decode.Decoder Profile
 decodeProfile =
-    Decode.map3 Profile
+    Decode.map4 Profile
         (Decode.field "id" Decode.string)
         (Decode.field "name" Decode.string)
+        (Decode.maybe (Decode.field "color" Decode.string))
         (Decode.map2 GenshinServer
             (Decode.at [ "server", "name" ] Decode.string)
             (Decode.at [ "server", "tzOffset" ] Decode.int)
@@ -36,13 +38,23 @@ decodeProfile =
 
 encodeProfile : Profile -> Encode.Value
 encodeProfile profile =
+    let
+        baseProps =
+            [ ( "id", Encode.string profile.id )
+            , ( "name", Encode.string profile.name )
+            , ( "server"
+              , Encode.object
+                    [ ( "name", Encode.string profile.server.name )
+                    , ( "tzOffset", Encode.int profile.server.tzOffset )
+                    ]
+              )
+            ]
+    in
     Encode.object
-        [ ( "id", Encode.string profile.id )
-        , ( "name", Encode.string profile.name )
-        , ( "server"
-          , Encode.object
-                [ ( "name", Encode.string profile.server.name )
-                , ( "tzOffset", Encode.int profile.server.tzOffset )
-                ]
-          )
-        ]
+        (case profile.color of
+            Just color ->
+                ( "color", Encode.string color ) :: baseProps
+
+            Nothing ->
+                baseProps
+        )

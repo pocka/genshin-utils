@@ -1,5 +1,8 @@
 module Scene exposing (..)
 
+import Color
+import Color.Accessibility
+import Color.Convert
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Profile
@@ -49,21 +52,47 @@ route url =
             Profile
 
 
+{-| <https://discourse.elm-lang.org/t/css-custom-properties/5554/3>
+-}
+profileColorVars : Profile.Profile -> Attribute msg
+profileColorVars profile =
+    case Maybe.map Color.Convert.hexToColor profile.color of
+        Just (Ok color) ->
+            attribute "style"
+                ("--theme-primary: "
+                    ++ Color.Convert.colorToHex color
+                    ++ "; --theme-primary-contrast: "
+                    ++ (if Color.Accessibility.luminance color > 0.5 then
+                            "var(--color-midnight-blue)"
+
+                        else
+                            "var(--color-clouds)"
+                       )
+                    ++ ";"
+                )
+
+        _ ->
+            attribute "" ""
+
+
 view : Scene -> Profile.Profile -> Html msg
 view scene profile =
     case scene of
         Profile ->
-            node "app-profile" [] []
+            node "app-profile" [ profileColorVars profile ] []
 
         RandomEventCounter ->
             node "app-random-event-counter"
                 [ property "profile" (Profile.encodeProfile profile)
+                , profileColorVars profile
                 ]
                 []
 
         NotFound ->
-            Views.error "Page Not Found"
-                Nothing
-                [ p [] [ text "I'm sorry that I can't process this URL." ]
-                , a [ class "button error-action", href "?profile" ] [ text "Go to profile page" ]
+            div [ profileColorVars profile ]
+                [ Views.error "Page Not Found"
+                    Nothing
+                    [ p [] [ text "I'm sorry that I can't process this URL." ]
+                    , a [ class "button error-action", href "?profile" ] [ text "Go to profile page" ]
+                    ]
                 ]

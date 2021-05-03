@@ -20,6 +20,11 @@ export interface ProfileSetter {
    * Which server to use as a base for time-related features?
    */
   server: GenshinServer;
+
+  /**
+   * Primary color to use in our UI.
+   */
+  color?: string;
 }
 
 export interface Profile extends ProfileSetter {

@@ -1,5 +1,6 @@
 import * as React from "react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { BlockPicker } from "react-color";
 import styled from "styled-components";
 
 import { Button } from "./Button";
@@ -15,6 +16,7 @@ const Form = styled.form`
 const FormItem = styled.div`
   display: flex;
   flex-direction: column-reverse;
+  justify-content: flex-end;
 `;
 
 const Label = styled.label`
@@ -62,6 +64,15 @@ const Select = styled.select`
   }
 `;
 
+const ColorPicker = styled(BlockPicker)`
+  // override react-color's style
+  &&& {
+    width: 100% !important; // the lib uses inline style (wtf)
+    min-height: 10rem;
+    margin-block-start: 0.8rem;
+  }
+`;
+
 const servers: readonly GenshinServer[] = [
   {
     name: "America",
@@ -75,6 +86,29 @@ const servers: readonly GenshinServer[] = [
     name: "Europe",
     tzOffset: 1,
   },
+];
+
+const PRESET_COLOR_VARS = [
+  "--color-turquoise",
+  "--color-green-sea",
+  "--color-emerald",
+  "--color-nephritis",
+  "--color-peter-river",
+  "--color-belize-hole",
+  "--color-amethyst",
+  "--color-wisteria",
+  "--color-wet-asphalt",
+  "--color-midnight-blue",
+  "--color-sun-flower",
+  "--color-orange",
+  "--color-carrot",
+  "--color-pumpkin",
+  "--color-alizarin",
+  "--color-pomegranate",
+  "--color-clouds",
+  "--color-silver",
+  "--color-concrete",
+  "--color-asbestos",
 ];
 
 export interface ProfileFormProps {
@@ -96,6 +130,22 @@ export const ProfileForm = ({
   const [server, setServer] = useState<GenshinServer>(
     () => initialData?.server || servers[1]!
   );
+  const [color, setColor] = useState<string>(
+    () =>
+      initialData?.color ||
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--theme-primary")
+        .trim() ||
+      // just a random color (no special meanings)
+      "#fa5310"
+  );
+  const colors = useMemo(() => {
+    const style = getComputedStyle(document.documentElement);
+
+    return PRESET_COLOR_VARS.map((varName) =>
+      style.getPropertyValue(varName).trim()
+    );
+  }, []);
 
   return (
     <Form
@@ -106,6 +156,7 @@ export const ProfileForm = ({
         onSubmit({
           name: profileName,
           server,
+          color,
         });
       }}
     >
@@ -141,6 +192,15 @@ export const ProfileForm = ({
           ))}
         </Select>
         <Label htmlFor="server">Server location (select one)</Label>
+      </FormItem>
+      <FormItem>
+        <ColorPicker
+          color={color}
+          colors={colors}
+          triangle="hide"
+          onChange={(color) => setColor(color.hex)}
+        />
+        <Label>Profile color (UI primary color)</Label>
       </FormItem>
       <Submit variant="primary" loading={loading}>
         {initialData ? "Update profile" : "Create new profile"}

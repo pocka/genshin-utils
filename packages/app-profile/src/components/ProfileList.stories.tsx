@@ -27,6 +27,7 @@ export default {
           name: "Asia",
           tzOffset: +8,
         },
+        color: "#f00",
         isCurrent: true,
       },
       {
@@ -36,6 +37,7 @@ export default {
           name: "Europe",
           tzOffset: +1,
         },
+        color: "#0ff",
         isCurrent: false,
       },
       {

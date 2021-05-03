@@ -30,10 +30,6 @@ const ListItem = styled.li`
   border-bottom: 0.2rem solid var(--color-asbestos);
 
   border-bottom-left-radius: 0.2rem;
-
-  &[data-current="current"] {
-    border-color: var(--theme-primary);
-  }
 `;
 
 const ProfileAction = styled(Button)`
@@ -55,7 +51,22 @@ const ProfileName = styled.span`
   display: block;
   font-size: 1.1em;
 
+  color: var(--theme-fg-sub);
   font-weight: bold;
+
+  &[data-current="current"] {
+    color: var(--theme-fg);
+  }
+`;
+
+const CurrentIndicator = styled.span`
+  margin-inline-start: 0.5em;
+  font-size: 0.6em;
+  padding: 0.05em 0.5em;
+
+  background-color: var(--theme-fg);
+  border-radius: 0.4rem;
+  color: var(--theme-bg);
 `;
 
 const ServerInfo = styled.span`
@@ -115,9 +126,16 @@ const ProfileListItem = ({
   }, [mutating]);
 
   return (
-    <ListItem data-current={profile.isCurrent ? "current" : null}>
+    <ListItem
+      style={{
+        borderColor: profile.color || "var(--theme-primary)",
+      }}
+    >
       <div>
-        <ProfileName>{profile.name}</ProfileName>
+        <ProfileName data-current={profile.isCurrent ? "current" : null}>
+          {profile.name}
+          {profile.isCurrent && <CurrentIndicator>Current</CurrentIndicator>}
+        </ProfileName>
         <ServerInfo>
           {profile.server.name} (UTC
           {formatTzOffset(profile.server.tzOffset)})

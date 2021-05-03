@@ -9,6 +9,7 @@
     "dialog-polyfill": "^0.5.6",
     "localforage": "^1.9.0",
     "react": "^17.0.2",
+    "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
     "react-is": "^17.0.2",
@@ -21,6 +22,7 @@
     "@genshin-utils/webpack": "^1.0.0",
     "@storybook/react": "6.2.8",
     "@types/react": "^17.0.3",
+    "@types/react-color": "^3.0.4",
     "@types/react-dom": "^17.0.3",
     "@types/styled-components": "^5.1.9",
     "@types/uuid": "^8.3.0"

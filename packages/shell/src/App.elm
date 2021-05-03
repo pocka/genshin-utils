@@ -288,7 +288,15 @@ appbar model =
                 _ ->
                     False
     in
-    footer [ class "appbar" ]
+    footer
+        [ class "appbar"
+        , case model.profile of
+            Loaded (Ok (Just profile)) ->
+                Scene.profileColorVars profile
+
+            _ ->
+                attribute "" ""
+        ]
         [ nav [ class "appbar-grid" ]
             [ a
                 [ class "button button-circle shellicons shellicons-profile"

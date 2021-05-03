@@ -27,3 +27,11 @@ UpdateProfile.args = {
     isCurrent: true,
   },
 };
+
+export const UpdateProfileWithColor = Template.bind({});
+UpdateProfileWithColor.args = {
+  initialData: {
+    ...UpdateProfile.args.initialData!,
+    color: "#faf",
+  },
+};
