@@ -72,7 +72,7 @@ profileColorVars profile =
                 )
 
         _ ->
-            attribute "" ""
+            class ""
 
 
 view : Scene -> Profile.Profile -> Html msg

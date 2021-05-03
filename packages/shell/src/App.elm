@@ -295,7 +295,7 @@ appbar model =
                 Scene.profileColorVars profile
 
             _ ->
-                attribute "" ""
+                class ""
         ]
         [ nav [ class "appbar-grid" ]
             [ a
