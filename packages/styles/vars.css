@@ -26,18 +26,21 @@
   --light-theme-bg: var(--color-clouds);
   --light-theme-bg-sub: var(--color-silver);
   --light-theme-primary: var(--color-nephritis);
+  --light-theme-primary-contrast: var(--color-clouds);
 
   --dark-theme-fg: var(--color-clouds);
   --dark-theme-fg-sub: var(--color-silver);
   --dark-theme-bg: var(--color-midnight-blue);
   --dark-theme-bg-sub: var(--color-wet-asphalt);
   --dark-theme-primary: var(--color-emerald);
+  --dark-theme-primary-contrast: var(--color-clouds);
 
   --theme-fg: var(--light-theme-fg);
   --theme-fg-sub: var(--light-theme-fg-sub);
   --theme-bg: var(--light-theme-bg);
   --theme-bg-sub: var(--light-theme-bg-sub);
   --theme-primary: var(--light-theme-primary);
+  --theme-primary-contrast: var(--light-theme-primary-contrast);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -47,5 +50,6 @@
     --theme-bg: var(--dark-theme-bg);
     --theme-bg-sub: var(--dark-theme-bg-sub);
     --theme-primary: var(--dark-theme-primary);
+    --theme-primary-contrast: var(--dark-theme-primary-contrast);
   }
 }

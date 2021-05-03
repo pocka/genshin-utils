@@ -149,7 +149,7 @@ shell-loading {
 }
 .button-active {
   background-color: var(--theme-primary);
-  color: var(--theme-fg);
+  color: var(--theme-primary-contrast);
 }
 
 /* === Error Module === */
