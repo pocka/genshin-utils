@@ -70,7 +70,7 @@ shell-loading {
   flex-wrap: wrap;
   gap: 0.8rem;
 
-  color: var(--theme-fg-sub);
+  color: var(--color-silver);
 }
 .appbar-text-link-list {
   display: flex;
@@ -85,7 +85,7 @@ shell-loading {
   text-decoration: underline;
 }
 .appbar-text-link-list a:hover {
-  color: var(--theme-fg);
+  color: var(--color-clouds);
 }
 
 .appbar-separator {
