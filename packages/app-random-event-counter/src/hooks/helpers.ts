@@ -1,32 +1,40 @@
 import type { GenshinServer } from "@genshin-utils/app-profile/exports";
-import { addDays, addHours, parseISO, formatISO, subMinutes } from "date-fns";
+import {
+  addDays,
+  parseISO,
+  formatISO,
+  subDays,
+  differenceInSeconds,
+} from "date-fns";
 
 import { SERVER_RESET_HOUR } from "../constants";
 
-export function getServerDate(date: Date, server: GenshinServer) {
-  const utcDate = subMinutes(date, date.getTimezoneOffset());
+export function getNextOfTheHour(base: Date, compared: Date): Date {
+  const diff = differenceInSeconds(compared, base);
 
-  return addHours(utcDate, server.tzOffset);
+  // If `compared` is before or equal to `base`
+  if (diff <= 0) {
+    return getNextOfTheHour(base, addDays(compared, 1));
+  }
+
+  // If the difference is over 1 day
+  if (diff > 24 * 60 * 60) {
+    return getNextOfTheHour(base, subDays(compared, 1));
+  }
+
+  return compared;
 }
 
 export function getNextServerResetDate(date: Date, server: GenshinServer) {
-  const serverDate = getServerDate(date, server);
-
   const tz =
     (server.tzOffset < 0 ? "-" : "+") +
     ("00" + Math.abs(server.tzOffset)).slice(-2) +
     ":00";
 
-  return parseISO(
-    formatISO(
-      serverDate.getHours() < SERVER_RESET_HOUR
-        ? serverDate
-        : addDays(serverDate, 1),
-      { representation: "date" }
-    ) +
-      "T" +
-      ("00" + SERVER_RESET_HOUR).slice(-2) +
-      ":00:00" +
-      tz
+  const resetTime = ("00" + SERVER_RESET_HOUR).slice(-2) + ":00:00";
+
+  return getNextOfTheHour(
+    date,
+    parseISO(formatISO(date, { representation: "date" }) + "T" + resetTime + tz)
   );
 }
