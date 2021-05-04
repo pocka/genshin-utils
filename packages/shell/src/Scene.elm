@@ -1,6 +1,5 @@
 module Scene exposing (..)
 
-import Color
 import Color.Accessibility
 import Color.Convert
 import Html exposing (..)
