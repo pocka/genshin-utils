@@ -51,24 +51,37 @@ route url =
             Profile
 
 
+{-| Define CSS custom properties at the element.
+This may conflict with `Html.Attributes.style`.
+
+This is needed because Elm can't set CSS custom properties via `Html.Attributes.style`.
+<https://github.com/elm/html/issues/177>
+
+-}
+cssVars : List ( String, String ) -> Attribute msg
+cssVars vars =
+    vars
+        |> List.map (\( name, value ) -> name ++ ":" ++ value ++ ";")
+        |> String.concat
+        |> attribute "style"
+
+
 {-| <https://discourse.elm-lang.org/t/css-custom-properties/5554/3>
 -}
 profileColorVars : Profile.Profile -> Attribute msg
 profileColorVars profile =
     case Maybe.map Color.Convert.hexToColor profile.color of
         Just (Ok color) ->
-            attribute "style"
-                ("--theme-primary: "
-                    ++ Color.Convert.colorToHex color
-                    ++ "; --theme-primary-contrast: "
-                    ++ (if Color.Accessibility.luminance color > 0.5 then
-                            "var(--color-midnight-blue)"
+            cssVars
+                [ ( "--theme-primary", Color.Convert.colorToHex color )
+                , ( "--theme-primary-contrast"
+                  , if Color.Accessibility.luminance color > 0.5 then
+                        "var(--color-midnight-blue)"
 
-                        else
-                            "var(--color-clouds)"
-                       )
-                    ++ ";"
-                )
+                    else
+                        "var(--color-clouds)"
+                  )
+                ]
 
         _ ->
             class ""
@@ -76,22 +89,21 @@ profileColorVars profile =
 
 view : Scene -> Profile.Profile -> Html msg
 view scene profile =
-    case scene of
-        Profile ->
-            node "app-profile" [ profileColorVars profile ] []
+    div [ profileColorVars profile ]
+        [ case scene of
+            Profile ->
+                node "app-profile" [] []
 
-        RandomEventCounter ->
-            node "app-random-event-counter"
-                [ property "profile" (Profile.encodeProfile profile)
-                , profileColorVars profile
-                ]
-                []
+            RandomEventCounter ->
+                node "app-random-event-counter"
+                    [ property "profile" (Profile.encodeProfile profile)
+                    ]
+                    []
 
-        NotFound ->
-            div [ profileColorVars profile ]
-                [ Views.error "Page Not Found"
+            NotFound ->
+                Views.error "Page Not Found"
                     Nothing
                     [ p [] [ text "I'm sorry that I can't process this URL." ]
                     , a [ class "button error-action", href "?profile" ] [ text "Go to profile page" ]
                     ]
-                ]
+        ]
