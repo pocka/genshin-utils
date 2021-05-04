@@ -18,8 +18,7 @@ Less likely to accept your feature request.
 ### As a developer
 
 - [x] Try Module Federation
-- [ ] Configure CI to only build changed packages, with Module Federation
-  - Probably Lerna is needed
+- [x] Configure CI to only build changed packages, with Module Federation
 
 ## Development
 
