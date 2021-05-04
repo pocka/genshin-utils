@@ -15,8 +15,8 @@
     "styled-components": "^5.2.3"
   },
   "devDependencies": {
-    "@genshin-utils/app-profile": "^1.0.0",
-    "@genshin-utils/app-timer": "^1.0.0",
+    "@genshin-utils/app-profile-types": "^1.0.0",
+    "@genshin-utils/app-timer-types": "^1.0.0",
     "@genshin-utils/webpack": "^1.0.0",
     "@storybook/react": "6.2.8",
     "@types/jest": "^26.0.23",

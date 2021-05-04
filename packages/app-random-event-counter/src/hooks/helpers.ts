@@ -1,4 +1,4 @@
-import type { GenshinServer } from "@genshin-utils/app-profile/exports";
+import type { GenshinServer } from "@genshin-utils/app-profile-types";
 import {
   addDays,
   parseISO,

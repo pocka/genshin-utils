@@ -1,43 +1,8 @@
-export interface GenshinServer {
-  /**
-   * e.g. Europe
-   */
-  name: string;
+import type { Profile } from "@genshin-utils/app-profile-types";
 
-  /**
-   * Timezone offset from UTC.
-   */
-  tzOffset: number;
-}
+export { Profile, GenshinServer } from "@genshin-utils/app-profile-types";
 
-export interface ProfileSetter {
-  /**
-   * Name given by a user, for labelling purpose.
-   */
-  name: string;
-
-  /**
-   * Which server to use as a base for time-related features?
-   */
-  server: GenshinServer;
-
-  /**
-   * Primary color to use in our UI.
-   */
-  color?: string;
-}
-
-export interface Profile extends ProfileSetter {
-  /**
-   * Identifies the profile among profiles saved in storage.
-   */
-  id: string;
-
-  /**
-   * Is the user using the profile?
-   */
-  isCurrent: boolean;
-}
+export type ProfileSetter = Omit<Profile, "id" | "isCurrent">;
 
 export enum ProfileListStates {
   Loading = 0,

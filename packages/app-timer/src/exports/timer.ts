@@ -1,3 +1,4 @@
+import type { TimerModule } from "@genshin-utils/app-timer-types";
 import { v4 as uuid } from "uuid";
 
 import TimerWorker from "../worker/timer.worker";
@@ -5,9 +6,7 @@ import { TimerMessage, isValidTimerMessage } from "../worker/message";
 
 const timerWorker = new TimerWorker();
 
-export type Unsubscribe = () => void;
-
-export function schedule(on: Date, callback: () => void): Unsubscribe {
+export const schedule: TimerModule["schedule"] = (on, callback) => {
   const id = uuid();
 
   const messageListener = (ev: MessageEvent) => {
@@ -38,4 +37,4 @@ export function schedule(on: Date, callback: () => void): Unsubscribe {
   return () => {
     timerWorker.removeEventListener("message", messageListener);
   };
-}
+};

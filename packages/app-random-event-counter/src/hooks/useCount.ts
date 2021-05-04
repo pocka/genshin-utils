@@ -23,10 +23,11 @@
  */
 
 import type {
-  store as Store,
+  Store,
+  StoreModule,
   Profile,
-} from "@genshin-utils/app-profile/exports";
-import type { timer } from "@genshin-utils/app-timer/exports";
+} from "@genshin-utils/app-profile-types";
+import type { TimerModule } from "@genshin-utils/app-timer-types";
 import { loadRemoteContainer } from "@genshin-utils/module-federation";
 import { Remotes } from "@genshin-utils/module-federation/remotes";
 import { isAfter, parseISO, formatISO } from "date-fns";
@@ -39,8 +40,8 @@ import { getNextServerResetDate } from "./helpers";
 
 export function useCount(profile: Profile) {
   const [state, setState] = useState<CountState>({ type: "loading" });
-  const [store, setStore] = useState<Store.Store | null>(null);
-  const [schedule, setScheduleFn] = useState<typeof timer.schedule | null>(
+  const [store, setStore] = useState<Store | null>(null);
+  const [schedule, setScheduleFn] = useState<TimerModule["schedule"] | null>(
     null
   );
 
@@ -62,9 +63,7 @@ export function useCount(profile: Profile) {
   // Load the external schedule function from timer app
   useEffect(() => {
     loadRemoteContainer(Remotes.AppTimer).then(async (remote) => {
-      const mod = await remote.getModule<{
-        schedule: typeof timer.schedule;
-      }>("timer");
+      const mod = await remote.getModule<TimerModule>("timer");
 
       setScheduleFn(() => mod.schedule);
     });
@@ -100,9 +99,7 @@ export function useCount(profile: Profile) {
   // Loads store
   useEffect(() => {
     loadRemoteContainer(Remotes.AppProfile).then(async (remote) => {
-      const { Store } = await remote.getModule<{
-        Store: Store.StoreConstructor;
-      }>("store");
+      const { Store } = await remote.getModule<StoreModule>("store");
 
       setStore(new Store(profile.id, APP_ID));
     });

@@ -1,4 +1,4 @@
-import type { Profile } from "@genshin-utils/app-profile/exports";
+import type { Profile } from "@genshin-utils/app-profile-types";
 import destyle from "destyle.css?raw";
 import * as React from "react";
 import * as ReactDOM from "react-dom";

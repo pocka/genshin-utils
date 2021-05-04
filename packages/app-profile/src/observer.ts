@@ -1,12 +1,11 @@
-import { Profile } from "./states/ProfileList";
+import type {
+  ProfilesObserver,
+  CurrentProfileObserver,
+  ObserverModule,
+} from "@genshin-utils/app-profile-types";
 import { getProfiles } from "./store";
 
-export type Unobserve = () => void;
-
 const OBSERVER_KEY = "__gu_observers";
-
-export type ProfilesObserver = (profiles: readonly Profile[]) => void;
-export type CurrentProfileObserver = (profile: Profile | null) => void;
 
 interface ObserverStore {
   currentProfile: CurrentProfileObserver[];
@@ -30,18 +29,10 @@ export function getObserverStore(): ObserverStore {
   return window[OBSERVER_KEY]!;
 }
 
-/**
- * Observe profile changes.
- *
- * @param callback Callback for profile changes.
- * A callback will be called with profile or null (if a user has no profiles).
- * @param runInitial Whether to call provided callback on first time.
- * @returns A function to unobserve.
- */
-export function observeCurrentProfile(
-  callback: CurrentProfileObserver,
-  runInitial: boolean = true
-): Unobserve {
+export const observeCurrentProfile: ObserverModule["observeCurrentProfile"] = (
+  callback,
+  runInitial = true
+) => {
   const store = getObserverStore();
 
   store.currentProfile.push(callback);
@@ -59,19 +50,12 @@ export function observeCurrentProfile(
   return () => {
     store.currentProfile = store.currentProfile.filter((c) => c !== callback);
   };
-}
+};
 
-/**
- * Observe overall profiles.
- *
- * @param callback Callback for profiles changes.
- * @param runInitial Whether to call provided callback on first time.
- * @returns A function to unobserve.
- */
-export function observeProfiles(
-  callback: ProfilesObserver,
-  runInitial: boolean = true
-): Unobserve {
+export const observeProfiles: ObserverModule["observeProfiles"] = (
+  callback,
+  runInitial = true
+) => {
   const store = getObserverStore();
 
   store.profiles.push(callback);
@@ -89,4 +73,4 @@ export function observeProfiles(
   return () => {
     store.profiles = store.profiles.filter((c) => c !== callback);
   };
-}
+};

@@ -1,9 +1,10 @@
+import type { Store as TStore } from "@genshin-utils/app-profile-types";
 import * as localforage from "localforage";
 
 /**
  * Simple key-value store tied to the profile.
  */
-export class Store {
+export class Store implements TStore {
   // LocalForage's TS typings leaking their types into global >:
   #instance: LocalForage;
 

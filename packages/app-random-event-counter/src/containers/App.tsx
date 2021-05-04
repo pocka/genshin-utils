@@ -1,5 +1,5 @@
 import * as React from "react";
-import type { Profile } from "@genshin-utils/app-profile/exports";
+import type { Profile } from "@genshin-utils/app-profile-types";
 
 import { App as Pure } from "../components/App";
 import { useCount } from "../hooks/useCount";

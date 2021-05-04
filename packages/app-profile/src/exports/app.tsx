@@ -1,3 +1,4 @@
+import type { Profile } from "@genshin-utils/app-profile-types";
 import destyle from "destyle.css?raw";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
@@ -5,7 +6,6 @@ import { StyleSheetManager } from "styled-components";
 import dialogPolyfillCss from "dialog-polyfill/dist/dialog-polyfill.css?raw";
 
 import { App } from "../containers/App";
-import { Profile } from "../states/ProfileList";
 
 export class AppProfile extends HTMLElement {
   #app?: HTMLElement;

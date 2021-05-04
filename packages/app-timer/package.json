@@ -5,6 +5,7 @@
   "description": "Set your timers",
   "license": "GPL-3.0-only",
   "dependencies": {
+    "@genshin-utils/app-timer-types": "^1.0.0",
     "@genshin-utils/module-federation": "^1.0.0",
     "@genshin-utils/styles": "^1.0.0",
     "uuid": "^8.3.2"

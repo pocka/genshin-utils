@@ -27,6 +27,7 @@ The site is built using Module Federation added in webpack 5.
 Every apps expose app main page then `@genshin-timer/shell` aggregates them and use as pages.
 
 - `app-*` ... Micro apps
+- `app-*-types` ... Remote Container typings for each micro apps
 - `module-federation` ... Utility scripts for Module Federation
 - `shell` ... Outermost app
 - `styles` ... Common styles (reset CSS, custom properties)
