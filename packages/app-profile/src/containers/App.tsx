@@ -63,10 +63,10 @@ export const App = ({ onSelectProfile }: AppProps) => {
 
     setState(mutating(state.list));
 
-    const oldSelected = state.list.find((p) => p.isCurrent);
+    const oldSelected = state.list.find((p) => p.isCurrent) || null;
     const newSelected = list.find((p) => p.isCurrent) || null;
 
-    if (oldSelected?.id !== newSelected?.id) {
+    if (JSON.stringify(oldSelected) !== JSON.stringify(newSelected)) {
       onSelectProfile?.(newSelected);
       observerStore.currentProfile.forEach((cb) => {
         try {
