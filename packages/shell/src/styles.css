@@ -37,6 +37,13 @@ shell-loading {
 
 /* === Appbar Module === */
 .appbar {
+  --theme-fg: var(--dark-theme-fg);
+  --theme-fg-sub: var(--dark-theme-fg-sub);
+  --theme-bg: var(--dark-theme-bg);
+  --theme-bg-sub: var(--dark-theme-bg-sub);
+  --theme-primary: var(--dark-theme-primary);
+  --theme-primary-contrast: var(--dark-theme-primary-contrast);
+
   position: sticky;
   right: 0;
   bottom: 0;
