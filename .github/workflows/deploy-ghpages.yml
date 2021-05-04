@@ -44,6 +44,6 @@ jobs:
         # https://github.com/tschaub/gh-pages/pull/378
         run: |
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          yarn lerna run --concurrency 1 build --since ${{github.event.before}} --include-dependents -- -- -u "github-actions-bot <support+actions@github.com>"
+          npx lerna run --concurrency 1 deploy --since ${{github.event.before}} --include-dependents -- -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
