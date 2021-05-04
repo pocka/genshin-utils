@@ -28,7 +28,8 @@
   "scripts": {
     "dev": "webpack serve --mode=development --hot",
     "build": "webpack --mode=production",
-    "storybook": "start-storybook -p 9000"
+    "storybook": "start-storybook -p 9000",
+    "deploy": "touch dist/.nojekyll && gh-pages -d dist --dotfiles --remove '{*.*,.*}'"
   },
   "postcss": {
     "plugins": {
