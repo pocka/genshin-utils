@@ -47,6 +47,16 @@ const UndoIcon = styled(RiArrowGoBackFill)`
   vertical-align: middle;
 `;
 
+const Loading = styled(({ className, ...props }) => (
+  <shell-loading class={className} {...props} />
+))`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+`;
+
 export interface AppProps {
   state: CountState;
 
@@ -58,7 +68,7 @@ export const App = ({ state, onChangeRemains }: AppProps) => {
     case "failed":
       return <p>Failed</p>;
     case "loading":
-      return <p>Loading</p>;
+      return <Loading />;
     case "loaded":
       return (
         <AppWrapper>
