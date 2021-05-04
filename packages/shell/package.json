@@ -1,12 +1,12 @@
 {
   "name": "@genshin-utils/shell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Application shell/Container for apps",
   "license": "GPL-3.0-only",
   "homepage": "https://pocka.github.io/genshin-utils/",
   "devDependencies": {
-    "@genshin-utils/webpack": "^1.0.0",
+    "@genshin-utils/webpack": "^1.0.1",
     "@storybook/react": "6.2.8",
     "css-loader": "^5.2.0",
     "cssnano": "^4.1.11",
@@ -21,8 +21,8 @@
     "webfonts-loader": "^7.2.0"
   },
   "dependencies": {
-    "@genshin-utils/module-federation": "^1.0.0",
-    "@genshin-utils/styles": "^1.0.0",
+    "@genshin-utils/module-federation": "^1.0.1",
+    "@genshin-utils/styles": "^1.0.1",
     "remixicon": "^2.5.0"
   },
   "scripts": {

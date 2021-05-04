@@ -1,6 +1,6 @@
 {
   "name": "@genshin-utils/webpack",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Webpack config utilities",
   "private": true,
   "license": "Apache-2.0",
