@@ -17,6 +17,7 @@
   --color-alizarin: #e74c3c;
   --color-pomegranate: #c0392b;
   --color-clouds: #ecf0f1;
+  --color-clouds-dim: #e7e9ea;
   --color-silver: #bdc3c7;
   --color-concrete: #95a5a6;
   --color-asbestos: #7f8c8d;
@@ -24,7 +25,7 @@
   --light-theme-fg: var(--color-midnight-blue);
   --light-theme-fg-sub: var(--color-wet-asphalt);
   --light-theme-bg: var(--color-clouds);
-  --light-theme-bg-sub: var(--color-silver);
+  --light-theme-bg-sub: var(--color-clouds-dim);
   --light-theme-primary: var(--color-nephritis);
   --light-theme-primary-contrast: var(--color-clouds);
 
