@@ -14,10 +14,10 @@
   transition: transform 0.15s ease;
 
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
   &:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
   }
 `,c=i().div`
   width: 100%;
