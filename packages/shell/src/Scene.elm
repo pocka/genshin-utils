@@ -15,6 +15,7 @@ import Views
 type Scene
     = Profile
     | RandomEventCounter
+    | ResinMeter
     | NotFound -- Soft 404
 
 
@@ -27,6 +28,9 @@ requiredCustomElement scene =
         RandomEventCounter ->
             Just "app-random-event-counter"
 
+        ResinMeter ->
+            Just "app-resin-meter"
+
         NotFound ->
             Nothing
 
@@ -35,6 +39,7 @@ processors : List (Query.QueryProcessor Scene)
 processors =
     [ Query.has "profile" Profile
     , Query.has "randomevent" RandomEventCounter
+    , Query.has "resinmeter" ResinMeter
     ]
 
 
@@ -99,6 +104,9 @@ view scene profile =
                     [ property "profile" (Profile.encodeProfile profile)
                     ]
                     []
+
+            ResinMeter ->
+                node "app-resin-meter" [ property "profile" (Profile.encodeProfile profile) ] []
 
             NotFound ->
                 Views.error "Page Not Found"

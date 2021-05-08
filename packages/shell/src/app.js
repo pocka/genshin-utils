@@ -67,6 +67,14 @@ async function loadCustomElement(tagName) {
       customElements.define(tagName, AppRandomEventCounter);
       return;
     }
+    case "app-resin-meter": {
+      const container = await getRemoteContainer(Remotes.AppResinMeter);
+
+      const { AppResinMeter } = await container.getModule("app");
+
+      customElements.define(tagName, AppResinMeter);
+      return;
+    }
   }
 }
 

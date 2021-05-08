@@ -314,6 +314,14 @@ appbar model =
                 , title "Random Event Counter"
                 ]
                 []
+            , a
+                [ class "button button-circle shellicons shellicons-resin"
+                , classIf "button-fill" (model.scene == Scene.ResinMeter)
+                , dataDisabled (not navigatable)
+                , href "?resinmeter"
+                , title "Resin Meter"
+                ]
+                []
             , div
                 [ class "appbar-separator"
                 , attribute "aria-hidden" "true"

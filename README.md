@@ -10,10 +10,15 @@ Less likely to accept your feature request.
 ### As a Genshin player
 
 - [x] Help counting random events/quests award remains
-- [ ] Resin notification (with configurable threshold)
-- [ ] Parametric Transformer availability / notification
-- [ ] Tell me when materials spawned
-- And more?
+- [ ] Resin meter
+  - [x] Resin count tracking
+  - [ ] Notification option
+  - [ ] Notification threshold
+- [ ] Timers
+  - [ ] Counting time
+  - [ ] Timer name
+  - [ ] Presets (e.g. Parametric Transformer, local item spawns, ore spawns)
+  - [ ] Notification option
 
 ### As a developer
 
