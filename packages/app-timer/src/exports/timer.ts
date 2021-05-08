@@ -8,6 +8,7 @@ const timerWorker = new TimerWorker();
 
 export const schedule: TimerModule["schedule"] = (on, callback) => {
   const id = uuid();
+  let called = false;
 
   const messageListener = (ev: MessageEvent) => {
     if (
@@ -21,12 +22,36 @@ export const schedule: TimerModule["schedule"] = (on, callback) => {
       return;
     }
 
-    callback();
+    if (!called) {
+      callback();
+      called = true;
+    }
 
     timerWorker.removeEventListener("message", messageListener);
   };
 
   timerWorker.addEventListener("message", messageListener);
+
+  const onVisibilityChange = () => {
+    if (document.visibilityState === "hidden") {
+      return;
+    }
+
+    // If the scheduled date is not reached yet:
+    if (on.valueOf() > Date.now().valueOf()) {
+      return;
+    }
+
+    if (!called) {
+      callback();
+      called = true;
+      timerWorker.removeEventListener("message", messageListener);
+    }
+
+    document.removeEventListener("visibilitychange", onVisibilityChange);
+  };
+
+  document.addEventListener("visibilitychange", onVisibilityChange);
 
   timerWorker.postMessage({
     type: "set_schedule",
@@ -36,5 +61,6 @@ export const schedule: TimerModule["schedule"] = (on, callback) => {
 
   return () => {
     timerWorker.removeEventListener("message", messageListener);
+    document.removeEventListener("visibilitychange", onVisibilityChange);
   };
 };
