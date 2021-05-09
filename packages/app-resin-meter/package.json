@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "deploy": "gh-pages -d dist --dest resin-meter"
+    "deploy": "gh-pages-clean && gh-pages -d dist --dest resin-meter"
   },
   "postcss": {
     "plugins": {

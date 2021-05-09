@@ -31,6 +31,6 @@
     "build": "webpack --mode=production",
     "storybook": "start-storybook -p 9002",
     "test": "jest",
-    "deploy": "gh-pages -d dist --dest random-event-counter"
+    "deploy": "gh-pages-clean && gh-pages -d dist --dest random-event-counter"
   }
 }

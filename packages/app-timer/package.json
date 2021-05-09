@@ -18,6 +18,6 @@
   "scripts": {
     "dev": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "deploy": "gh-pages -d dist --dest timer"
+    "deploy": "gh-pages-clean && gh-pages -d dist --dest timer"
   }
 }
