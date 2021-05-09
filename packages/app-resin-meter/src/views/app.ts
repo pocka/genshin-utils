@@ -55,15 +55,11 @@ export const view = ({
     </p>`;
   }
 
+  const remains = estimateCurrentResin(lastSnapshot.value, currentTime);
+
   const add = (amount: number) => () => {
     onSave({
-      remains: Math.max(
-        0,
-        Math.min(
-          RESIN_HARD_MAX,
-          (lastSnapshot.value?.remains ?? RESIN_SOFT_MAX) + amount
-        )
-      ),
+      remains: Math.max(0, Math.min(RESIN_HARD_MAX, remains + amount)),
       savedAt: new Date(),
     });
   };
@@ -77,8 +73,6 @@ export const view = ({
       savedAt: new Date(),
     });
   };
-
-  const remains = estimateCurrentResin(lastSnapshot.value, currentTime);
 
   return layout.view(html`
     ${snapshotSaveError ? html` <p>${snapshotSaveError.message}</p> ` : null}
