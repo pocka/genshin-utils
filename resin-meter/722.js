@@ -21,14 +21,14 @@
     }
   `];var Ot;const Nt=({currentTime:t,lastSnapshot:e,snapshotSaveError:i,onSave:s})=>{if("loading"===e.type)return I`<shell-loading />`;if("failed"===e.type)return I`<p>
       Failed to load from store: ${e.reason.message}
-    </p>`;const n=t=>()=>{var i,n;s({remains:Math.max(0,Math.min(2e3,(null!=(n=null==(i=e.value)?void 0:i.remains)?n:ut)+t)),savedAt:new Date})},r=function(t,e){if(!t)return ut;if(!(t.remains<ut))return t.remains;const i=function(t,e){Et(2,arguments);var i=Mt(t,e)/1e3;return i>0?Math.floor(i):Math.ceil(i)}(e,t.savedAt);return Math.max(0,Math.min(ut,t.remains+Math.floor(i/480)))}(e.value,t);return o=I`
+    </p>`;const n=function(t,e){if(!t)return ut;if(!(t.remains<ut))return t.remains;const i=function(t,e){Et(2,arguments);var i=Mt(t,e)/1e3;return i>0?Math.floor(i):Math.ceil(i)}(e,t.savedAt);return Math.max(0,Math.min(ut,t.remains+Math.floor(i/480)))}(e.value,t),r=t=>()=>{s({remains:Math.max(0,Math.min(2e3,n+t)),savedAt:new Date})};return o=I`
     ${i?I` <p>${i.message}</p> `:null}
     <div class="app-head">
       <p class="app-head-info">
         <span>Current Resin</span>
-        <span class="app-current-resin">${r}</span>
+        <span class="app-current-resin">${n}</span>
       </p>
-      ${a=Math.min(100,r/ut*100),B`
+      ${a=Math.min(100,n/ut*100),B`
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 100 100"
@@ -74,22 +74,22 @@
   `}
     </div>
     <div class="app-buttons">
-      <button class="app-button app-button-circle" @click="${n(-10)}">
+      <button class="app-button app-button-circle" @click="${r(-10)}">
         <span>-10</span>
       </button>
-      <button class="app-button app-button-circle" @click="${n(-20)}">
+      <button class="app-button app-button-circle" @click="${r(-20)}">
         <span>-20</span>
       </button>
-      <button class="app-button app-button-circle" @click="${n(-30)}">
+      <button class="app-button app-button-circle" @click="${r(-30)}">
         <span>-30</span>
       </button>
-      <button class="app-button app-button-circle" @click="${n(-40)}">
+      <button class="app-button app-button-circle" @click="${r(-40)}">
         <span>-40</span>
       </button>
-      <button class="app-button app-button-circle" @click="${n(-60)}">
+      <button class="app-button app-button-circle" @click="${r(-60)}">
         <span>-60</span>
       </button>
-      <button class="app-button" @click="${n(60)}">
+      <button class="app-button" @click="${r(60)}">
         <span>+60</span>
       </button>
       <button class="app-button" @click="${()=>{var t,i;s({remains:Math.max(ut,null!=(i=null==(t=e.value)?void 0:t.remains)?i:ut),savedAt:new Date})}}">
