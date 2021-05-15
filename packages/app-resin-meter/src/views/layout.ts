@@ -14,6 +14,7 @@ export const styles = [
       justify-content: flex-start;
       align-items: center;
       flex-wrap: nowrap;
+      padding-bottom: 3.2rem;
     }
   `,
 ];

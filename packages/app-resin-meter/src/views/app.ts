@@ -74,6 +74,19 @@ export const view = ({
     });
   };
 
+  const onInputChange = (ev: Event) => {
+    const remains = parseInt((ev.currentTarget as HTMLInputElement).value, 10);
+
+    if (!isFinite(remains)) {
+      return;
+    }
+
+    onSave({
+      remains: Math.min(RESIN_HARD_MAX, Math.max(0, remains)),
+      savedAt: new Date(),
+    });
+  };
+
   return layout.view(html`
     ${snapshotSaveError ? html` <p>${snapshotSaveError.message}</p> ` : null}
     <div class="app-head">
@@ -105,6 +118,18 @@ export const view = ({
       <button class="app-button" @click="${addSoftMax}">
         <span>MAX</span>
       </button>
+    </div>
+    <div class="app-input-block">
+      <label class="app-input-label" for="resin_manual">Change manually</label>
+      <input
+        id="resin_manual"
+        class="app-input"
+        type="number"
+        min="0"
+        max=${RESIN_HARD_MAX}
+        value=${RESIN_SOFT_MAX}
+        @change=${onInputChange}
+      />
     </div>
   `);
 };
@@ -193,6 +218,34 @@ export const styles = [
 
     .app-button-circle {
       border-radius: 50%;
+    }
+
+    .app-input-block {
+      margin-block-start: 6.4rem;
+      padding: 1.6rem;
+      max-width: calc(100% - 1.6rem);
+
+      background-color: var(--theme-bg-sub);
+      border-radius: 0.4rem;
+    }
+
+    .app-input-label {
+      display: block;
+      font-size: 0.8em;
+
+      font-weight: bold;
+    }
+
+    .app-input {
+      display: block;
+      margin-block-start: 0.8rem;
+      font-size: 1.5em;
+      padding: 0.4rem;
+      border-bottom: 2px solid currentColor;
+      max-width: 100%;
+    }
+    .app-input:focus {
+      border-bottom-color: var(--theme-primary);
     }
   `,
 ];
