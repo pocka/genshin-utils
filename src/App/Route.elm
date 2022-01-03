@@ -37,4 +37,7 @@ parser =
 
 fromUrl : Url.Url -> Route
 fromUrl url =
-    Parser.parse parser url |> Maybe.withDefault NotFound
+    -- elm/url cannot skip path parsing while docs says it can
+    -- https://github.com/elm/url/issues/36
+    -- https://github.com/elm/url/issues/17
+    Parser.parse parser { url | path = "" } |> Maybe.withDefault NotFound
