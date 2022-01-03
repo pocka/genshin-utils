@@ -1,0 +1,73 @@
+.container {
+  width: 100%;
+  max-width: 120rem;
+  padding: 8px;
+  margin: 0 auto;
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-rows: max-content;
+  gap: 8px;
+}
+
+.link {
+  display: flex;
+  flex-direction: column;
+  padding: 0.8rem;
+  border: 1px solid
+    hsl(var(--turtle-ui--color--tone--mono), var(--turtle-ui--color--level--7));
+  font-size: 1.4rem;
+
+  border-radius: 8px;
+  color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--0)
+  );
+  text-decoration: none;
+  user-select: none;
+}
+.link:hover {
+  background-color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--9)
+  );
+}
+.link:active {
+  background-color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--8)
+  );
+}
+.link:focus {
+  border-color: hsl(
+    var(--turtle-ui--color--tone--primary),
+    var(--turtle-ui--color--level--4)
+  );
+}
+
+.link-title {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.link-description {
+  margin-top: 0.8rem;
+  font-size: 1.2rem;
+
+  color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--3)
+  );
+}
+
+.link-icon {
+  transition: transform 0.2s ease-out;
+}
+.link:hover .link-icon {
+  transform: translateX(10%) scale(1.05);
+}

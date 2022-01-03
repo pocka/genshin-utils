@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Genshin Utils</title>
+    <meta name="theme-color" content="var(--theme-bg)" />
+    <script type="module" src="./src/turtle-ui.ts" async></script>
+    <script type="module" src="./src/main.ts"></script>
+    <style>
+      :root {
+        font-size: 62.5%;
+        height: stretch;
+        height: -webkit-fill-available;
+      }
+
+      *,
+      *::after,
+      *::before {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Ubuntu", sans-serif;
+        font-size: 1.6rem;
+        margin: 0;
+        min-height: 100vh;
+        min-height: stretch;
+        min-height: -webkit-fill-available;
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
+
+        overflow-y: auto;
+      }
+
+      turtle-design-system {
+        --turtle-ui--unit: 1rem;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body></body>
+</html>

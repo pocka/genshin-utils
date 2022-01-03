@@ -1,0 +1,20 @@
+[
+  {
+    "id": "asia",
+    "name": "Asia",
+    "tzOffset": 8,
+    "shortName": "AS"
+  },
+  {
+    "id": "us",
+    "name": "America",
+    "tzOffset": -5,
+    "shortName": "US"
+  },
+  {
+    "id": "eu",
+    "name": "Europe",
+    "tzOffset": 1,
+    "shortName": "EU"
+  }
+]

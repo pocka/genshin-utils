@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
     "strict": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -10,6 +11,12 @@
     "forceConsistentCasingInFileNames": false,
     "target": "ES2018",
     "module": "ESNext",
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "./src/**/*.ts",
+    "./vite.config.ts"
+  ]
 }

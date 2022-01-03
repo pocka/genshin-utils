@@ -1,4 +1,4 @@
-# Deploy apps to GitHub Pages
+# Deploy app to GitHub Pages
 name: Deploy to GHPages
 
 on:
@@ -13,37 +13,26 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # Checkout previous commit in order to detect what was changed since
-      - name: Checkout previous commit
-        uses: actions/checkout@v2
-        with:
-          ref: "${{github.event.before}}"
       - name: Checkout
         uses: actions/checkout@v2
       - name: Read .nvmrc
         run: echo "##[set-output name=NVMRC;]$(cat .nvmrc)"
         id: nvm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: "6.24.4"
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v2
         with:
+          cache: pnpm
           node-version: "${{ steps.nvm.outputs.NVMRC }}"
-      - name: Cache dependencies
-        uses: actions/cache@v2
-        env:
-          cache-name: node_modules
-        with:
-          path: "./**/node_modules"
-          key: ${{env.cache-name}}-${{hashFiles('./yarn.lock')}}
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Bootstrap packages
-        run: yarn bootstrap --since ${{github.event.before}} --include-dependencies --include-dependents
-      - name: Build packages
-        run: yarn lerna run --stream build --since ${{github.event.before}} --include-dependents
+        run: pnpm i --frozen-lockfile
+      - name: Build application
+        run: pnpm build -- --base $BASE_URL
       - name: Deploy
-        # https://github.com/tschaub/gh-pages/pull/378
-        run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npx lerna run --concurrency 1 deploy --since ${{github.event.before}} --include-dependents -- -u "github-actions-bot <support+actions@github.com>"
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          publish_dir: ./dist

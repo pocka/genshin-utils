@@ -1,0 +1,65 @@
+.globalActions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 4px;
+}
+
+.counter {
+  --size: min(50vh, 75vw);
+  --tone: var(--turtle-ui--color--tone--primary);
+
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: max(32px, calc(var(--size) / 5));
+  width: var(--size);
+  height: var(--size);
+  border: calc(var(--size) / 25) solid
+    hsl(var(--tone), var(--turtle-ui--color--level--4));
+  font: inherit;
+  font-size: 1.8rem;
+
+  background-color: hsl(var(--tone), var(--turtle-ui--color--level--9));
+  border-radius: 50%;
+  color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--1)
+  );
+  cursor: pointer;
+
+  transition: transform 0.1s ease-out;
+}
+.counter:not(:disabled):hover {
+  transform: scale(1.02);
+}
+.counter:not(:disabled):active {
+  transform: scale(0.995);
+}
+.counter:disabled {
+  --tone: var(--turtle-ui--color--tone--mono);
+
+  cursor: not-allowed;
+}
+
+.counter--count {
+  font-size: calc(var(--size) / 8);
+  font-weight: bold;
+}
+
+.counter--description {
+  font-size: 1.4rem;
+}
+
+.tapOrClick::before {
+  content: "Tap";
+}
+
+@media (any-hover: hover) {
+  .tapOrClick::before {
+    content: "Click";
+  }
+}

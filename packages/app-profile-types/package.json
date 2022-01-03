@@ -1,7 +1,0 @@
-{
-  "name": "@genshin-utils/app-profile-types",
-  "private": true,
-  "license": "UNLICENSED",
-  "version": "1.0.1",
-  "module": "./index.js"
-}
