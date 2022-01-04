@@ -1,4 +1,4 @@
-module App.RandomEventReward exposing (RandomEventReward, decoder, encode, max, refresh)
+module App.RandomEventReward exposing (RandomEventReward, decoder, encode, max, nextResetAt, refresh)
 
 import App.ReferenceServer exposing (ReferenceServer, TzOffset(..))
 import Json.Decode as Decode
@@ -38,7 +38,7 @@ nextResetAt date server =
         resetHour =
             case server.tzOffset of
                 TzOffset offset ->
-                    modBy 24 (4 + offset)
+                    modBy 24 (4 - offset)
 
         dayOffset =
             if Time.toHour Time.utc date >= resetHour then
