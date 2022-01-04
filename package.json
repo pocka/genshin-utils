@@ -26,6 +26,7 @@
     "cssnano": "^5.0.14",
     "elm": "^0.19.1-5",
     "elm-format": "^0.8.5",
+    "elm-test": "^0.19.1-revision7",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
     "postcss-preset-env": "^7.1.0",
@@ -50,6 +51,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "test": "elm-test"
   }
 }
