@@ -16,7 +16,7 @@
   "dependencies": {
     "@fontsource/ubuntu": "^4.5.0",
     "@fontsource/ubuntu-mono": "^4.5.0",
-    "@turtleui/webcomponents": "^0.1.6",
+    "@turtleui/webcomponents": "^0.1.7",
     "localforage": "^1.10.0",
     "minireset.css": "^0.0.7",
     "sanitize.css": "^13.0.0"
@@ -29,12 +29,12 @@
     "elm-test": "^0.19.1-revision7",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
-    "postcss-preset-env": "^7.1.0",
+    "postcss-preset-env": "^7.2.0",
     "prettier": "^2.5.1",
     "rollup": "^2.62.0",
     "rollup-plugin-license": "^2.6.1",
     "typescript": "^4.5.4",
-    "vite": "^2.7.9",
+    "vite": "^2.7.10",
     "vite-plugin-elm": "^2.5.1"
   },
   "browserslist": [
