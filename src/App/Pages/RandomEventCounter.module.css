@@ -2,6 +2,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  gap: 8px;
   padding: 4px;
 }
 
@@ -15,7 +16,7 @@
   justify-content: center;
   align-items: center;
   margin: 0 auto;
-  margin-top: max(32px, calc(var(--size) / 5));
+  margin-top: max(16px, calc(var(--size) / 8));
   width: var(--size);
   height: var(--size);
   border: calc(var(--size) / 25) solid

@@ -38,6 +38,7 @@ type Msg
     | Decrement Time.Posix
     | ManualReset Time.Posix
     | PersistProfile
+    | Increment Time.Posix
 
 
 decrementRemains : Time.Posix -> Profile.Profile -> Profile.Profile
@@ -58,6 +59,24 @@ decrementRemains now profile =
             { profile | randomEvent = Just { remains = RandomEventReward.max - 1, loggedAt = now } }
 
 
+incrementRemains : Time.Posix -> Profile.Profile -> Profile.Profile
+incrementRemains now profile =
+    case profile.randomEvent of
+        Just randomEvent ->
+            let
+                latest =
+                    RandomEventReward.refresh profile.server now randomEvent
+            in
+            if latest.remains == RandomEventReward.max then
+                profile
+
+            else
+                { profile | randomEvent = Just { remains = latest.remains + 1, loggedAt = now } }
+
+        Nothing ->
+            profile
+
+
 resetRemains : Time.Posix -> Profile.Profile -> Profile.Profile
 resetRemains now profile =
     { profile | randomEvent = Just { remains = RandomEventReward.max, loggedAt = now } }
@@ -71,6 +90,10 @@ update msg model =
 
         Decrement now ->
             { model | session = Session.mapProfile (decrementRemains now) model.session }
+                |> update PersistProfile
+
+        Increment now ->
+            { model | session = Session.mapProfile (incrementRemains now) model.session }
                 |> update PersistProfile
 
         ManualReset now ->
@@ -104,13 +127,15 @@ view model =
         [ pageHeader model.session { title = "Random event counter" } []
         , div []
             [ div [ class "globalActions" ]
-                [ node "turtle-button"
-                    [ attribute "variant" "danger"
-                    , disabled (remains == RandomEventReward.max)
-                    , onClick (UpdateWithTimestamp ManualReset)
+                [ node "turtle-pill"
+                    [ attribute "pressable" "", onClick (UpdateWithTimestamp Increment) ]
+                    [ text "ADD 1"
+                    , node "turtle-circle-plus-icon" [ slot "action-icon" ] []
                     ]
-                    [ node "turtle-reload-icon" [ slot "icon" ] []
-                    , text "Reset"
+                , node "turtle-pill"
+                    [ attribute "pressable" "", onClick (UpdateWithTimestamp ManualReset) ]
+                    [ text "RESET"
+                    , node "turtle-reload-icon" [ slot "action-icon" ] []
                     ]
                 ]
             , button
