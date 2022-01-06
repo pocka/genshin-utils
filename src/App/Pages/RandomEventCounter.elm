@@ -1,9 +1,11 @@
 module App.Pages.RandomEventCounter exposing (Model, Msg, init, subscriptions, update, view)
 
+import App.Preference as Preference
 import App.Profile as Profile
 import App.RandomEventReward as RandomEventReward
 import App.Session as Session
 import App.UI.Common exposing (pageHeader)
+import App.Vibrations exposing (quickKnock)
 import Browser
 import CssModules
 import Html exposing (..)
@@ -13,6 +15,7 @@ import Html5 exposing (..)
 import String
 import Task
 import Time
+import Vibration
 
 
 
@@ -39,6 +42,7 @@ type Msg
     | ManualReset Time.Posix
     | PersistProfile
     | Increment Time.Posix
+    | Vibrate
 
 
 decrementRemains : Time.Posix -> Profile.Profile -> Profile.Profile
@@ -82,6 +86,12 @@ resetRemains now profile =
     { profile | randomEvent = Just { remains = RandomEventReward.max, loggedAt = now } }
 
 
+mapUpdate : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
+mapUpdate msg ( model, a ) =
+    update msg model
+        |> Tuple.mapSecond (\b -> Cmd.batch [ a, b ])
+
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -91,6 +101,7 @@ update msg model =
         Decrement now ->
             { model | session = Session.mapProfile (decrementRemains now) model.session }
                 |> update PersistProfile
+                |> mapUpdate Vibrate
 
         Increment now ->
             { model | session = Session.mapProfile (incrementRemains now) model.session }
@@ -102,6 +113,14 @@ update msg model =
 
         PersistProfile ->
             ( model, Profile.persist model.session.profile )
+
+        Vibrate ->
+            case model.session.profile.preference.feedbackVibration of
+                Preference.Enabled ->
+                    ( model, Vibration.vibrate quickKnock )
+
+                Preference.Disabled ->
+                    ( model, Cmd.none )
 
 
 

@@ -1,10 +1,12 @@
 module App.Pages.Config exposing (..)
 
+import App.Preference as Preference
 import App.Profile as Profile
 import App.ReferenceServer as ReferenceServer
 import App.Session as Session
 import App.UI.Common exposing (pageHeader)
 import App.UiTheme as UiTheme
+import App.Vibrations
 import App.WakeLock as WakeLock
 import Browser
 import CssModules
@@ -12,6 +14,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html5 exposing (..)
+import Vibration
 
 
 
@@ -41,6 +44,12 @@ type Msg
     = TrySelectServer String
     | ChangeTheme UiTheme.UiTheme
     | WakeLockMsg WakeLock.Msg
+    | ChangeFeedbackVibration Bool
+
+
+mapPreference : (Preference.Preference -> Preference.Preference) -> Session.Session -> Session.Session
+mapPreference f =
+    mapProfile (\profile -> { profile | preference = f profile.preference })
 
 
 mapProfile : (Profile.Profile -> Profile.Profile) -> Session.Session -> Session.Session
@@ -74,6 +83,22 @@ update msg model =
             WakeLock.update subMsg model.wakeLock
                 |> Tuple.mapFirst (Model model.session)
                 |> Tuple.mapSecond (Cmd.map WakeLockMsg)
+
+        ChangeFeedbackVibration enabled ->
+            let
+                session =
+                    mapPreference (\p -> { p | feedbackVibration = Preference.boolToOnOff enabled }) model.session
+            in
+            ( { model | session = session }
+            , Cmd.batch
+                [ Profile.persist session.profile
+                , if enabled then
+                    Vibration.vibrate App.Vibrations.quickKnock
+
+                  else
+                    Cmd.none
+                ]
+            )
 
 
 
@@ -148,6 +173,7 @@ wakeLockField model =
             []
             [ input
                 [ type_ "checkbox"
+                , id "config_wakelock"
                 , if isChecked then
                     attribute "checked" ""
 
@@ -174,6 +200,64 @@ wakeLockField model =
         ]
 
 
+vibrationField : Model -> Html Msg
+vibrationField { session } =
+    let
+        { profile, platformCapability } =
+            session
+
+        { vibrationApi } =
+            platformCapability
+
+        isDisabled =
+            vibrationApi == Session.NotSupported
+
+        isChecked =
+            case ( vibrationApi, profile.preference.feedbackVibration ) of
+                ( Session.NotSupported, _ ) ->
+                    False
+
+                ( _, Preference.Disabled ) ->
+                    False
+
+                ( _, Preference.Enabled ) ->
+                    True
+
+        description =
+            case vibrationApi of
+                Session.NotSupported ->
+                    "Your browser does not support Vibration API."
+
+                Session.Supported ->
+                    "When turned on, the device perform short feedback vibration for primary actions. On devices without vibration mechanism, this setting has no effect."
+    in
+    node "turtle-form-field"
+        []
+        [ label [ slot "label", for "config_feedback_vibration" ] [ text "Feedback Vibration" ]
+        , node "turtle-toggle-switch"
+            []
+            [ input
+                [ type_ "checkbox"
+                , id "config_feedback_vibration"
+                , if isChecked then
+                    attribute "checked" ""
+
+                  else
+                    class ""
+
+                -- NOTE: This is required due to browser have no way to detect the change of DOM properties so
+                -- <turtle-toggle-switch> can't decide when to toggle style.
+                , checked isChecked
+                , disabled isDisabled
+                , aria "describedby" "config_feedback_vibration_description"
+                , onCheck ChangeFeedbackVibration
+                ]
+                []
+            ]
+        , span [ slot "description", id "config_feedback_vibration_description" ] [ text description ]
+        ]
+
+
 view : Model -> Browser.Document Msg
 view model =
     let
@@ -188,7 +272,8 @@ view model =
         [ pageHeader model.session { title = "Config" } []
         , div [ class "container" ]
             [ div [ class "fields" ]
-                [ node "turtle-form-field"
+                [ h2 [ class "heading" ] [ text "General" ]
+                , node "turtle-form-field"
                     []
                     [ label [ slot "label", for "config_server" ] [ text "Reference Server" ]
                     , node "turtle-selectbox"
@@ -202,6 +287,7 @@ view model =
                         ]
                     , span [ slot "description", id "config_server_description" ] [ text "Select Genshin Game Server used for timer resets." ]
                     ]
+                , h2 [ class "heading" ] [ text "User Interface" ]
                 , node "turtle-form-field"
                     []
                     [ label [ slot "label", for "config_theme" ] [ text "UI Theme" ]
@@ -220,6 +306,7 @@ view model =
                     , span [ slot "description", id "config_theme_description" ] [ text "Select your preferred application theme." ]
                     ]
                 , wakeLockField model.wakeLock
+                , vibrationField model
                 ]
             ]
         ]

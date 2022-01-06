@@ -12,3 +12,13 @@
   align-items: stretch;
   gap: 24px;
 }
+
+.heading {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.5;
+}
+
+.heading:not(:first-child) {
+  margin-top: 2.4rem;
+}

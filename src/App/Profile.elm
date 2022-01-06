@@ -1,5 +1,6 @@
 port module App.Profile exposing (Profile, decoder, persist)
 
+import App.Preference as Preference exposing (Preference)
 import App.RandomEventReward as RandomEventReward exposing (RandomEventReward)
 import App.ReferenceServer as ReferenceServer
 import App.UiTheme as UiTheme
@@ -46,6 +47,7 @@ type alias Profile =
     { server : ReferenceServer.ReferenceServer
     , theme : UiTheme.UiTheme
     , randomEvent : Maybe RandomEventReward
+    , preference : Preference
     }
 
 
@@ -65,13 +67,15 @@ encodeProfile profile =
         [ ( "server", ReferenceServer.encode profile.server )
         , ( "theme", UiTheme.encode profile.theme )
         , ( "randomEvent", encodeMaybe RandomEventReward.encode profile.randomEvent )
+        , ( "preference", Preference.encode profile.preference )
         ]
 
 
 decoder : Decode.Decoder Profile
 decoder =
-    Decode.map3
+    Decode.map4
         Profile
         (Decode.field "server" ReferenceServer.decoder)
         (Decode.field "theme" UiTheme.decoder)
         (Decode.field "randomEvent" (Decode.maybe RandomEventReward.decoder))
+        (Decode.field "preference" (Decode.oneOf [ Preference.decoder, Decode.succeed Preference.default ]))

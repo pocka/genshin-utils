@@ -5,6 +5,7 @@ import { Elm } from "./App/App.elm";
 import type { GameServer } from "./App/Profile";
 import * as Profile from "./App/Profile";
 import * as WakeLock from "./App/WakeLock";
+import * as Vibration from "./Vibration";
 import servers from "./servers.json";
 
 import configPageCss from "./App/Pages/Config.module.css";
@@ -31,6 +32,7 @@ async function main(): Promise<void> {
     packageInfo: unknown;
     mode: string;
     profile: Profile.Profile | null;
+    vibrationApi: boolean;
   }>({
     flags: {
       cssModules: {
@@ -45,11 +47,13 @@ async function main(): Promise<void> {
       packageInfo: import.meta.env.PACKAGE_INFO,
       mode: import.meta.env.MODE,
       profile: await Profile.load(),
+      vibrationApi: "vibrate" in navigator,
     },
   });
 
   Profile.setup(app.ports);
   WakeLock.setup(app.ports);
+  Vibration.setup(app.ports);
 }
 
 main();

@@ -6,6 +6,7 @@ import App.Pages.Config as ConfigPage
 import App.Pages.Dashboard as DashboardPage
 import App.Pages.NotFound as NotFoundPage
 import App.Pages.RandomEventCounter as RandomEventCounterPage
+import App.Preference as Preference
 import App.Profile as Profile
 import App.RandomEventReward as RandomEventReward
 import App.ReferenceServer as ReferenceServer
@@ -70,6 +71,7 @@ type alias FlagDecodeResult =
     , packageInfo : Result Decode.Error PackageInfo.PackageJson
     , profile : Result Decode.Error (Maybe Profile.Profile)
     , mode : LaunchMode
+    , vibrationApi : Session.Capability
     }
 
 
@@ -80,6 +82,7 @@ decodeFlags v =
     , packageInfo = Decode.decodeValue (Decode.field "packageInfo" PackageInfo.packageJsonDecoder) v
     , profile = Decode.decodeValue (Decode.field "profile" (Decode.nullable Profile.decoder)) v
     , mode = Decode.decodeValue (Decode.field "mode" launchModeDecoder) v |> Result.withDefault Production
+    , vibrationApi = Decode.decodeValue (Decode.field "vibrationApi" Session.capabilityDecoder) v |> Result.withDefault Session.NotSupported
     }
 
 
@@ -177,12 +180,15 @@ init rawFlags url navKey =
                                         profile
 
                                     _ ->
-                                        { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing }
+                                        { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing, preference = Preference.default }
                             , servers = servers
                             , packageInfo = packageInfo
                             , cssModules = cssModules
                             , navKey = navKey
                             , url = url
+                            , platformCapability =
+                                { vibrationApi = flags.vibrationApi
+                                }
                             , warnings =
                                 case flags.profile of
                                     Ok _ ->
