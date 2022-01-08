@@ -31,8 +31,9 @@
     var(--turtle-ui--color--level--1)
   );
   cursor: pointer;
+  user-select: none;
 
-  transition: transform 0.1s ease-out;
+  transition: transform 0.05s ease-out;
 }
 .counter:not(:disabled):hover {
   transform: scale(1.02);

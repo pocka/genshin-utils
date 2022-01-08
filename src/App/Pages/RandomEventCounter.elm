@@ -12,6 +12,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html5 exposing (..)
+import Json.Decode as Decode
+import Process
 import String
 import Task
 import Time
@@ -42,7 +44,9 @@ type Msg
     | ManualReset Time.Posix
     | PersistProfile
     | Increment Time.Posix
+    | WaitAndUpdate Msg Float
     | Vibrate
+    | Noop
 
 
 decrementRemains : Time.Posix -> Profile.Profile -> Profile.Profile
@@ -86,12 +90,6 @@ resetRemains now profile =
     { profile | randomEvent = Just { remains = RandomEventReward.max, loggedAt = now } }
 
 
-mapUpdate : Msg -> ( Model, Cmd Msg ) -> ( Model, Cmd Msg )
-mapUpdate msg ( model, a ) =
-    update msg model
-        |> Tuple.mapSecond (\b -> Cmd.batch [ a, b ])
-
-
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -101,7 +99,6 @@ update msg model =
         Decrement now ->
             { model | session = Session.mapProfile (decrementRemains now) model.session }
                 |> update PersistProfile
-                |> mapUpdate Vibrate
 
         Increment now ->
             { model | session = Session.mapProfile (incrementRemains now) model.session }
@@ -114,6 +111,9 @@ update msg model =
         PersistProfile ->
             ( model, Profile.persist model.session.profile )
 
+        WaitAndUpdate nextMsg ms ->
+            ( model, Task.perform (\_ -> nextMsg) (Process.sleep ms) )
+
         Vibrate ->
             case model.session.profile.preference.feedbackVibration of
                 Preference.Enabled ->
@@ -121,6 +121,9 @@ update msg model =
 
                 Preference.Disabled ->
                     ( model, Cmd.none )
+
+        Noop ->
+            ( model, Cmd.none )
 
 
 
@@ -162,6 +165,15 @@ view model =
                 , disabled (remains == 0)
                 , aria "label" ("You have " ++ String.fromInt remains ++ " rewards left today. Click this button to consume one.")
                 , onClick (UpdateWithTimestamp Decrement)
+                , on "touchstart"
+                    (Decode.succeed
+                        (if remains > 0 then
+                            WaitAndUpdate Vibrate 30
+
+                         else
+                            Noop
+                        )
+                    )
                 ]
                 [ span [ class "counter--count" ] [ text (String.fromInt remains) ]
                 , span [ class "counter--description" ]
