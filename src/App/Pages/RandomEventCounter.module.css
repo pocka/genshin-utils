@@ -56,12 +56,19 @@
   font-size: 1.4rem;
 }
 
-.tapOrClick::before {
-  content: "Tap";
+.tap {
+  display: inline;
+}
+.click {
+  display: none;
 }
 
-@media (any-hover: hover) {
-  .tapOrClick::before {
-    content: "Click";
+@media (hover: hover) and (pointer: fine) {
+  .tap {
+    display: none;
+  }
+
+  .click {
+    display: inline;
   }
 }

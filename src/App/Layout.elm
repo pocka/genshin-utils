@@ -5,6 +5,7 @@ import App.UiTheme as UiTheme
 import CssModules exposing (CssModules)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Translation exposing (fmt)
 import Url
 
 
@@ -14,21 +15,24 @@ scopedClass =
 
 
 footer : Session.Session -> List (Attribute msg) -> Html msg
-footer { cssModules, packageInfo } attrs =
+footer { cssModules, packageInfo, translation } attrs =
     let
         class =
             scopedClass cssModules
 
         authors =
             packageInfo.author :: packageInfo.contributors
+
+        t key =
+            fmt [] (key translation.shell)
     in
     Html.footer (class "footer" :: attrs)
-        [ p [ class "footer-line" ] [ text "This application is not affiliated with miHoYo Limited." ]
+        [ p [ class "footer-line" ] [ text (t .disclaimer) ]
         , div [ class "footer-line" ]
             [ span [ class "footer-copyright" ] [ text ("© 2021 " ++ String.join ", " (List.map .name authors) ++ " / " ++ packageInfo.license) ]
             , ul [ class "footer-links" ]
-                [ footerLinkItem cssModules "Third party notice" "ThirdPartyNotice.txt"
-                , footerLinkItem cssModules "Source code" (Url.toString packageInfo.repository)
+                [ footerLinkItem cssModules (t .thirdPartyNotice) "ThirdPartyNotice.txt"
+                , footerLinkItem cssModules (t .sourceCode) (Url.toString packageInfo.repository)
                 ]
             ]
         ]

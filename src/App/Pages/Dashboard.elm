@@ -6,6 +6,7 @@ import CssModules
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html5 exposing (..)
+import Translation
 
 
 
@@ -55,19 +56,25 @@ view { session } =
     let
         class =
             CssModules.class "App.Pages.Dashboard" session.cssModules
+
+        { translation } =
+            session
+
+        t =
+            Translation.fmt []
     in
     { title = "Dashboard"
     , body =
         [ div [ class "container" ]
             [ div [ class "links" ]
                 [ link class
-                    { title = "Random Event Counter"
-                    , description = "Log and Manage how many times left you can get a reward by completing a random event/quest."
+                    { title = t translation.randomEventCounterPage.title
+                    , description = t translation.randomEventCounterPage.description
                     , href = "#randoms"
                     }
                 , link class
-                    { title = "Config"
-                    , description = "Configure this application."
+                    { title = t translation.configPage.title
+                    , description = t translation.configPage.description
                     , href = "#config"
                     }
                 ]

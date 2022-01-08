@@ -17,6 +17,7 @@ import Process
 import String
 import Task
 import Time
+import Translation exposing (fmt)
 import Vibration
 
 
@@ -143,27 +144,29 @@ view model =
 
         class =
             CssModules.class "App.Pages.RandomEventCounter" model.session.cssModules
+
+        t key =
+            fmt [] (key model.session.translation.randomEventCounterPage)
     in
-    { title = "Random event counter"
+    { title = t .title
     , body =
-        [ pageHeader model.session { title = "Random event counter" } []
+        [ pageHeader model.session { title = t .title } []
         , div []
             [ div [ class "globalActions" ]
                 [ node "turtle-pill"
                     [ attribute "pressable" "", onClick (UpdateWithTimestamp Increment) ]
-                    [ text "ADD 1"
+                    [ text (t (\d -> d.actions.undo))
                     , node "turtle-circle-plus-icon" [ slot "action-icon" ] []
                     ]
                 , node "turtle-pill"
                     [ attribute "pressable" "", onClick (UpdateWithTimestamp ManualReset) ]
-                    [ text "RESET"
+                    [ text (t (\d -> d.actions.reset))
                     , node "turtle-reload-icon" [ slot "action-icon" ] []
                     ]
                 ]
             , button
                 [ class "counter"
                 , disabled (remains == 0)
-                , aria "label" ("You have " ++ String.fromInt remains ++ " rewards left today. Click this button to consume one.")
                 , onClick (UpdateWithTimestamp Decrement)
                 , on "touchstart"
                     (Decode.succeed
@@ -179,12 +182,12 @@ view model =
                 , span [ class "counter--description" ]
                     [ if remains > 0 then
                         span []
-                            [ span [ class "tapOrClick" ] []
-                            , text " to consume one"
+                            [ span [ class "tap" ] [ text (fmt [ t (\d -> d.actions.tap) ] model.session.translation.randomEventCounterPage.buttonDescription) ]
+                            , span [ class "click" ] [ text (fmt [ t (\d -> d.actions.click) ] model.session.translation.randomEventCounterPage.buttonDescription) ]
                             ]
 
                       else
-                        text "You claimed all rewards you have today"
+                        text (t .noMoreLeft)
                     ]
                 ]
             ]

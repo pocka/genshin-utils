@@ -3,6 +3,7 @@ module App.Session exposing (Capability(..), Session, capabilityDecoder, mapProf
 import App.PackageInfo as PackageInfo
 import App.Profile as Profile
 import App.ReferenceServer as ReferenceServer
+import App.Translation
 import Browser.Navigation
 import CssModules
 import Json.Decode as Decode
@@ -41,6 +42,7 @@ type alias Session =
     , url : Url.Url
     , warnings : List String
     , platformCapability : PlatformCapability
+    , translation : App.Translation.Translation
     }
 
 

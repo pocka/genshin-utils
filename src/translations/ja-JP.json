@@ -1,0 +1,55 @@
+{
+  "shell": {
+    "disclaimer": "このアプリケーションは非公式のものであり、 miHoYo Limited とは関係がありません。",
+    "thirdPartyNotice": "ライブラリライセンス",
+    "sourceCode": "ソースコード"
+  },
+  "configPage": {
+    "title": "設定",
+    "description": "アプリケーションの設定が行えます。",
+    "general": {
+      "title": "一般",
+      "referenceServer": {
+        "label": "時間参考サーバ",
+        "description": "リセット時間の参考にするサーバです。"
+      }
+    },
+    "ui": {
+      "title": "ユーザインタフェース",
+      "language": {
+        "label": "表示言語",
+        "description": "アプリケーションで表示する言語です。翻訳されていない部分は英語で表示されます。"
+      },
+      "theme": {
+        "label": "UIテーマ",
+        "description": "UIの色テーマを選べます。"
+      },
+      "systemDefaultTheme": "システム設定",
+      "light": "ライト",
+      "dark": "ダーク",
+      "wakeLock": {
+        "label": "画面ロック",
+        "description": "このページを開いている間、デバイスの画面が暗転したりロックするのを防ぐことができます。タブを閉じる、バックグラウンドに行く等すると解除されます。",
+        "checking": "WakeLock APIが利用できるか確認中です...",
+        "notSupported": "このブラウザでは WakeLock API が利用できないため、画面ロック機能は使えません。"
+      },
+      "feedbackVibration": {
+        "label": "操作時の振動フィードバック",
+        "description": "主要なアクションや、画面が大きく変わらない操作時に短いバイブレーションを鳴らして操作のフィードバックを返します。バイブレーション機能がないデバイスでは何もおこりません。",
+        "notSupported": "このブラウザでは Vibration API が利用できないため、操作時の振動フィードバックは使えません。"
+      }
+    }
+  },
+  "randomEventCounterPage": {
+    "title": "ランダムイベントカウンタ",
+    "description": "ランダムイベントの残り報酬受取可能回数を記録・カウントできます。",
+    "actions": {
+      "reset": "リセット",
+      "undo": "1つ戻す",
+      "click": "クリック",
+      "tap": "タップ"
+    },
+    "buttonDescription": "ここを%sして1つ消費",
+    "noMoreLeft": "本日の報酬はすべて受取済みです"
+  }
+}

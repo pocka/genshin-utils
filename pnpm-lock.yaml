@@ -4,12 +4,14 @@ specifiers:
   '@fontsource/ubuntu': ^4.5.0
   '@fontsource/ubuntu-mono': ^4.5.0
   '@turtleui/webcomponents': ^0.1.9
+  '@types/lodash.merge': ^4.6.6
   browserslist: ^4.19.1
   cssnano: ^5.0.14
   elm: ^0.19.1-5
   elm-format: ^0.8.5
   elm-test: ^0.19.1-revision7
   localforage: ^1.10.0
+  lodash.merge: ^4.6.2
   minireset.css: ^0.0.7
   postcss: ^8.4.5
   postcss-import: ^14.0.2
@@ -27,10 +29,12 @@ dependencies:
   '@fontsource/ubuntu-mono': 4.5.0
   '@turtleui/webcomponents': 0.1.9
   localforage: 1.10.0
+  lodash.merge: 4.6.2
   minireset.css: 0.0.7
   sanitize.css: 13.0.0
 
 devDependencies:
+  '@types/lodash.merge': 4.6.6
   browserslist: 4.19.1
   cssnano: 5.0.14_postcss@8.4.5
   elm: 0.19.1-5
@@ -70,6 +74,16 @@ packages:
     dependencies:
       lit: 2.0.2
     dev: false
+
+  /@types/lodash.merge/4.6.6:
+    resolution: {integrity: sha512-IB90krzMf7YpfgP3u/EvZEdXVvm4e3gJbUvh5ieuI+o+XqiNEt6fCzqNRaiLlPVScLI59RxIGZMQ3+Ko/DJ8vQ==}
+    dependencies:
+      '@types/lodash': 4.14.178
+    dev: true
+
+  /@types/lodash/4.14.178:
+    resolution: {integrity: sha512-0d5Wd09ItQWH1qFbEyQ7oTQ3GZrMfth5JkbN3EvTKLXcHLRDSXeLnlvlOn0wvxVIwK5o2M8JzP/OWz7T3NRsbw==}
+    dev: true
 
   /@types/trusted-types/2.0.2:
     resolution: {integrity: sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==}
@@ -995,6 +1009,10 @@ packages:
   /lodash.memoize/4.1.2:
     resolution: {integrity: sha1-vMbEmkKihA7Zl/Mj6tpezRguC/4=}
     dev: true
+
+  /lodash.merge/4.6.2:
+    resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+    dev: false
 
   /lodash.uniq/4.5.0:
     resolution: {integrity: sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=}

@@ -14,6 +14,12 @@ export interface GameServer {
 export interface Profile {
   server: GameServer;
   theme: string;
+  preference:
+    | { version: "1" }
+    | {
+        version: "2";
+        language: string;
+      };
 }
 
 interface IncomingEvent {

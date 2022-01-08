@@ -12,6 +12,7 @@ import App.RandomEventReward as RandomEventReward
 import App.ReferenceServer as ReferenceServer
 import App.Route as Route
 import App.Session as Session
+import App.Translation
 import App.UiTheme
 import Browser
 import Browser.Navigation
@@ -72,6 +73,7 @@ type alias FlagDecodeResult =
     , profile : Result Decode.Error (Maybe Profile.Profile)
     , mode : LaunchMode
     , vibrationApi : Session.Capability
+    , translation : Result Decode.Error App.Translation.Translation
     }
 
 
@@ -83,6 +85,7 @@ decodeFlags v =
     , profile = Decode.decodeValue (Decode.field "profile" (Decode.nullable Profile.decoder)) v
     , mode = Decode.decodeValue (Decode.field "mode" launchModeDecoder) v |> Result.withDefault Production
     , vibrationApi = Decode.decodeValue (Decode.field "vibrationApi" Session.capabilityDecoder) v |> Result.withDefault Session.NotSupported
+    , translation = Decode.decodeValue (Decode.field "translation" App.Translation.decoder) v
     }
 
 
@@ -97,6 +100,7 @@ type BootstrapError
     | FailedToDecodeCssModules String
     | FailedToDecodeServers String
     | FailedToDecodePackageMeta String
+    | FailedToDecodeInitialTranslation String
     | Unknown
 
 
@@ -114,6 +118,9 @@ bootstrapErrorCode error =
 
         FailedToDecodePackageMeta _ ->
             "E-103"
+
+        FailedToDecodeInitialTranslation _ ->
+            "E-104"
 
         Unknown ->
             "E-999"
@@ -166,42 +173,48 @@ init rawFlags url navKey =
     in
     case ( flags.cssModules, flags.servers, flags.packageInfo ) of
         ( Ok cssModules, Ok servers, Ok packageInfo ) ->
-            case servers of
-                [] ->
-                    ( failedToBoot NoGameServersAvailable, Cmd.none )
+            case flags.translation of
+                Ok translation ->
+                    case servers of
+                        [] ->
+                            ( failedToBoot NoGameServersAvailable, Cmd.none )
 
-                head :: _ ->
-                    let
-                        session : Session.Session
-                        session =
-                            { profile =
-                                case flags.profile of
-                                    Ok (Just profile) ->
-                                        profile
+                        head :: _ ->
+                            let
+                                session : Session.Session
+                                session =
+                                    { profile =
+                                        case flags.profile of
+                                            Ok (Just profile) ->
+                                                profile
 
-                                    _ ->
-                                        { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing, preference = Preference.default }
-                            , servers = servers
-                            , packageInfo = packageInfo
-                            , cssModules = cssModules
-                            , navKey = navKey
-                            , url = url
-                            , platformCapability =
-                                { vibrationApi = flags.vibrationApi
-                                }
-                            , warnings =
-                                case flags.profile of
-                                    Ok _ ->
-                                        []
+                                            _ ->
+                                                { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing, preference = Preference.default }
+                                    , servers = servers
+                                    , packageInfo = packageInfo
+                                    , cssModules = cssModules
+                                    , navKey = navKey
+                                    , url = url
+                                    , platformCapability =
+                                        { vibrationApi = flags.vibrationApi
+                                        }
+                                    , translation = translation
+                                    , warnings =
+                                        case flags.profile of
+                                            Ok _ ->
+                                                []
 
-                                    Err error ->
-                                        [ "Failed to restore saved profile: " ++ Decode.errorToString error ]
-                            }
+                                            Err error ->
+                                                [ "Failed to restore saved profile: " ++ Decode.errorToString error ]
+                                    }
 
-                        ( page, cmd ) =
-                            initPage session (Route.fromUrl url)
-                    in
-                    ( Booted page, cmd )
+                                ( page, cmd ) =
+                                    initPage session (Route.fromUrl url)
+                            in
+                            ( Booted page, cmd )
+
+                Err error ->
+                    ( failedToBoot (FailedToDecodeInitialTranslation (Decode.errorToString error)), Cmd.none )
 
         ( Err error, _, _ ) ->
             ( failedToBoot (FailedToDecodeCssModules (Decode.errorToString error)), Cmd.none )
@@ -252,11 +265,13 @@ updateSession page session =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
+    | UpdateTranslation App.Translation.Translation
     | ConfigPageMsg ConfigPage.Msg
     | NotFoundPageMsg NotFoundPage.Msg
     | DashboardPageMsg DashboardPage.Msg
     | RandomEventCounterPageMsg RandomEventCounterPage.Msg
     | RefreshRandomEventReward Time.Posix
+    | Noop
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -288,6 +303,13 @@ update msg model =
             in
             initPage { session | url = url } (Route.fromUrl url)
                 |> Tuple.mapFirst Booted
+
+        ( UpdateTranslation translation, Booted page ) ->
+            let
+                session =
+                    toSession page
+            in
+            ( Booted (updateSession page { session | translation = translation }), Cmd.none )
 
         ( ConfigPageMsg subMsg, Booted (ConfigPage subModel) ) ->
             ConfigPage.update subMsg subModel
@@ -375,6 +397,13 @@ bootError mode error =
                 ( Development, FailedToDecodePackageMeta message ) ->
                     ( "Failed to decode package.json"
                     , [ p [ class "app--error--description" ] [ text "Cannot parse contents of the package.json file. See details below." ]
+                      , pre [ class "app--error--details" ] [ text message ]
+                      ]
+                    )
+
+                ( Development, FailedToDecodeInitialTranslation message ) ->
+                    ( "Failed to decode initial translation dictionary"
+                    , [ p [ class "app--error--description" ] [ text "Cannot parse `defaultTranslation` flag. Please make sure you passed it correctly." ]
                       , pre [ class "app--error--details" ] [ text message ]
                       ]
                     )
@@ -498,4 +527,14 @@ subscriptions model =
             _ ->
                 Sub.none
         , pollRandomEventReward model
+        , App.Translation.on
+            (\ev ->
+                case ev of
+                    App.Translation.RecievedTranslation translation ->
+                        UpdateTranslation translation
+
+                    _ ->
+                        -- TODO: Handle error
+                        Noop
+            )
         ]

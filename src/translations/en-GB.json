@@ -1,0 +1,55 @@
+{
+  "shell": {
+    "disclaimer": "This application is not affiliated with miHoYo Limited.",
+    "thirdPartyNotice": "Third party notice",
+    "sourceCode": "Source code"
+  },
+  "configPage": {
+    "title": "Config",
+    "description": "Configure this application.",
+    "general": {
+      "title": "General",
+      "referenceServer": {
+        "label": "Reference Server",
+        "description": "Select Genshin Game Server used for timer resets."
+      }
+    },
+    "ui": {
+      "title": "User Interface",
+      "language": {
+        "label": "Language",
+        "description": "Choose a language to use in UI. Some may partially lack translations."
+      },
+      "theme": {
+        "label": "UI Theme",
+        "description": "Select your preferred application theme."
+      },
+      "systemDefaultTheme": "System Default",
+      "light": "Light",
+      "dark": "Dark",
+      "wakeLock": {
+        "label": "Screen Lock",
+        "description": "Prevent your device from dimming or locking the screen while this application is running. Will be released when the tab is closed, hidden, or reloaded.",
+        "checking": "Checking whether your browser supports WakeLock API...",
+        "notSupported": "Your browser does not support WakeLock API."
+      },
+      "feedbackVibration": {
+        "label": "Feedback Vibration",
+        "description": "When turned on, the device perform short feedback vibration for primary actions. On devices without vibration mechanism, this setting has no effect.",
+        "notSupported": "Your browser does not support Vibration API."
+      }
+    }
+  },
+  "randomEventCounterPage": {
+    "title": "Random event counter",
+    "description": "Log and Manage how many times left you can get a reward by completing a random event/quest.",
+    "actions": {
+      "reset": "RESET",
+      "undo": "UNDO 1",
+      "click": "Click",
+      "tap": "Tap"
+    },
+    "buttonDescription": "%s to consume one",
+    "noMoreLeft": "You claimed all rewards you have today"
+  }
+}

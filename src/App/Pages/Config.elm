@@ -1,9 +1,11 @@
 module App.Pages.Config exposing (..)
 
+import App.Language as Language exposing (Language)
 import App.Preference as Preference
 import App.Profile as Profile
 import App.ReferenceServer as ReferenceServer
 import App.Session as Session
+import App.Translation
 import App.UI.Common exposing (pageHeader)
 import App.UiTheme as UiTheme
 import App.Vibrations
@@ -14,6 +16,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html5 exposing (..)
+import Translation exposing (fmt)
 import Vibration
 
 
@@ -45,6 +48,7 @@ type Msg
     | ChangeTheme UiTheme.UiTheme
     | WakeLockMsg WakeLock.Msg
     | ChangeFeedbackVibration Bool
+    | ChangeLanguage Language
 
 
 mapPreference : (Preference.Preference -> Preference.Preference) -> Session.Session -> Session.Session
@@ -100,6 +104,18 @@ update msg model =
                 ]
             )
 
+        ChangeLanguage lang ->
+            let
+                session =
+                    mapPreference (\p -> { p | language = lang }) model.session
+            in
+            ( { model | session = session }
+            , Cmd.batch
+                [ Profile.persist session.profile
+                , App.Translation.request lang
+                ]
+            )
+
 
 
 -- VIEW
@@ -115,11 +131,14 @@ serverOption selected server =
     option [ value server.id, Html.Attributes.selected (selected == server) ] [ text server.name ]
 
 
-wakeLockField : WakeLock.Model -> Html Msg
+wakeLockField : Model -> Html Msg
 wakeLockField model =
     let
+        t key =
+            fmt [] (key model.session.translation.configPage.ui.wakeLock)
+
         isDisabled =
-            case model of
+            case model.wakeLock of
                 WakeLock.NotSupported ->
                     True
 
@@ -136,7 +155,7 @@ wakeLockField model =
                     False
 
         isChecked =
-            case model of
+            case model.wakeLock of
                 WakeLock.NotSupported ->
                     False
 
@@ -156,19 +175,19 @@ wakeLockField model =
                     False
 
         description =
-            case model of
+            case model.wakeLock of
                 WakeLock.CheckingSupport ->
-                    "Checking whether your browser supports WakeLock API..."
+                    t .checking
 
                 WakeLock.NotSupported ->
-                    "Your browser does not support WakeLock API."
+                    t .notSupported
 
                 _ ->
-                    "Prevent your device from dimming or locking the screen while this application is running. Will be released when the tab is closed, hidden, or reloaded."
+                    t .description
     in
     node "turtle-form-field"
         []
-        [ label [ slot "label", for "config_wakelock" ] [ text "WakeLock" ]
+        [ label [ slot "label", for "config_wakelock" ] [ text (t .label) ]
         , node "turtle-toggle-switch"
             []
             [ input
@@ -206,6 +225,9 @@ vibrationField { session } =
         { profile, platformCapability } =
             session
 
+        t key =
+            fmt [] (key session.translation.configPage.ui.feedbackVibration)
+
         { vibrationApi } =
             platformCapability
 
@@ -226,14 +248,14 @@ vibrationField { session } =
         description =
             case vibrationApi of
                 Session.NotSupported ->
-                    "Your browser does not support Vibration API."
+                    t .notSupported
 
                 Session.Supported ->
-                    "When turned on, the device perform short feedback vibration for primary actions. On devices without vibration mechanism, this setting has no effect."
+                    t .description
     in
     node "turtle-form-field"
         []
-        [ label [ slot "label", for "config_feedback_vibration" ] [ text "Feedback Vibration" ]
+        [ label [ slot "label", for "config_feedback_vibration" ] [ text (t .label) ]
         , node "turtle-toggle-switch"
             []
             [ input
@@ -266,16 +288,19 @@ view model =
 
         { profile, servers } =
             model.session
+
+        t key =
+            fmt [] (key model.session.translation.configPage)
     in
-    { title = "Config"
+    { title = t .title
     , body =
-        [ pageHeader model.session { title = "Config" } []
+        [ pageHeader model.session { title = t .title } []
         , div [ class "container" ]
             [ div [ class "fields" ]
-                [ h2 [ class "heading" ] [ text "General" ]
+                [ h2 [ class "heading" ] [ text (t (\d -> d.general.title)) ]
                 , node "turtle-form-field"
                     []
-                    [ label [ slot "label", for "config_server" ] [ text "Reference Server" ]
+                    [ label [ slot "label", for "config_server" ] [ text (t (\d -> d.general.referenceServer.label)) ]
                     , node "turtle-selectbox"
                         [ attribute "novalidity" "" ]
                         [ select
@@ -285,12 +310,31 @@ view model =
                             ]
                             (List.map (serverOption profile.server) servers)
                         ]
-                    , span [ slot "description", id "config_server_description" ] [ text "Select Genshin Game Server used for timer resets." ]
+                    , span [ slot "description", id "config_server_description" ] [ text (t (\d -> d.general.referenceServer.description)) ]
                     ]
-                , h2 [ class "heading" ] [ text "User Interface" ]
+                , h2 [ class "heading" ] [ text (t (\d -> d.ui.title)) ]
                 , node "turtle-form-field"
                     []
-                    [ label [ slot "label", for "config_theme" ] [ text "UI Theme" ]
+                    [ label [ slot "label", for "config_lang" ] [ text (t (\d -> d.ui.language.label)) ]
+                    , node "turtle-selectbox"
+                        [ attribute "novalidity" "" ]
+                        [ select
+                            [ id "config_lang"
+                            , aria "describedby" "config_lang_description"
+                            , onInput (\str -> ChangeLanguage (Language.fromString str |> Maybe.withDefault Language.enGB))
+                            ]
+                            (List.map
+                                (\lang ->
+                                    option [ selected (profile.preference.language == lang), value lang.code, attribute "lang" lang.code ] [ text lang.name ]
+                                )
+                                Language.languages
+                            )
+                        ]
+                    , span [ slot "description", id "config_lang_description" ] [ text (t (\d -> d.ui.language.description)) ]
+                    ]
+                , node "turtle-form-field"
+                    []
+                    [ label [ slot "label", for "config_theme" ] [ text (t (\d -> d.ui.theme.label)) ]
                     , node "turtle-selectbox"
                         [ attribute "novalidity" "" ]
                         [ select
@@ -298,14 +342,14 @@ view model =
                             , aria "describedby" "config_theme_description"
                             , onInput (\str -> ChangeTheme (UiTheme.fromString str))
                             ]
-                            [ option [ selected (profile.theme == UiTheme.SystemDefault), value (UiTheme.toString UiTheme.SystemDefault) ] [ text "System default" ]
-                            , option [ selected (profile.theme == UiTheme.Light), value (UiTheme.toString UiTheme.Light) ] [ text "Light" ]
-                            , option [ selected (profile.theme == UiTheme.Dark), value (UiTheme.toString UiTheme.Dark) ] [ text "Dark" ]
+                            [ option [ selected (profile.theme == UiTheme.SystemDefault), value (UiTheme.toString UiTheme.SystemDefault) ] [ text (t (\d -> d.ui.systemDefaultTheme)) ]
+                            , option [ selected (profile.theme == UiTheme.Light), value (UiTheme.toString UiTheme.Light) ] [ text (t (\d -> d.ui.light)) ]
+                            , option [ selected (profile.theme == UiTheme.Dark), value (UiTheme.toString UiTheme.Dark) ] [ text (t (\d -> d.ui.dark)) ]
                             ]
                         ]
-                    , span [ slot "description", id "config_theme_description" ] [ text "Select your preferred application theme." ]
+                    , span [ slot "description", id "config_theme_description" ] [ text (t (\d -> d.ui.theme.description)) ]
                     ]
-                , wakeLockField model.wakeLock
+                , wakeLockField model
                 , vibrationField model
                 ]
             ]
