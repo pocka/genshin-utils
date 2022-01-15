@@ -1,5 +1,5 @@
 Name: @lit/reactive-element
-Version: 1.0.2
+Version: 1.2.0
 License: BSD-3-Clause
 Private: false
 Description: A simple low level base class for creating fast, lightweight web components
@@ -41,7 +41,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 Name: lit-html
-Version: 2.0.2
+Version: 2.1.1
 License: BSD-3-Clause
 Private: false
 Description: HTML templates literals in JavaScript
@@ -84,7 +84,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 Name: lit-element
-Version: 3.0.2
+Version: 3.1.1
 License: BSD-3-Clause
 Private: false
 Description: A simple base class for creating fast, lightweight web components
@@ -126,7 +126,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ---
 
 Name: @turtleui/webcomponents
-Version: 0.1.9
+Version: 0.2.1
 License: Apache-2.0
 Private: false
 Repository: https://github.com/pocka/TurtleUI
