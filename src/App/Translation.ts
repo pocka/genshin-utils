@@ -58,7 +58,7 @@ export function setup(ports: Ports, { profile }: SetupParams): void {
     }
   };
 
-  if (profile && profile.preference.version === "2") {
+  if (profile && "language" in profile.preference) {
     loadTranslation(profile.preference.language);
   }
 

@@ -8,6 +8,7 @@ type alias Translation =
     { title : Text
     , description : Text
     , general : GeneralSection
+    , notification : Notifications
     , ui : UiSection
     }
 
@@ -38,6 +39,44 @@ generalSectionDecoder =
         GeneralSection
         (Decode.field "title" textDecoder)
         (Decode.field "referenceServer" fieldDecoder)
+
+
+type alias BrowserNotification =
+    { label : Text
+    , description : Text
+    , checking : Text
+    , notSupported : Text
+    , denied : Text
+    , permissionRequesting : Text
+    }
+
+
+browserNotificationDecoder : Decode.Decoder BrowserNotification
+browserNotificationDecoder =
+    Decode.map6
+        BrowserNotification
+        (Decode.field "label" textDecoder)
+        (Decode.field "description" textDecoder)
+        (Decode.field "checking" textDecoder)
+        (Decode.field "notSupported" textDecoder)
+        (Decode.field "denied" textDecoder)
+        (Decode.field "permissionRequesting" textDecoder)
+
+
+type alias Notifications =
+    { title : Text
+    , inAppNotification : Field
+    , browserNotification : BrowserNotification
+    }
+
+
+notificationsDecoder : Decode.Decoder Notifications
+notificationsDecoder =
+    Decode.map3
+        Notifications
+        (Decode.field "title" textDecoder)
+        (Decode.field "inAppNotification" fieldDecoder)
+        (Decode.field "browserNotification" browserNotificationDecoder)
 
 
 type alias WakeLock =
@@ -102,9 +141,10 @@ uiSectionDecoder =
 
 decoder : Decode.Decoder Translation
 decoder =
-    Decode.map4
+    Decode.map5
         Translation
         (Decode.field "title" textDecoder)
         (Decode.field "description" textDecoder)
         (Decode.field "general" generalSectionDecoder)
+        (Decode.field "notification" notificationsDecoder)
         (Decode.field "ui" uiSectionDecoder)

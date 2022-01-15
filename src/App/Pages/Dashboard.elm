@@ -73,6 +73,11 @@ view { session } =
                     , href = "#randoms"
                     }
                 , link class
+                    { title = t translation.timerPage.title
+                    , description = t translation.timerPage.description
+                    , href = "#timers"
+                    }
+                , link class
                     { title = t translation.configPage.title
                     , description = t translation.configPage.description
                     , href = "#config"

@@ -1,17 +1,21 @@
 module App.App exposing (main)
 
+import App.Duration as Duration
 import App.Layout
 import App.PackageInfo as PackageInfo
 import App.Pages.Config as ConfigPage
 import App.Pages.Dashboard as DashboardPage
+import App.Pages.NewTimer as NewTimerPage
 import App.Pages.NotFound as NotFoundPage
 import App.Pages.RandomEventCounter as RandomEventCounterPage
+import App.Pages.Timer as TimerPage
 import App.Preference as Preference
 import App.Profile as Profile
 import App.RandomEventReward as RandomEventReward
 import App.ReferenceServer as ReferenceServer
 import App.Route as Route
 import App.Session as Session
+import App.Timer as Timer
 import App.Translation
 import App.UiTheme
 import Browser
@@ -20,8 +24,11 @@ import CssModules
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Json.Decode as Decode
+import Notifications
 import Time
+import Translation exposing (fmt)
 import Url
+import Vibration
 
 
 
@@ -131,11 +138,13 @@ type Page
     | NotFoundPage NotFoundPage.Model
     | DashboardPage DashboardPage.Model
     | RandomEventCounterPage RandomEventCounterPage.Model
+    | TimerPage TimerPage.Model
+    | NewTimerPage NewTimerPage.Model
 
 
 type Model
     = FailedToBoot LaunchMode BootstrapError
-    | Booted Page
+    | Booted Notifications.Model Page
 
 
 initPage : Session.Session -> Route.Route -> ( Page, Cmd Msg )
@@ -160,6 +169,16 @@ initPage session route =
             RandomEventCounterPage.init session
                 |> Tuple.mapFirst RandomEventCounterPage
                 |> Tuple.mapSecond (Cmd.map RandomEventCounterPageMsg)
+
+        Route.Timer ->
+            TimerPage.init session
+                |> Tuple.mapFirst TimerPage
+                |> Tuple.mapSecond (Cmd.map TimerPageMsg)
+
+        Route.NewTimer ->
+            NewTimerPage.init session
+                |> Tuple.mapFirst NewTimerPage
+                |> Tuple.mapSecond (Cmd.map NewTimerPageMsg)
 
 
 init : Decode.Value -> Url.Url -> Browser.Navigation.Key -> ( Model, Cmd Msg )
@@ -189,7 +208,7 @@ init rawFlags url navKey =
                                                 profile
 
                                             _ ->
-                                                { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing, preference = Preference.default }
+                                                { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing, preference = Preference.default, timers = [] }
                                     , servers = servers
                                     , packageInfo = packageInfo
                                     , cssModules = cssModules
@@ -208,10 +227,13 @@ init rawFlags url navKey =
                                                 [ "Failed to restore saved profile: " ++ Decode.errorToString error ]
                                     }
 
+                                ( notifications, nCmd ) =
+                                    Notifications.init
+
                                 ( page, cmd ) =
                                     initPage session (Route.fromUrl url)
                             in
-                            ( Booted page, cmd )
+                            ( Booted notifications page, Cmd.batch [ cmd, Cmd.map NotificationsMsg nCmd ] )
 
                 Err error ->
                     ( failedToBoot (FailedToDecodeInitialTranslation (Decode.errorToString error)), Cmd.none )
@@ -245,6 +267,12 @@ toSession page =
         RandomEventCounterPage model ->
             model.session
 
+        TimerPage model ->
+            model.session
+
+        NewTimerPage model ->
+            model.session
+
 
 updateSession : Page -> Session.Session -> Page
 updateSession page session =
@@ -261,6 +289,50 @@ updateSession page session =
         RandomEventCounterPage model ->
             RandomEventCounterPage { model | session = session }
 
+        TimerPage model ->
+            TimerPage { model | session = session }
+
+        NewTimerPage model ->
+            NewTimerPage { model | session = session }
+
+
+updateTimer : Time.Posix -> Timer.Timer -> ( Timer.Timer, Bool )
+updateTimer now timer =
+    case timer.state of
+        Timer.Running start ->
+            let
+                endAt =
+                    Time.posixToMillis start + Duration.toInt timer.duration
+            in
+            if Time.posixToMillis now >= endAt then
+                -- TODO: Show notification
+                ( { timer | state = Timer.Completed start (Time.millisToPosix endAt) }, True )
+
+            else
+                ( timer, False )
+
+        _ ->
+            ( timer, False )
+
+
+updateTimers : Time.Posix -> List Timer.Timer -> ( List Timer.Timer, List Timer.Timer )
+updateTimers now timers =
+    let
+        t =
+            List.map (updateTimer now) timers
+    in
+    ( List.map Tuple.first t
+    , List.filterMap
+        (\( timer, isCompleted ) ->
+            if isCompleted then
+                Just timer
+
+            else
+                Nothing
+        )
+        t
+    )
+
 
 type Msg
     = LinkClicked Browser.UrlRequest
@@ -270,7 +342,11 @@ type Msg
     | NotFoundPageMsg NotFoundPage.Msg
     | DashboardPageMsg DashboardPage.Msg
     | RandomEventCounterPageMsg RandomEventCounterPage.Msg
+    | TimerPageMsg TimerPage.Msg
+    | NewTimerPageMsg NewTimerPage.Msg
     | RefreshRandomEventReward Time.Posix
+    | RefreshTimer Time.Posix
+    | NotificationsMsg Notifications.Msg
     | Noop
 
 
@@ -280,7 +356,7 @@ update msg model =
         ( LinkClicked (Browser.External url), _ ) ->
             ( model, Browser.Navigation.load url )
 
-        ( LinkClicked req, Booted page ) ->
+        ( LinkClicked req, Booted _ page ) ->
             case req of
                 Browser.Internal url ->
                     if String.endsWith ".txt" url.path then
@@ -296,46 +372,58 @@ update msg model =
                 Browser.External url ->
                     ( model, Browser.Navigation.load url )
 
-        ( UrlChanged url, Booted page ) ->
+        ( UrlChanged url, Booted notifications page ) ->
             let
                 session =
                     toSession page
             in
             initPage { session | url = url } (Route.fromUrl url)
-                |> Tuple.mapFirst Booted
+                |> Tuple.mapFirst (Booted notifications)
 
-        ( UpdateTranslation translation, Booted page ) ->
+        ( UpdateTranslation translation, Booted notifications page ) ->
             let
                 session =
                     toSession page
             in
-            ( Booted (updateSession page { session | translation = translation }), Cmd.none )
+            ( Booted notifications (updateSession page { session | translation = translation }), Cmd.none )
 
-        ( ConfigPageMsg subMsg, Booted (ConfigPage subModel) ) ->
+        ( ConfigPageMsg subMsg, Booted notifications (ConfigPage subModel) ) ->
             ConfigPage.update subMsg subModel
                 |> Tuple.mapFirst ConfigPage
-                |> Tuple.mapFirst Booted
+                |> Tuple.mapFirst (Booted notifications)
                 |> Tuple.mapSecond (Cmd.map ConfigPageMsg)
 
-        ( NotFoundPageMsg subMsg, Booted (NotFoundPage subModel) ) ->
+        ( NotFoundPageMsg subMsg, Booted notifications (NotFoundPage subModel) ) ->
             NotFoundPage.update subMsg subModel
                 |> Tuple.mapFirst NotFoundPage
-                |> Tuple.mapFirst Booted
+                |> Tuple.mapFirst (Booted notifications)
                 |> Tuple.mapSecond (Cmd.map NotFoundPageMsg)
 
-        ( DashboardPageMsg subMsg, Booted (DashboardPage subModel) ) ->
+        ( DashboardPageMsg subMsg, Booted notifications (DashboardPage subModel) ) ->
             DashboardPage.update subMsg subModel
                 |> Tuple.mapFirst DashboardPage
-                |> Tuple.mapFirst Booted
+                |> Tuple.mapFirst (Booted notifications)
                 |> Tuple.mapSecond (Cmd.map DashboardPageMsg)
 
-        ( RandomEventCounterPageMsg subMsg, Booted (RandomEventCounterPage subModel) ) ->
+        ( RandomEventCounterPageMsg subMsg, Booted notifications (RandomEventCounterPage subModel) ) ->
             RandomEventCounterPage.update subMsg subModel
                 |> Tuple.mapFirst RandomEventCounterPage
-                |> Tuple.mapFirst Booted
+                |> Tuple.mapFirst (Booted notifications)
                 |> Tuple.mapSecond (Cmd.map RandomEventCounterPageMsg)
 
-        ( RefreshRandomEventReward now, Booted page ) ->
+        ( TimerPageMsg subMsg, Booted notifications (TimerPage subModel) ) ->
+            TimerPage.update subMsg subModel
+                |> Tuple.mapFirst TimerPage
+                |> Tuple.mapFirst (Booted notifications)
+                |> Tuple.mapSecond (Cmd.map TimerPageMsg)
+
+        ( NewTimerPageMsg subMsg, Booted notifications (NewTimerPage subModel) ) ->
+            NewTimerPage.update subMsg subModel
+                |> Tuple.mapFirst NewTimerPage
+                |> Tuple.mapFirst (Booted notifications)
+                |> Tuple.mapSecond (Cmd.map NewTimerPageMsg)
+
+        ( RefreshRandomEventReward now, Booted notifications page ) ->
             let
                 session =
                     toSession page
@@ -351,7 +439,84 @@ update msg model =
                         Nothing ->
                             { profile | randomEvent = Nothing }
             in
-            ( Booted (updateSession page { session | profile = newProfile }), Cmd.none )
+            ( Booted notifications (updateSession page { session | profile = newProfile }), Cmd.none )
+
+        ( RefreshTimer now, Booted notifications page ) ->
+            let
+                session =
+                    toSession page
+
+                profile =
+                    session.profile
+
+                ( newTimers, completedTimers ) =
+                    updateTimers now profile.timers
+
+                newProfile =
+                    { profile | timers = newTimers }
+
+                translation =
+                    session.translation.notifications.timer
+            in
+            ( Booted notifications (updateSession page { session | profile = newProfile })
+            , Cmd.batch
+                ((if profile == newProfile then
+                    Cmd.none
+
+                  else
+                    Profile.persist newProfile
+                 )
+                    :: List.map
+                        (\t ->
+                            if profile.preference.browserNotification == Preference.Enabled then
+                                Notifications.send
+                                    (Notifications.notification (fmt [ t.name ] translation.title)
+                                        [ Notifications.body (fmt [ t.name ] translation.body)
+                                        , Notifications.lang profile.preference.language.code
+                                        , Notifications.vibrate (Vibration.repeat (Vibration.pulse 8 |> Vibration.pause 8) 3)
+                                        ]
+                                    )
+
+                            else
+                                Cmd.none
+                        )
+                        completedTimers
+                )
+            )
+
+        ( NotificationsMsg subMsg, Booted notifications page ) ->
+            let
+                ( next, cmd ) =
+                    Notifications.update subMsg notifications
+
+                session =
+                    toSession page
+
+                newSession =
+                    if next.availability == Notifications.Available then
+                        session
+
+                    else
+                        Session.mapProfile
+                            (\p ->
+                                let
+                                    preference =
+                                        p.preference
+                                in
+                                { p | preference = { preference | browserNotification = Preference.Disabled } }
+                            )
+                            session
+            in
+            ( Booted next (updateSession page newSession)
+            , Cmd.batch
+                [ Cmd.map NotificationsMsg cmd
+                , if session.profile == newSession.profile then
+                    Cmd.none
+
+                  else
+                    Profile.persist newSession.profile
+                ]
+            )
 
         _ ->
             ( model, Cmd.none )
@@ -446,7 +611,7 @@ mapDocument f doc =
 view : Model -> Browser.Document Msg
 view model =
     case model of
-        Booted page ->
+        Booted _ page ->
             let
                 session =
                     toSession page
@@ -464,6 +629,14 @@ view model =
                         RandomEventCounterPage subModel ->
                             RandomEventCounterPage.view subModel
                                 |> mapDocument RandomEventCounterPageMsg
+
+                        TimerPage subModel ->
+                            TimerPage.view subModel
+                                |> mapDocument TimerPageMsg
+
+                        NewTimerPage subModel ->
+                            NewTimerPage.view subModel
+                                |> mapDocument NewTimerPageMsg
 
                         NotFoundPage subModel ->
                             NotFoundPage.view subModel
@@ -485,7 +658,7 @@ view model =
 pollRandomEventReward : Model -> Sub Msg
 pollRandomEventReward model =
     case model of
-        Booted page ->
+        Booted _ page ->
             let
                 interval =
                     case page of
@@ -496,6 +669,34 @@ pollRandomEventReward model =
                             3000
             in
             Time.every interval RefreshRandomEventReward
+
+        _ ->
+            Sub.none
+
+
+pollTimer : Model -> Sub Msg
+pollTimer model =
+    case model of
+        Booted _ page ->
+            let
+                session =
+                    toSession page
+            in
+            case session.profile.timers of
+                [] ->
+                    Sub.none
+
+                _ ->
+                    let
+                        interval =
+                            case page of
+                                TimerPage _ ->
+                                    1000
+
+                                _ ->
+                                    2000
+                    in
+                    Time.every interval RefreshTimer
 
         _ ->
             Sub.none
@@ -516,17 +717,27 @@ toSubscriptions page =
         RandomEventCounterPage subModel ->
             RandomEventCounterPage.subscriptions subModel |> Sub.map RandomEventCounterPageMsg
 
+        TimerPage subModel ->
+            TimerPage.subscriptions subModel |> Sub.map TimerPageMsg
+
+        NewTimerPage subModel ->
+            NewTimerPage.subscriptions subModel |> Sub.map NewTimerPageMsg
+
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
         [ case model of
-            Booted page ->
-                toSubscriptions page
+            Booted notifications page ->
+                Sub.batch
+                    [ toSubscriptions page
+                    , Notifications.subscriptions notifications |> Sub.map NotificationsMsg
+                    ]
 
             _ ->
                 Sub.none
         , pollRandomEventReward model
+        , pollTimer model
         , App.Translation.on
             (\ev ->
                 case ev of

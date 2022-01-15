@@ -7,6 +7,22 @@ type Text
     = Text String
 
 
+alternate : List String -> List String -> List String
+alternate a b =
+    case ( a, b ) of
+        ( ah :: ax, bh :: bx ) ->
+            ah :: bh :: alternate ax bx
+
+        ( ah :: ax, [] ) ->
+            ah :: ax
+
+        ( [], bh :: bx ) ->
+            bh :: bx
+
+        ( [], [] ) ->
+            []
+
+
 fmt : List String -> Text -> String
 fmt params t =
     case t of
@@ -16,7 +32,9 @@ fmt params t =
                     txt
 
                 _ ->
-                    List.foldl (String.replace "%s") txt params
+                    params
+                        |> alternate (String.split "%s" txt)
+                        |> String.join ""
 
 
 textDecoder : Decode.Decoder Text

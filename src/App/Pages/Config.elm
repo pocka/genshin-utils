@@ -1,4 +1,4 @@
-module App.Pages.Config exposing (..)
+module App.Pages.Config exposing (Model, Msg, init, subscriptions, update, view)
 
 import App.Language as Language exposing (Language)
 import App.Preference as Preference
@@ -16,6 +16,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html5 exposing (..)
+import Notifications exposing (Availability(..))
 import Translation exposing (fmt)
 import Vibration
 
@@ -27,6 +28,7 @@ import Vibration
 type alias Model =
     { session : Session.Session
     , wakeLock : WakeLock.Model
+    , notifications : Notifications.Model
     }
 
 
@@ -35,8 +37,16 @@ init session =
     let
         ( wakeLock, wakeLockCmd ) =
             WakeLock.init
+
+        ( notifications, notificationsCmd ) =
+            Notifications.init
     in
-    ( { session = session, wakeLock = wakeLock }, Cmd.map WakeLockMsg wakeLockCmd )
+    ( { session = session, wakeLock = wakeLock, notifications = notifications }
+    , Cmd.batch
+        [ Cmd.map WakeLockMsg wakeLockCmd
+        , Cmd.map NotificationsMsg notificationsCmd
+        ]
+    )
 
 
 
@@ -49,6 +59,10 @@ type Msg
     | WakeLockMsg WakeLock.Msg
     | ChangeFeedbackVibration Bool
     | ChangeLanguage Language
+    | ChangeInAppNotification Bool
+    | ChangeBrowserNotification Bool
+    | NotificationsMsg Notifications.Msg
+    | RequestNotificationPermission
 
 
 mapPreference : (Preference.Preference -> Preference.Preference) -> Session.Session -> Session.Session
@@ -85,8 +99,13 @@ update msg model =
 
         WakeLockMsg subMsg ->
             WakeLock.update subMsg model.wakeLock
-                |> Tuple.mapFirst (Model model.session)
+                |> Tuple.mapFirst (\wakeLock -> { model | wakeLock = wakeLock })
                 |> Tuple.mapSecond (Cmd.map WakeLockMsg)
+
+        NotificationsMsg subMsg ->
+            Notifications.update subMsg model.notifications
+                |> Tuple.mapFirst (\notifications -> { model | notifications = notifications })
+                |> Tuple.mapSecond (Cmd.map NotificationsMsg)
 
         ChangeFeedbackVibration enabled ->
             let
@@ -115,6 +134,34 @@ update msg model =
                 , App.Translation.request lang
                 ]
             )
+
+        ChangeInAppNotification enabled ->
+            let
+                session =
+                    mapPreference (\p -> { p | inAppNotification = Preference.boolToOnOff enabled }) model.session
+            in
+            ( { model | session = session }
+            , Profile.persist session.profile
+            )
+
+        ChangeBrowserNotification enabled ->
+            let
+                session =
+                    mapPreference (\p -> { p | browserNotification = Preference.boolToOnOff enabled }) model.session
+            in
+            ( { model | session = session }
+            , Cmd.batch
+                [ Profile.persist session.profile
+                , if enabled then
+                    Notifications.requestPermission
+
+                  else
+                    Cmd.none
+                ]
+            )
+
+        RequestNotificationPermission ->
+            ( model, Notifications.requestPermission )
 
 
 
@@ -193,14 +240,6 @@ wakeLockField model =
             [ input
                 [ type_ "checkbox"
                 , id "config_wakelock"
-                , if isChecked then
-                    attribute "checked" ""
-
-                  else
-                    class ""
-
-                -- NOTE: This is required due to browser have no way to detect the change of DOM properties so
-                -- <turtle-toggle-switch> can't decide when to toggle style.
                 , checked isChecked
                 , disabled isDisabled
                 , aria "describedby" "config_wakelock_description"
@@ -261,14 +300,6 @@ vibrationField { session } =
             [ input
                 [ type_ "checkbox"
                 , id "config_feedback_vibration"
-                , if isChecked then
-                    attribute "checked" ""
-
-                  else
-                    class ""
-
-                -- NOTE: This is required due to browser have no way to detect the change of DOM properties so
-                -- <turtle-toggle-switch> can't decide when to toggle style.
                 , checked isChecked
                 , disabled isDisabled
                 , aria "describedby" "config_feedback_vibration_description"
@@ -277,6 +308,70 @@ vibrationField { session } =
                 []
             ]
         , span [ slot "description", id "config_feedback_vibration_description" ] [ text description ]
+        ]
+
+
+notificationField : Model -> Html Msg
+notificationField model =
+    let
+        t key =
+            fmt [] (key model.session.translation.configPage.notification.browserNotification)
+
+        isChecked =
+            case model.notifications.availability of
+                Notifications.Available ->
+                    model.session.profile.preference.browserNotification == Preference.Enabled
+
+                _ ->
+                    False
+
+        isDisabled =
+            case model.notifications.availability of
+                Notifications.Available ->
+                    False
+
+                Notifications.RequiresPermission ->
+                    False
+
+                Notifications.PermissionRequestDenied ->
+                    False
+
+                _ ->
+                    True
+
+        description =
+            case model.notifications.availability of
+                Notifications.Checking ->
+                    t .checking
+
+                Notifications.PlatformNotSupported ->
+                    t .notSupported
+
+                Notifications.RequestingPermission ->
+                    t .permissionRequesting
+
+                Notifications.PermissionRequestDenied ->
+                    t .denied
+
+                _ ->
+                    t .description
+    in
+    node "turtle-form-field"
+        []
+        [ label [ slot "label", for "config_browser_notification" ] [ text (t .label) ]
+        , node "turtle-toggle-switch"
+            []
+            [ input
+                [ type_ "checkbox"
+                , id "config_browser_notification"
+                , checked isChecked
+                , disabled isDisabled
+                , aria "describedby" "config_browser_notification_description"
+                , onCheck ChangeBrowserNotification
+                ]
+                []
+            ]
+        , span [ slot "description", id "config_browser_notification_description" ] [ text description ]
         ]
 
 
@@ -312,6 +407,24 @@ view model =
                         ]
                     , span [ slot "description", id "config_server_description" ] [ text (t (\d -> d.general.referenceServer.description)) ]
                     ]
+                , h2 [ class "heading" ] [ text (t (\d -> d.notification.title)) ]
+                , node "turtle-form-field"
+                    []
+                    [ label [ slot "label", for "inapp_notification" ] [ text (t (\d -> d.notification.inAppNotification.label)) ]
+                    , node "turtle-toggle-switch"
+                        []
+                        [ input
+                            [ type_ "checkbox"
+                            , id "inapp_notification"
+                            , checked (model.session.profile.preference.inAppNotification == Preference.Enabled)
+                            , aria "describedby" "inapp_notification_description"
+                            , onCheck ChangeInAppNotification
+                            ]
+                            []
+                        ]
+                    , span [ slot "description", id "inapp_notification_description" ] [ text (t (\d -> d.notification.inAppNotification.description)) ]
+                    ]
+                , notificationField model
                 , h2 [ class "heading" ] [ text (t (\d -> d.ui.title)) ]
                 , node "turtle-form-field"
                     []
@@ -363,4 +476,7 @@ view model =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-    WakeLock.subscriptions model.wakeLock |> Sub.map WakeLockMsg
+    Sub.batch
+        [ WakeLock.subscriptions model.wakeLock |> Sub.map WakeLockMsg
+        , Notifications.subscriptions model.notifications |> Sub.map NotificationsMsg
+        ]

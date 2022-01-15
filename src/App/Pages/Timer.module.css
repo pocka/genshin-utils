@@ -1,0 +1,89 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 0;
+  margin-top: 4rem;
+  gap: 1.6rem;
+}
+
+.empty--title {
+  margin: 0;
+  font-size: 2.2rem;
+
+  color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--0)
+  );
+  font-weight: bold;
+}
+
+.empty--description {
+  margin: 0;
+  font-size: 1.4rem;
+
+  color: hsl(
+    var(--turtle-ui--color--tone--mono),
+    var(--turtle-ui--color--level--3)
+  );
+  font-weight: normal;
+}
+
+.empty--action {
+  margin: 0;
+  margin-top: 2.4rem;
+}
+
+.container {
+  margin: 0 auto;
+  max-width: 103.2rem;
+  padding: 16px;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+  grid-template-rows: repeat(auto-fill, max-content);
+  align-items: start;
+  gap: 16px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+}
+
+.section + .section {
+  margin-top: 16rem;
+}
+
+.section--title {
+  margin: 0;
+  margin-bottom: 1.6rem;
+}
+
+.timer--text {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.timer--progress,
+.timer--progress--completed {
+  /* Workaround for the bug of <turtle-progressbar> */
+  --turtle-progressbar--height: 14px;
+
+  margin-top: 1.6rem;
+}
+
+.timer--progress--completed {
+  --turtle-progressbar--inner-bar--color: hsl(
+    var(--turtle-ui--color--tone--safe),
+    var(--turtle-ui--color--level--4)
+  );
+}

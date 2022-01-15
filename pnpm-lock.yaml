@@ -3,7 +3,7 @@ lockfileVersion: 5.3
 specifiers:
   '@fontsource/ubuntu': ^4.5.0
   '@fontsource/ubuntu-mono': ^4.5.0
-  '@turtleui/webcomponents': ^0.1.9
+  '@turtleui/webcomponents': ^0.2.1
   '@types/lodash.merge': ^4.6.6
   browserslist: ^4.19.1
   cssnano: ^5.0.14
@@ -27,7 +27,7 @@ specifiers:
 dependencies:
   '@fontsource/ubuntu': 4.5.0
   '@fontsource/ubuntu-mono': 4.5.0
-  '@turtleui/webcomponents': 0.1.9
+  '@turtleui/webcomponents': 0.2.1
   localforage: 1.10.0
   lodash.merge: 4.6.2
   minireset.css: 0.0.7
@@ -60,8 +60,8 @@ packages:
     resolution: {integrity: sha512-PytR+FgXPPK+UNrLNhYucrNXewS9b4YOJpS2oYw4dfJq+5iyG8iV6CfwToy2UOVSOmBSBhCQ6mJa5Z6BqrGqMw==}
     dev: false
 
-  /@lit/reactive-element/1.0.2:
-    resolution: {integrity: sha512-oz3d3MKjQ2tXynQgyaQaMpGTDNyNDeBdo6dXf1AbjTwhA1IRINHmA7kSaVYv9ttKweNkEoNqp9DqteDdgWzPEg==}
+  /@lit/reactive-element/1.2.0:
+    resolution: {integrity: sha512-7i/Fz8enAQ2AN5DyJ2i2AFERufjP6x1NjuHoNgDyJkjjHxEoo8kVyyHxu1A9YyeShlksjt5FvpvENBDuivQHLA==}
     dev: false
 
   /@trysound/sax/0.2.0:
@@ -69,10 +69,10 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: true
 
-  /@turtleui/webcomponents/0.1.9:
-    resolution: {integrity: sha512-zeaNmlZOxuz8rBLXGgtLO0NjcHtYGwlkV/kN2MHyEJgRU1dGeWAzOwQs3ajDZX9Tv20TTV7q/0WJcs08vj0RLA==}
+  /@turtleui/webcomponents/0.2.1:
+    resolution: {integrity: sha512-jCcNucqhO3LVWImAB9W4/HF2/+uHekBa9q4/lbVUGdaQWOKkznWCOytRdSZ2cKG2GkZ0pSi1b/KCy9ubHBfSNA==}
     dependencies:
-      lit: 2.0.2
+      lit: 2.1.1
     dev: false
 
   /@types/lodash.merge/4.6.6:
@@ -979,25 +979,25 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
-  /lit-element/3.0.2:
-    resolution: {integrity: sha512-9vTJ47D2DSE4Jwhle7aMzEwO2ZcOPRikqfT3CVG7Qol2c9/I4KZwinZNW5Xv8hNm+G/enSSfIwqQhIXi6ioAUg==}
+  /lit-element/3.1.1:
+    resolution: {integrity: sha512-14ClnMAU8EXnzC+M2/KDd3SFmNUn1QUw1+GxWkEMwGV3iaH8ObunMlO5svzvaWlkSV0WlxJCi40NGnDVJ2XZKQ==}
     dependencies:
-      '@lit/reactive-element': 1.0.2
-      lit-html: 2.0.2
+      '@lit/reactive-element': 1.2.0
+      lit-html: 2.1.1
     dev: false
 
-  /lit-html/2.0.2:
-    resolution: {integrity: sha512-dON7Zg8btb14/fWohQLQBdSgkoiQA4mIUy87evmyJHtxRq7zS6LlC32bT5EPWiof5PUQaDpF45v2OlrxHA5Clg==}
+  /lit-html/2.1.1:
+    resolution: {integrity: sha512-E4BImK6lopAYanJpvcGaAG8kQFF1ccIulPu2BRNZI7acFB6i4ujjjsnaPVFT1j/4lD9r8GKih0Y8d7/LH8SeyQ==}
     dependencies:
       '@types/trusted-types': 2.0.2
     dev: false
 
-  /lit/2.0.2:
-    resolution: {integrity: sha512-hKA/1YaSB+P+DvKWuR2q1Xzy/iayhNrJ3aveD0OQ9CKn6wUjsdnF/7LavDOJsKP/K5jzW/kXsuduPgRvTFrFJw==}
+  /lit/2.1.1:
+    resolution: {integrity: sha512-yqDqf36IhXwOxIQSFqCMgpfvDCRdxLCLZl7m/+tO5C9W/OBHUj17qZpiMBT35v97QMVKcKEi1KZ3hZRyTwBNsQ==}
     dependencies:
-      '@lit/reactive-element': 1.0.2
-      lit-element: 3.0.2
-      lit-html: 2.0.2
+      '@lit/reactive-element': 1.2.0
+      lit-element: 3.1.1
+      lit-html: 2.1.1
     dev: false
 
   /localforage/1.10.0:

@@ -1,0 +1,31 @@
+.container {
+  padding: 1.6rem;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1.6rem;
+  margin-top: 3.2rem;
+}
+
+.heading {
+  margin: 0;
+  margin-top: 3.2rem;
+  font-size: 2rem;
+  line-height: 1.5;
+}
+
+.name {
+  align-self: stretch;
+}
+
+.submit {
+  margin-top: 4rem;
+  align-self: stretch;
+}

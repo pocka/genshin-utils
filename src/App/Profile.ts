@@ -19,6 +19,12 @@ export interface Profile {
     | {
         version: "2";
         language: string;
+      }
+    | {
+        version: "3";
+        language: string;
+        inAppNotification: boolean;
+        browserNotification: boolean;
       };
 }
 

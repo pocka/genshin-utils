@@ -12,3 +12,8 @@ slot name =
 aria : String -> String -> Html.Attribute msg
 aria name =
     attribute ("aria-" ++ name)
+
+
+role : String -> Html.Attribute msg
+role =
+    attribute "role"

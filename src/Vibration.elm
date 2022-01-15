@@ -1,4 +1,4 @@
-port module Vibration exposing (PulsePattern, PulseUnit, joinPatterns, patternPause, pause, pulse, repeat, vibrate)
+port module Vibration exposing (PulsePattern, PulseUnit, encodePulsePattern, joinPatterns, patternPause, pause, pulse, repeat, vibrate)
 
 import Json.Encode as Encode
 

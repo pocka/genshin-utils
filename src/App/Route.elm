@@ -9,6 +9,8 @@ type Route
     | Configuration
     | Dashboard
     | RandomEventCounter
+    | Timer
+    | NewTimer
 
 
 fragmentToRoute : Maybe String -> Route
@@ -25,6 +27,12 @@ fragmentToRoute fragment =
 
         Just "randoms" ->
             RandomEventCounter
+
+        Just "timers" ->
+            Timer
+
+        Just "timers/new" ->
+            NewTimer
 
         _ ->
             NotFound

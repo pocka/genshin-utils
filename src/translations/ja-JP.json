@@ -14,6 +14,21 @@
         "description": "リセット時間の参考にするサーバです。"
       }
     },
+    "notification": {
+      "title": "通知",
+      "inAppNotification": {
+        "label": "ページ内通知 (未実装)",
+        "description": "ページ内の通知を行うかどうか設定できます。OSへの通知は行いません。"
+      },
+      "browserNotification": {
+        "label": "ブラウザ通知",
+        "description": "ブラウザのAPIを利用してOSへ通知を行います。",
+        "checking": "通知が利用できるか確認中です...",
+        "notSupported": "このブラウザでは Notifications API が利用できないためブラウザ通知機能は使えません。",
+        "denied": "通知APIへのアクセスが拒否されました。",
+        "permissionRequesting": "通知APIへのアクセスを申請しています..."
+      }
+    },
     "ui": {
       "title": "ユーザインタフェース",
       "language": {
@@ -51,5 +66,79 @@
     },
     "buttonDescription": "ここを%sして1つ消費",
     "noMoreLeft": "本日の報酬はすべて受取済みです"
+  },
+  "timerPage": {
+    "title": "タイマー",
+    "description": "参量物質変化器の再使用可能時間や「調べる」ポイントのリポップなどをタイマーとしてセットできます。設定画面で許可すれば通知も設定できます。",
+    "empty": {
+      "title": "タイマーがありません",
+      "description": "時間を計るためには、まずタイマーを作る必要があります。"
+    },
+    "actions": {
+      "create": "新規作成",
+      "start": "開始",
+      "delete": "削除",
+      "stop": "キャンセル",
+      "clear": "クリア"
+    },
+    "timerCard": {
+      "duration": "長さ: %s",
+      "remains": "残り%s",
+      "ended": "%s前に終了"
+    },
+    "active": {
+      "heading": "稼働中のタイマー",
+      "empty": {
+        "title": "稼働中のタイマーはありません",
+        "description": "カウント中、及びカウント終了後リセットされていないタイマーがここに表示されます。"
+      }
+    },
+    "inactive": {
+      "heading": "未稼働のタイマー",
+      "empty": {
+        "title": "未稼働のタイマーはありません",
+        "description": "すべてのタイマーが稼働中です。"
+      }
+    }
+  },
+  "newTimerPage": {
+    "title": "タイマーの作成",
+    "form": {
+      "general": {
+        "title": "一般",
+        "name": {
+          "label": "名前",
+          "description": "タイマーを識別する表示名。"
+        }
+      },
+      "duration": {
+        "title": "タイマーの長さ",
+        "tips": "タイマーの長さは%sになります。",
+        "day": {
+          "label": "日",
+          "description": "何日間タイマーをかけるか。"
+        },
+        "hour": {
+          "label": "時間",
+          "description": "何時間タイマーをかけるか。"
+        },
+        "minute": {
+          "label": "分",
+          "description": "何分間タイマーをかけるか。"
+        }
+      },
+      "submit": "作成する"
+    }
+  },
+  "validation": {
+    "required": "%sは必須です。",
+    "int": "%sには有効な整数を入力してください。",
+    "gte": "%sには%s以上の数値を入力してください。"
+  },
+  "notifications": {
+    "timer": {
+      "title": "%s",
+      "body": "「%s」のタイマーが終了しました。"
+    }
   }
 }

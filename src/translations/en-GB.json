@@ -14,6 +14,21 @@
         "description": "Select Genshin Game Server used for timer resets."
       }
     },
+    "notification": {
+      "title": "Notifications",
+      "inAppNotification": {
+        "label": "In-App Notification (Not Implemented Yet)",
+        "description": "Whether to display in-page notification. This does not triggers OS/browser notification."
+      },
+      "browserNotification": {
+        "label": "Browser Notification",
+        "description": "Whether to display OS/browser notification using Notifications API.",
+        "checking": "Checking availability...",
+        "notSupported": "Your browser does not support Notifications API.",
+        "denied": "Access to Notifications API was rejected.",
+        "permissionRequesting": "Requesting permission..."
+      }
+    },
     "ui": {
       "title": "User Interface",
       "language": {
@@ -51,5 +66,79 @@
     },
     "buttonDescription": "%s to consume one",
     "noMoreLeft": "You claimed all rewards you have today"
+  },
+  "timerPage": {
+    "title": "Timer",
+    "description": "Setup timers for parameteric transformer, investigation points, etc. You can optionally enable push notification on config page.",
+    "empty": {
+      "title": "No timers created",
+      "description": "Let's create a timer to use your resouces efficiently."
+    },
+    "actions": {
+      "create": "Create",
+      "start": "Start",
+      "delete": "Delete",
+      "stop": "Cancel",
+      "clear": "Clear"
+    },
+    "timerCard": {
+      "duration": "Duration: %s",
+      "remains": "%s remains",
+      "ended": "Ended %s ago"
+    },
+    "active": {
+      "heading": "Running timers",
+      "empty": {
+        "title": "No timers running",
+        "description": "Active timers will appear here."
+      }
+    },
+    "inactive": {
+      "heading": "Inactive timers",
+      "empty": {
+        "title": "No inactive timers",
+        "description": "No available timers to start."
+      }
+    }
+  },
+  "newTimerPage": {
+    "title": "Create a new timer",
+    "form": {
+      "general": {
+        "title": "General",
+        "name": {
+          "label": "Name",
+          "description": "Name of the timer."
+        }
+      },
+      "duration": {
+        "title": "Duration",
+        "tips": "The timer will run for %s.",
+        "day": {
+          "label": "Days",
+          "description": "How long will the timer run, in days?"
+        },
+        "hour": {
+          "label": "Hours",
+          "description": "How long will the timer run, in hours?"
+        },
+        "minute": {
+          "label": "Minutes",
+          "description": "How long will the timer run, in minutes?"
+        }
+      },
+      "submit": "Create"
+    }
+  },
+  "validation": {
+    "required": "%s is required.",
+    "int": "%s must be valid integer.",
+    "gte": "%s must be greater than or equal to %s."
+  },
+  "notifications": {
+    "timer": {
+      "title": "%s",
+      "body": "Timer \"%s\" has finished just now."
+    }
   }
 }

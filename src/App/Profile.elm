@@ -3,6 +3,7 @@ port module App.Profile exposing (Profile, decoder, persist)
 import App.Preference as Preference exposing (Preference)
 import App.RandomEventReward as RandomEventReward exposing (RandomEventReward)
 import App.ReferenceServer as ReferenceServer
+import App.Timer as Timer exposing (Timer)
 import App.UiTheme as UiTheme
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -48,6 +49,7 @@ type alias Profile =
     , theme : UiTheme.UiTheme
     , randomEvent : Maybe RandomEventReward
     , preference : Preference
+    , timers : List Timer
     }
 
 
@@ -68,14 +70,16 @@ encodeProfile profile =
         , ( "theme", UiTheme.encode profile.theme )
         , ( "randomEvent", encodeMaybe RandomEventReward.encode profile.randomEvent )
         , ( "preference", Preference.encode profile.preference )
+        , ( "timers", Encode.list Timer.encode profile.timers )
         ]
 
 
 decoder : Decode.Decoder Profile
 decoder =
-    Decode.map4
+    Decode.map5
         Profile
         (Decode.field "server" ReferenceServer.decoder)
         (Decode.field "theme" UiTheme.decoder)
         (Decode.field "randomEvent" (Decode.maybe RandomEventReward.decoder))
         (Decode.field "preference" (Decode.oneOf [ Preference.decoder, Decode.succeed Preference.default ]))
+        (Decode.field "timers" (Decode.oneOf [ Decode.list Timer.decoder, Decode.succeed [] ]))

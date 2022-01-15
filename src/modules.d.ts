@@ -24,3 +24,8 @@ declare module "*.elm" {
     };
   };
 }
+
+declare module "*?url" {
+  const path: string;
+  export default path;
+}

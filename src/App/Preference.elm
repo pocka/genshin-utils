@@ -37,13 +37,15 @@ togglePreferenceDecoder =
 type alias Preference =
     { feedbackVibration : OnOffFeature
     , language : Language
+    , inAppNotification : OnOffFeature
+    , browserNotification : OnOffFeature
     }
 
 
 v1Decoder : Decode.Decoder Preference
 v1Decoder =
     Decode.map
-        (\v -> Preference v Language.enGB)
+        (\v -> Preference v Language.enGB Enabled Disabled)
         (Decode.field "feedbackVibration" togglePreferenceDecoder)
 
 
@@ -53,6 +55,17 @@ v2Decoder =
         Preference
         (Decode.field "feedbackVibration" togglePreferenceDecoder)
         (Decode.field "language" Language.decoder)
+        |> Decode.map (\p -> p Enabled Disabled)
+
+
+v3Decoder : Decode.Decoder Preference
+v3Decoder =
+    Decode.map4
+        Preference
+        (Decode.field "feedbackVibration" togglePreferenceDecoder)
+        (Decode.field "language" Language.decoder)
+        (Decode.field "inAppNotification" togglePreferenceDecoder)
+        (Decode.field "browserNotification" togglePreferenceDecoder)
 
 
 decoder : Decode.Decoder Preference
@@ -67,6 +80,9 @@ decoder =
                     "2" ->
                         v2Decoder
 
+                    "3" ->
+                        v3Decoder
+
                     _ ->
                         v1Decoder
             )
@@ -75,9 +91,11 @@ decoder =
 encode : Preference -> Encode.Value
 encode p =
     Encode.object
-        [ ( "version", Encode.string "2" )
+        [ ( "version", Encode.string "3" )
         , ( "feedbackVibration", Encode.bool (onOffToBool p.feedbackVibration) )
         , ( "language", Language.encode p.language )
+        , ( "inAppNotification", Encode.bool (onOffToBool p.inAppNotification) )
+        , ( "browserNotification", Encode.bool (onOffToBool p.browserNotification) )
         ]
 
 
@@ -85,4 +103,6 @@ default : Preference
 default =
     { feedbackVibration = Disabled
     , language = Language.enGB
+    , inAppNotification = Enabled
+    , browserNotification = Disabled
     }
