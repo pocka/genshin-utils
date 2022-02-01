@@ -61,8 +61,8 @@ theme t =
             class ""
 
 
-layout : Session.Session -> List (Html msg) -> Html msg
-layout session children =
+layout : Session.Session -> List (Html msg) -> List (Html msg) -> Html msg
+layout session notifications children =
     let
         class =
             scopedClass session.cssModules
@@ -73,4 +73,5 @@ layout session children =
             [ div [ class "body" ] children
             , footer session []
             ]
+        , div [ class "notifications" ] notifications
         ]

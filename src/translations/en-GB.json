@@ -17,7 +17,7 @@
     "notification": {
       "title": "Notifications",
       "inAppNotification": {
-        "label": "In-App Notification (Not Implemented Yet)",
+        "label": "In-App Notification",
         "description": "Whether to display in-page notification. This does not triggers OS/browser notification."
       },
       "browserNotification": {
@@ -138,7 +138,9 @@
   "notifications": {
     "timer": {
       "title": "%s",
-      "body": "Timer \"%s\" has finished just now."
+      "body": "Timer \"%s\" has finished just now.",
+      "open": "Open",
+      "dismiss": "Dismiss"
     }
   }
 }

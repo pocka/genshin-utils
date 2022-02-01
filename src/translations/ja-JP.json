@@ -17,7 +17,7 @@
     "notification": {
       "title": "通知",
       "inAppNotification": {
-        "label": "ページ内通知 (未実装)",
+        "label": "ページ内通知",
         "description": "ページ内の通知を行うかどうか設定できます。OSへの通知は行いません。"
       },
       "browserNotification": {
@@ -138,7 +138,9 @@
   "notifications": {
     "timer": {
       "title": "%s",
-      "body": "「%s」のタイマーが終了しました。"
+      "body": "「%s」のタイマーが終了しました。",
+      "open": "タイマー一覧",
+      "dismiss": "閉じる"
     }
   }
 }

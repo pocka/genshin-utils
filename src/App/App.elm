@@ -23,6 +23,8 @@ import Browser.Navigation
 import CssModules
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (onClick)
+import Html5 exposing (..)
 import Json.Decode as Decode
 import Notifications
 import Time
@@ -225,6 +227,7 @@ init rawFlags url navKey =
 
                                             Err error ->
                                                 [ "Failed to restore saved profile: " ++ Decode.errorToString error ]
+                                    , inAppNotifications = []
                                     }
 
                                 ( notifications, nCmd ) =
@@ -347,6 +350,7 @@ type Msg
     | RefreshRandomEventReward Time.Posix
     | RefreshTimer Time.Posix
     | NotificationsMsg Notifications.Msg
+    | DismissInAppNotification Session.InAppNotification
     | Noop
 
 
@@ -457,31 +461,47 @@ update msg model =
 
                 translation =
                     session.translation.notifications.timer
+
+                newInAppNotifications =
+                    if profile.preference.inAppNotification == Preference.Enabled then
+                        session.inAppNotifications
+                            ++ List.map
+                                (\t ->
+                                    Session.InAppNotification (fmt [ t.name ] translation.body)
+                                )
+                                completedTimers
+
+                    else
+                        []
+
+                systemNotificationCmd =
+                    if profile.preference.browserNotification == Preference.Enabled then
+                        Cmd.batch
+                            (List.map
+                                (\t ->
+                                    Notifications.send
+                                        (Notifications.notification (fmt [ t.name ] translation.title)
+                                            [ Notifications.body (fmt [ t.name ] translation.body)
+                                            , Notifications.lang profile.preference.language.code
+                                            , Notifications.vibrate (Vibration.repeat (Vibration.pulse 8 |> Vibration.pause 8) 3)
+                                            ]
+                                        )
+                                )
+                                completedTimers
+                            )
+
+                    else
+                        Cmd.none
             in
-            ( Booted notifications (updateSession page { session | profile = newProfile })
+            ( Booted notifications (updateSession page { session | profile = newProfile, inAppNotifications = newInAppNotifications })
             , Cmd.batch
-                ((if profile == newProfile then
+                [ if profile == newProfile then
                     Cmd.none
 
                   else
                     Profile.persist newProfile
-                 )
-                    :: List.map
-                        (\t ->
-                            if profile.preference.browserNotification == Preference.Enabled then
-                                Notifications.send
-                                    (Notifications.notification (fmt [ t.name ] translation.title)
-                                        [ Notifications.body (fmt [ t.name ] translation.body)
-                                        , Notifications.lang profile.preference.language.code
-                                        , Notifications.vibrate (Vibration.repeat (Vibration.pulse 8 |> Vibration.pause 8) 3)
-                                        ]
-                                    )
-
-                            else
-                                Cmd.none
-                        )
-                        completedTimers
-                )
+                , systemNotificationCmd
+                ]
             )
 
         ( NotificationsMsg subMsg, Booted notifications page ) ->
@@ -517,6 +537,16 @@ update msg model =
                     Profile.persist newSession.profile
                 ]
             )
+
+        ( DismissInAppNotification notification, Booted notifications page ) ->
+            let
+                session =
+                    toSession page
+
+                inAppNotifications =
+                    List.filter (\n -> not (n == notification)) session.inAppNotifications
+            in
+            ( Booted notifications (updateSession page { session | inAppNotifications = inAppNotifications }), Cmd.none )
 
         _ ->
             ( model, Cmd.none )
@@ -608,6 +638,30 @@ mapDocument f doc =
     }
 
 
+inAppNotificationCards : Session.Session -> List (Html Msg)
+inAppNotificationCards { inAppNotifications, translation } =
+    let
+        t key =
+            fmt [] (key translation.notifications.timer)
+    in
+    inAppNotifications
+        |> List.map
+            (\n ->
+                node "turtle-notification"
+                    []
+                    [ node "turtle-info-icon" [ slot "icon" ] []
+                    , case n of
+                        Session.InAppNotification message ->
+                            text message
+                    , node "turtle-notification-action"
+                        [ slot "action", attribute "lightdom" "" ]
+                        [ a [ href "#timers", onClick (DismissInAppNotification n) ] [ text (t .open) ]
+                        ]
+                    , node "turtle-notification-action" [ slot "action", onClick (DismissInAppNotification n) ] [ text (t .dismiss) ]
+                    ]
+            )
+
+
 view : Model -> Browser.Document Msg
 view model =
     case model of
@@ -644,7 +698,7 @@ view model =
             in
             { title = doc.title ++ " - Genshin Utils"
             , body =
-                [ App.Layout.layout session doc.body ]
+                [ App.Layout.layout session (inAppNotificationCards session) doc.body ]
             }
 
         FailedToBoot mode error ->

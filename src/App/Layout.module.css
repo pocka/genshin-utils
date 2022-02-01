@@ -58,3 +58,14 @@
 .footer-line + .footer-line {
   margin-top: 1em;
 }
+
+.notifications {
+  position: fixed;
+  bottom: 4px;
+  right: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 0.8rem;
+}

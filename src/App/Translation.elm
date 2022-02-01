@@ -121,15 +121,19 @@ validationDecoder =
 type alias Notification =
     { title : Text
     , body : Text
+    , open : Text
+    , dismiss : Text
     }
 
 
 notificationDecoder : Decode.Decoder Notification
 notificationDecoder =
-    Decode.map2
+    Decode.map4
         Notification
         (Decode.field "title" textDecoder)
         (Decode.field "body" textDecoder)
+        (Decode.field "open" textDecoder)
+        (Decode.field "dismiss" textDecoder)
 
 
 type alias Notifications =

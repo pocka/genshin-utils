@@ -1,4 +1,4 @@
-module App.Session exposing (Capability(..), Session, capabilityDecoder, mapProfile)
+module App.Session exposing (Capability(..), InAppNotification(..), Session, capabilityDecoder, mapProfile)
 
 import App.PackageInfo as PackageInfo
 import App.Profile as Profile
@@ -33,6 +33,10 @@ type alias PlatformCapability =
     }
 
 
+type InAppNotification
+    = InAppNotification String
+
+
 type alias Session =
     { profile : Profile.Profile
     , servers : List ReferenceServer.ReferenceServer
@@ -43,6 +47,7 @@ type alias Session =
     , warnings : List String
     , platformCapability : PlatformCapability
     , translation : App.Translation.Translation
+    , inAppNotifications : List InAppNotification
     }
 
 
