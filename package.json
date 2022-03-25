@@ -32,6 +32,7 @@
     "elm": "^0.19.1-5",
     "elm-format": "^0.8.5",
     "elm-test": "^0.19.1-revision7",
+    "esbuild": "^0.14.27",
     "postcss": "^8.4.5",
     "postcss-import": "^14.0.2",
     "postcss-preset-env": "^7.2.0",
@@ -56,7 +57,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && esbuild ./src/sw.js --bundle --outfile=dist/sw.js",
     "test": "elm-test"
   }
 }

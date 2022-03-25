@@ -20,8 +20,6 @@ import timerPageCss from "./App/Pages/Timer.module.css";
 import layoutCss from "./App/Layout.module.css";
 import uiCommonCss from "./App/UI/Common.module.css";
 
-import swUrl from "./sw.js?url";
-
 declare global {
   interface ImportMeta {
     // https://vitejs.dev/guide/env-and-mode.html
@@ -34,16 +32,14 @@ declare global {
 }
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register(swUrl, {
-      type: import.meta.env.MODE === "development" ? "module" : "classic",
-    })
-    .catch((err) => {
-      console.group("Failed to register ServiceWorker");
-      console.info("worker file: " + swUrl);
-      console.error(err);
-      console.groupEnd();
-    });
+  const url = new URL("sw.js", location.href);
+
+  navigator.serviceWorker.register(url).catch((err) => {
+    console.group("Failed to register ServiceWorker");
+    console.info("worker file: " + url.href);
+    console.error(err);
+    console.groupEnd();
+  });
 }
 
 async function main(): Promise<void> {

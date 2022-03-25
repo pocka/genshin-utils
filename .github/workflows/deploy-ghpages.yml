@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
       - name: Build application
-        run: pnpm build -- --base $BASE_URL
+        run: pnpm build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:

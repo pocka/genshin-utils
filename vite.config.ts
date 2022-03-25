@@ -5,6 +5,8 @@ import elmPlugin from "vite-plugin-elm";
 import packageJson from "./package.json";
 
 export default defineConfig({
+  // @ts-expect-error: Not worth adding dependency just for this line
+  base: process.env.BASE_URL || "/",
   plugins: [elmPlugin()],
   build: {
     rollupOptions: {
@@ -17,8 +19,6 @@ export default defineConfig({
         }),
       ],
     },
-    // Workaround for a bug that Vite inlining imports with `?url` query, even without `?inline` query.
-    assetsInlineLimit: 0,
   },
   define: {
     "import.meta.env.PACKAGE_INFO": JSON.stringify({
