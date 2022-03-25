@@ -20,7 +20,10 @@
     "localforage": "^1.10.0",
     "lodash.merge": "^4.6.2",
     "minireset.css": "^0.0.7",
-    "sanitize.css": "^13.0.0"
+    "sanitize.css": "^13.0.0",
+    "workbox-cacheable-response": "^6.5.2",
+    "workbox-routing": "^6.5.2",
+    "workbox-strategies": "^6.5.2"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.6",
