@@ -17,6 +17,8 @@ export default defineConfig({
         }),
       ],
     },
+    // Workaround for a bug that Vite inlining imports with `?url` query, even without `?inline` query.
+    assetsInlineLimit: 0,
   },
   define: {
     "import.meta.env.PACKAGE_INFO": JSON.stringify({
