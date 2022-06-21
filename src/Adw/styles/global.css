@@ -1,0 +1,31 @@
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/600.css";
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 62.5%;
+  --adw-unit: 1rem;
+}
+
+body {
+  font-family: var(--adw-fontfamily-sans);
+  font-weight: var(--adw-fontweight-reguar);
+  font-size: var(--adw-fontsize-medium);
+  line-height: var(--adw-lineheight-medium);
+
+  background-color: hsl(
+    var(--adw-color-bg-hue),
+    var(--adw-color-bg-saturation),
+    var(--adw-color-bg-lightness)
+  );
+  color: hsl(
+    var(--adw-color-fg-hue),
+    var(--adw-color-fg-saturation),
+    var(--adw-color-fg-lightness)
+  );
+}

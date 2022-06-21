@@ -1,5 +1,6 @@
 module App.Pages.Dashboard exposing (Model, Msg, init, subscriptions, update, view)
 
+import Adw.Button
 import App.Session as Session
 import Browser
 import CssModules
@@ -83,6 +84,9 @@ view { session } =
                     , href = "#config"
                     }
                 ]
+            , Adw.Button.button
+                [ Adw.Button.variant Adw.Button.Primary ]
+                [ button [] [ text "Button" ] ]
             ]
         ]
     }

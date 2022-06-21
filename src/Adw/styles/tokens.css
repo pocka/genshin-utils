@@ -1,0 +1,60 @@
+:root {
+  --adw-unit: 0.625rem;
+
+  --adw-spacing-xsmall: 4px;
+  --adw-spacing-small: 8px;
+  --adw-spacing-medium: 12px;
+  --adw-spacing-large: 16px;
+  --adw-spacing-xlarge: 20px;
+
+  --adw-radius-medium: calc(0.3 * var(--adw-unit));
+
+  --adw-fontfamily-sans: Inter, system-ui, sans-serif;
+
+  --adw-fontsize-small: calc(1.2 * var(--adw-unit));
+  --adw-fontsize-medium: calc(1.4 * var(--adw-unit));
+  --adw-fontsize-large: calc(1.6 * var(--adw-unit));
+
+  --adw-fontweight-regular: 400;
+  --adw-fontweight-bold: 600;
+
+  --adw-lineheight-dense: 1.2;
+  --adw-lineheight-medium: 1.5;
+  --adw-lineheight-loose: 1.8;
+
+  --adw-color-primary-hue: 211;
+  --adw-color-primary-saturation: 65%;
+  --adw-color-primary-lightness: 55%;
+
+  --adw-color-bg-hue: 40;
+  --adw-color-bg-saturation: 16%;
+  --adw-color-bg-lightness: 95%;
+
+  --adw-color-fg-hue: 100;
+  --adw-color-fg-saturation: 2%;
+  --adw-color-fg-lightness: 19%;
+
+  --adw-color-border-hue: var(--adw-color-bg-hue);
+  --adw-color-border-saturation: 6%;
+  --adw-color-border-lightness: 72%;
+
+  --adw-color-onprimary-hue: 40;
+  --adw-color-onprimary-saturation: 16%;
+  --adw-color-onprimary-lightness: 95%;
+
+  --adw-lightness-step: 24%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --adw-color-primary-lightness: 45%;
+
+    --adw-color-bg-lightness: 16%;
+
+    --adw-color-fg-lightness: 95%;
+
+    --adw-color-border-lightness: 52%;
+
+    --adw-lightness-step: -12%;
+  }
+}

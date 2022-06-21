@@ -14,9 +14,11 @@
   },
   "packageManager": "pnpm@7.3.0",
   "dependencies": {
+    "@fontsource/inter": "^4.5.11",
     "@fontsource/ubuntu": "^4.5.0",
     "@fontsource/ubuntu-mono": "^4.5.0",
     "@turtleui/webcomponents": "^0.2.1",
+    "lit": "^2.2.6",
     "localforage": "^1.10.0",
     "lodash.merge": "^4.6.2",
     "minireset.css": "^0.0.7",
@@ -58,6 +60,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && esbuild ./src/sw.js --bundle --outfile=dist/sw.js",
-    "test": "elm-test"
+    "test": "elm-test",
+    "adw:showcase": "vite ./src/Adw"
   }
 }

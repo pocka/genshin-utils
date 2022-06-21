@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Adw Showcase</title>
+    <script type="module" src="./showcase.ts"></script>
+    <link rel="stylesheet" href="./styles/tokens.css" />
+    <link rel="stylesheet" href="./styles/global.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: var(--adw-spacing-medium);
+      }
+
+      h1 {
+        margin: var(--adw-spacing-large) 0;
+        margin-top: 0;
+        font-weight: var(--adw-fontwegit-bold);
+      }
+
+      h2 {
+        margin: var(--adw-spacing-large) 0;
+        margin-top: calc(var(--adw-spacing-large) * 2);
+        font-weight: var(--adw-fontwegit-bold);
+        border-top: 1px solid
+          hsl(
+            var(--adw-color-border-hue),
+            var(--adw-color-border-saturation),
+            var(--adw-color-border-lightness)
+          );
+      }
+
+      h3 {
+        margin: var(--adw-spacing-medium) 0;
+        font-weight: var(--adw-fontwegit-regular);
+      }
+
+      .list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--adw-spacing-small);
+        align-items: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Adw components showcase</h1>
+    <p>Usage? Just open a browser inspector panel.</p>
+    <h2>adw-button</h2>
+    <div>
+      <h3>Normal</h3>
+      <div class="list">
+        <adw-button><button>Button</button></adw-button>
+        <adw-button size="large"><button>Button</button></adw-button>
+        <adw-button variant="primary"><button>Button</button></adw-button>
+        <adw-button variant="primary" size="large">
+          <button>Button</button>
+        </adw-button>
+        <adw-button><a href="#">Link</a></adw-button>
+        <adw-button size="large" variant="primary">
+          <a href="#">Link</a>
+        </adw-button>
+      </div>
+      <h3>Disabled</h3>
+      <div class="list">
+        <adw-button disabled><button>Button</button></adw-button>
+        <adw-button variant="primary" disabled>
+          <button>Button</button>
+        </adw-button>
+        <adw-button disabled>
+          <a href="#">Link</a>
+        </adw-button>
+        <adw-button variant="primary" disabled>
+          <a href="#">Link</a>
+        </adw-button>
+      </div>
+      <h3>Loading</h3>
+      <div class="list">
+        <adw-button size="large" loading><button>Button</button></adw-button>
+        <adw-button variant="primary" loading>
+          <button>Button</button>
+        </adw-button>
+        <adw-button loading>
+          <a href="#">Link</a>
+        </adw-button>
+        <adw-button size="large" variant="primary" loading>
+          <a href="#">Link</a>
+        </adw-button>
+      </div>
+    </div>
+    <h2>adw-glow-dot</h2>
+    <div>
+      <h3>(default)</h3>
+      <adw-glow-dot></adw-glow-dot>
+      <h3>glowing</h3>
+      <adw-glow-dot glowing></adw-glow-dot>
+    </div>
+    <h2>adw-nav-item</h2>
+    <div class="list">
+      <adw-nav-item>
+        <radix-icons-timer slot="icon"></radix-icons-timer>
+        <a href="#"> Timer </a>
+      </adw-nav-item>
+      <adw-nav-item active>
+        <radix-icons-timer slot="icon"></radix-icons-timer>
+        <a href="#"> Timer </a>
+      </adw-nav-item>
+    </div>
+  </body>
+</html>

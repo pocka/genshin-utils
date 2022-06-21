@@ -1,4 +1,3 @@
-import "sanitize.css";
 import "./App/App.css";
 
 import { Elm } from "./App/App.elm";
@@ -19,6 +18,9 @@ import newTimerPageCss from "./App/Pages/NewTimer.module.css";
 import timerPageCss from "./App/Pages/Timer.module.css";
 import layoutCss from "./App/Layout.module.css";
 import uiCommonCss from "./App/UI/Common.module.css";
+
+import "./Adw";
+import "./RadixIcons";
 
 declare global {
   interface ImportMeta {
