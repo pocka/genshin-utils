@@ -1,4 +1,4 @@
-module Adw.Button exposing (Variant(..), button, disabled, loading, size, variant)
+module Adw.Button exposing (Size(..), Variant(..), button, disabled, iconOnly, loading, size, variant)
 
 import Html exposing (..)
 import Html.Attributes exposing (attribute, property)
@@ -52,3 +52,8 @@ loading v =
 disabled : Bool -> Attribute msg
 disabled v =
     property "disabled" (Encode.bool v)
+
+
+iconOnly : Bool -> Attribute msg
+iconOnly v =
+    property "iconOnly" (Encode.bool v)

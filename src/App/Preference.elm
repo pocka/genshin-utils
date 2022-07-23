@@ -1,6 +1,6 @@
 module App.Preference exposing (OnOffFeature(..), Preference, boolToOnOff, decoder, default, encode)
 
-import App.Language as Language exposing (Language)
+import App.Types.Language as Language exposing (Language)
 import Json.Decode as Decode
 import Json.Encode as Encode
 

@@ -1,0 +1,61 @@
+.container {
+  max-width: calc(50 * var(--adw-unit));
+  margin: 0 auto;
+}
+
+.menus {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 8px;
+  gap: 8px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: var(--adw-spacing-medium);
+  margin: 0;
+  margin-top: calc(var(--adw-spacing-xlarge) * 2);
+}
+
+.dots {
+  display: flex;
+  gap: var(--adw-spacing-xsmall);
+}
+
+.number {
+  font-size: 110px;
+  font-weight: var(--adw-fontweight-bold);
+  line-height: var(--adw-lineheight-medium);
+}
+
+.control {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--adw-spacing-xlarge);
+  padding: var(--adw-spacing-small);
+}
+
+.actions,
+.texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--adw-spacing-medium);
+}
+
+.delta {
+  font-size: var(--adw-fontsize-small);
+
+  color: hsl(
+    var(--adw-color-fg-hue),
+    var(--adw-color-fg-saturation),
+    calc(var(--adw-color-fg-lightness) + var(--adw-lightness-step))
+  );
+}

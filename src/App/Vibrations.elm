@@ -1,6 +1,6 @@
 module App.Vibrations exposing (quickKnock)
 
-import Vibration exposing (PulsePattern, pulse)
+import Browser.Extra.Vibration exposing (PulsePattern, pulse)
 
 
 quickKnock : PulsePattern

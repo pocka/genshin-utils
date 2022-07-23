@@ -1,4 +1,4 @@
-module App.Route exposing (Route(..), fromUrl)
+module App.Route exposing (Route(..), fromUrl, hash)
 
 import Url
 import Url.Parser as Parser
@@ -6,21 +6,46 @@ import Url.Parser as Parser
 
 type Route
     = NotFound
+    | About
     | Configuration
-    | Dashboard
     | RandomEventCounter
     | Timer
     | NewTimer
+
+
+hash : Route -> String
+hash route =
+    case route of
+        NotFound ->
+            "#"
+
+        About ->
+            "#about"
+
+        Configuration ->
+            "#config"
+
+        RandomEventCounter ->
+            "#randoms"
+
+        Timer ->
+            "#timers"
+
+        NewTimer ->
+            "#timers/new"
 
 
 fragmentToRoute : Maybe String -> Route
 fragmentToRoute fragment =
     case fragment of
         Just "" ->
-            Dashboard
+            Timer
 
         Nothing ->
-            Dashboard
+            Timer
+
+        Just "about" ->
+            About
 
         Just "config" ->
             Configuration

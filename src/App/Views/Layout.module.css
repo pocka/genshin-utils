@@ -1,0 +1,27 @@
+.main {
+  margin-bottom: calc(8 * var(--adw-unit));
+}
+
+.nav {
+  --_margin: var(--adw-spacing-xsmall);
+  box-sizing: border-box;
+  position: fixed;
+  bottom: var(--_margin);
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  min-width: 0;
+  width: calc(100% - var(--_margin) * 2);
+}
+
+@media (orientation: landscape) {
+  .nav {
+    max-width: calc(40 * var(--adw-unit));
+  }
+}
+
+@media (orientation: landscape) and (min-height: 600px) {
+  .nav {
+    --_margin: var(--adw-spacing-medium);
+  }
+}

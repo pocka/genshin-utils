@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/pocka/genshin-utils"
   },
+  "bugs": {
+    "url": "https://github.com/pocka/genshin-utils/issues"
+  },
   "packageManager": "pnpm@7.3.0",
   "dependencies": {
     "@fontsource/inter": "^4.5.11",

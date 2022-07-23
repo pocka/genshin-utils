@@ -1,6 +1,6 @@
 module App.Timer exposing (State(..), Timer, decoder, encode, idToString, posixToId)
 
-import App.Duration as Duration exposing (Duration)
+import App.Types.Duration as Duration exposing (Duration)
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Time

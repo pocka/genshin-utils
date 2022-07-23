@@ -28,6 +28,7 @@ export default defineConfig({
       author: packageJson.author,
       contributors: packageJson.contributors,
       repository: packageJson.repository,
+      bugs: packageJson.bugs,
     }),
   },
 });

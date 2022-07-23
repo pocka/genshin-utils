@@ -35,6 +35,8 @@ sendEvent ev =
     sendAppProfileEvent (encodeOutgoingEvent ev)
 
 
+{-| Save the current profile data to client storage.
+-}
 persist : Profile -> Cmd msg
 persist profile =
     sendEvent (PersistProfile profile)

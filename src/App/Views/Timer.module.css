@@ -1,0 +1,115 @@
+.empty {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--adw-spacing-large);
+  min-width: 0;
+  max-width: calc(42 * var(--adw-unit));
+  padding: var(--adw-spacing-xsmall);
+  margin: 0 auto;
+  margin-top: var(--adw-spacing-large);
+  padding: var(--adw-spacing-large);
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: var(--adw-fontsize-large);
+  font-weight: var(--adw-fontweight-bold);
+
+  text-align: center;
+}
+
+.emptyDescription {
+  margin: 0;
+  margin-bottom: var(--adw-spacing-large);
+  font-size: var(--adw-fontsize-medium);
+  justify-self: center;
+}
+
+.container {
+  max-width: calc(100 * var(--adw-unit));
+  margin: 0 auto;
+  padding: var(--adw-spacing-xsmall);
+}
+
+.header {
+  max-width: calc(60 * var(--adw-unit));
+  margin: 0 auto;
+  padding: var(--adw-spacing-small);
+  margin-bottom: var(--adw-spacing-large);
+}
+
+.description {
+  margin: 0;
+  margin-top: var(--adw-spacing-medium);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.timers {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(calc(30 * var(--adw-unit)), 1fr)
+  );
+  padding: var(--adw-spacing-xsmall);
+  gap: var(--adw-spacing-medium) var(--adw-spacing-large);
+  width: 100%;
+  margin: 0;
+  margin-top: var(--adw-spacing-xlarge);
+}
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--adw-spacing-medium);
+  padding: var(--adw-spacing-medium);
+  border: 1px solid
+    hsl(
+      var(--adw-color-border-hue),
+      var(--adw-color-border-saturation),
+      calc(var(--adw-color-border-lightness) + var(--adw-lightness-step) * 0.5)
+    );
+
+  background-color: hsl(
+    var(--adw-color-bg-hue),
+    var(--adw-color-bg-saturation),
+    calc(var(--adw-color-bg-lightness) + var(--adw-lightness-step) * 0.25)
+  );
+  border-radius: var(--adw-radius-medium);
+}
+
+.timer--header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--adw-spacing-small);
+}
+
+.timer--header--info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: var(--adw-spacing-xsmall);
+}
+
+.timer--header--info--title {
+  font-weight: var(--adw-fontweight-bold);
+  font-size: var(--adw-fontsize-large);
+  line-height: var(--adw-lineheight-medium);
+}
+
+.timer--header--info--status {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 4px;
+}

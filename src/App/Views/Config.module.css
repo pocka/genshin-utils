@@ -1,0 +1,28 @@
+.container {
+  max-width: calc(40 * var(--adw-unit));
+  margin: 0 auto;
+  padding: 8px;
+}
+
+.field {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.label {
+  font-weight: var(--adw-fontweight-bold);
+  line-height: var(--adw-lineheight-medium);
+  font-size: var(--adw-fontsize-medium);
+}
+
+.tips {
+  font-size: var(--adw-fontsize-small);
+  line-height: var(--adw-lineheight-dense);
+}
+
+.switch {
+  align-self: flex-start;
+}

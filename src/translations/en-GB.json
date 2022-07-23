@@ -1,9 +1,4 @@
 {
-  "shell": {
-    "disclaimer": "This application is not affiliated with miHoYo Limited.",
-    "thirdPartyNotice": "Third party notice",
-    "sourceCode": "Source code"
-  },
   "configPage": {
     "title": "Config",
     "description": "Configure this application.",
@@ -26,7 +21,8 @@
         "checking": "Checking availability...",
         "notSupported": "Your browser does not support Notifications API.",
         "denied": "Access to Notifications API was rejected.",
-        "permissionRequesting": "Requesting permission..."
+        "permissionRequesting": "Requesting permission...",
+        "requestPermission": "Enable Notifications API"
       }
     },
     "ui": {
@@ -42,12 +38,6 @@
       "systemDefaultTheme": "System Default",
       "light": "Light",
       "dark": "Dark",
-      "wakeLock": {
-        "label": "Screen Lock",
-        "description": "Prevent your device from dimming or locking the screen while this application is running. Will be released when the tab is closed, hidden, or reloaded.",
-        "checking": "Checking whether your browser supports WakeLock API...",
-        "notSupported": "Your browser does not support WakeLock API."
-      },
       "feedbackVibration": {
         "label": "Feedback Vibration",
         "description": "When turned on, the device perform short feedback vibration for primary actions. On devices without vibration mechanism, this setting has no effect.",
@@ -58,14 +48,12 @@
   "randomEventCounterPage": {
     "title": "Random event counter",
     "description": "Log and Manage how many times left you can get a reward by completing a random event/quest.",
+    "lastClaimedLabel": "Last claimed",
+    "ago": "%s ago",
     "actions": {
-      "reset": "RESET",
-      "undo": "UNDO 1",
-      "click": "Click",
-      "tap": "Tap"
-    },
-    "buttonDescription": "%s to consume one",
-    "noMoreLeft": "You claimed all rewards you have today"
+      "claim": "Claim",
+      "undo": "Undo"
+    }
   },
   "timerPage": {
     "title": "Timer",
@@ -79,61 +67,46 @@
       "start": "Start",
       "delete": "Delete",
       "stop": "Cancel",
-      "clear": "Clear"
+      "clear": "Clear",
+      "menu": "Open Menu",
+      "presets": "Create from presets"
     },
     "timerCard": {
       "duration": "Duration: %s",
       "remains": "%s remains",
       "ended": "Ended %s ago"
-    },
-    "active": {
-      "heading": "Running timers",
-      "empty": {
-        "title": "No timers running",
-        "description": "Active timers will appear here."
-      }
-    },
-    "inactive": {
-      "heading": "Inactive timers",
-      "empty": {
-        "title": "No inactive timers",
-        "description": "No available timers to start."
-      }
     }
   },
   "newTimerPage": {
     "title": "Create a new timer",
     "form": {
-      "general": {
-        "title": "General",
-        "name": {
-          "label": "Name",
-          "description": "Name of the timer."
-        }
+      "name": {
+        "label": "Name",
+        "placeholder": "Artifact spawn"
       },
       "duration": {
         "title": "Duration",
         "tips": "The timer will run for %s.",
         "day": {
-          "label": "Days",
-          "description": "How long will the timer run, in days?"
+          "label": "days",
+          "placeholder": ""
         },
         "hour": {
-          "label": "Hours",
-          "description": "How long will the timer run, in hours?"
+          "label": "hours",
+          "placeholder": ""
         },
         "minute": {
-          "label": "Minutes",
-          "description": "How long will the timer run, in minutes?"
+          "label": "minutes",
+          "placeholder": ""
         }
       },
-      "submit": "Create"
+      "submit": "Create",
+      "errors": {
+        "emptyName": "Please input a name",
+        "negativeDuration": "Duration cannot be negative.",
+        "zeroDuration": "Duration cannot be zero."
+      }
     }
-  },
-  "validation": {
-    "required": "%s is required.",
-    "int": "%s must be valid integer.",
-    "gte": "%s must be greater than or equal to %s."
   },
   "notifications": {
     "timer": {
@@ -142,5 +115,20 @@
       "open": "Open",
       "dismiss": "Dismiss"
     }
+  },
+  "appMenu": {
+    "wakeLock": "Screen Lock",
+    "wakeLockNotSupported": "This browser does not support WakeLock API.",
+    "preference": "Preference",
+    "about": "About"
+  },
+  "aboutPage": {
+    "title": "About this app",
+    "version": "Version",
+    "license": "License",
+    "repository": "Source code",
+    "author": "Author",
+    "issues": "Issue tracker",
+    "thirdPartyNotice": "Third party notice"
   }
 }

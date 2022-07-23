@@ -41,6 +41,10 @@ export function setup(ports: Ports): void {
   ports.sendAppProfileEvent.subscribe((ev) => {
     switch (ev.type) {
       case "PersistProfile": {
+        document.documentElement.setAttribute(
+          "data-adw-theme",
+          ev.profile.theme
+        );
         localforage.setItem<Profile>(LOCALFORAGE_KEY, ev.profile);
         return;
       }

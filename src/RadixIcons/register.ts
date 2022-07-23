@@ -1,11 +1,23 @@
+import { RadixIconsBackpack } from "./Backpack";
+import { RadixIconsCheck } from "./Check";
+import { RadixIconsDotsVertical } from "./DotsVertical";
+import { RadixIconsPencil2 } from "./Pencil2";
 import { RadixIconsTimer } from "./Timer";
+import { RadixIconsTrash } from "./Trash";
 
 interface RadixIconsComponent {
   defaultTagName: string;
 }
 
 export const components: readonly (CustomElementConstructor &
-  RadixIconsComponent)[] = [RadixIconsTimer];
+  RadixIconsComponent)[] = [
+  RadixIconsBackpack,
+  RadixIconsCheck,
+  RadixIconsDotsVertical,
+  RadixIconsPencil2,
+  RadixIconsTimer,
+  RadixIconsTrash,
+];
 
 export function register() {
   components.forEach((component) => {

@@ -44,6 +44,8 @@ export class AdwNavItem extends LitElement {
       }
 
       .link::slotted(*) {
+        display: block;
+        width: 100%;
         padding: var(--_padding);
         padding-top: calc(var(--_padding) + var(--_icon-size) + var(--_gap));
         font-size: var(--adw-fontsize-small);
@@ -55,7 +57,7 @@ export class AdwNavItem extends LitElement {
         text-align: center;
         border-radius: var(--adw-radius-medium);
       }
-      .link::slotted(:focus) {
+      .link::slotted(:focus-visible) {
         text-decoration: underline;
         outline: none;
       }

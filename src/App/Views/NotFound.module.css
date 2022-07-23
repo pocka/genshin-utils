@@ -1,0 +1,27 @@
+.container {
+  width: 100%;
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--adw-spacing-small);
+}
+
+.paragraph {
+  margin: 0;
+  font-size: var(--adw-fontsize-large);
+}
+
+.url {
+  display: block;
+  width: 100%;
+  font-size: var(--adw-fontsize-medium);
+  font-family: "Ubuntu mono", monospace;
+  padding: var(--adw-spacing-medium);
+
+  background-color: hsl(
+    var(--adw-color-bg-hue),
+    var(--adw-color-bg-saturation),
+    calc(var(--adw-color-bg-lightness) + var(--adw-lightness-step))
+  );
+  border-radius: var(--adw-radius-medium);
+  overflow-x: auto;
+}

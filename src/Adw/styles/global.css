@@ -29,3 +29,10 @@ body {
     var(--adw-color-fg-lightness)
   );
 }
+
+/* A workaround for Safari not having correct pseudo-element support for `::slotted` selector */
+adw-input > input::-webkit-inner-spin-button,
+adw-input > input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

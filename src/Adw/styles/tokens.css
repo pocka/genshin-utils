@@ -48,13 +48,25 @@
 @media (prefers-color-scheme: dark) {
   :root {
     --adw-color-primary-lightness: 45%;
-
     --adw-color-bg-lightness: 16%;
-
     --adw-color-fg-lightness: 95%;
-
     --adw-color-border-lightness: 52%;
-
     --adw-lightness-step: -12%;
   }
+}
+
+[data-adw-theme="light"] {
+  --adw-color-primary-lightness: 55%;
+  --adw-color-bg-lightness: 95%;
+  --adw-color-fg-lightness: 19%;
+  --adw-color-border-lightness: 72%;
+  --adw-lightness-step: 24%;
+}
+
+[data-adw-theme="dark"] {
+  --adw-color-primary-lightness: 45%;
+  --adw-color-bg-lightness: 16%;
+  --adw-color-fg-lightness: 95%;
+  --adw-color-border-lightness: 52%;
+  --adw-lightness-step: -12%;
 }

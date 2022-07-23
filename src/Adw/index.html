@@ -88,6 +88,24 @@
           <a href="#">Link</a>
         </adw-button>
       </div>
+      <h3>Icon only</h3>
+      <div class="list">
+        <adw-button size="large" icon-only>
+          <button title="Demo">
+            <radix-icons-dots-vertical></radix-icons-dots-vertical>
+          </button>
+        </adw-button>
+        <adw-button disabled icon-only>
+          <button title="Demo">
+            <radix-icons-backpack></radix-icons-backpack>
+          </button>
+        </adw-button>
+        <adw-button variant="primary" loading icon-only>
+          <a title="Demo" href="#">
+            <radix-icons-check></radix-icons-check>
+          </a>
+        </adw-button>
+      </div>
     </div>
     <h2>adw-glow-dot</h2>
     <div>
@@ -103,9 +121,123 @@
         <a href="#"> Timer </a>
       </adw-nav-item>
       <adw-nav-item active>
+        <radix-icons-backpack slot="icon"></radix-icons-backpack>
+        <a href="#"> Rewards </a>
+      </adw-nav-item>
+    </div>
+    <h2>adw-nav</h2>
+    <adw-nav>
+      <adw-nav-item active>
         <radix-icons-timer slot="icon"></radix-icons-timer>
         <a href="#"> Timer </a>
       </adw-nav-item>
+      <adw-nav-item>
+        <radix-icons-backpack slot="icon"></radix-icons-backpack>
+        <a href="#"> Rewards </a>
+      </adw-nav-item>
+      <adw-button slot="action" icon-only>
+        <button>
+          <radix-icons-dots-vertical></radix-icons-dots-vertical>
+        </button>
+      </adw-button>
+    </adw-nav>
+    <h2>adw-menu-item</h2>
+    <adw-menu-item role="presentation">
+      <button>Item</button>
+    </adw-menu-item>
+    <adw-menu-item role="presentation">
+      <radix-icons-check slot="icon"></radix-icons-check>
+      <a href="#">Item</a>
+    </adw-menu-item>
+    <h2>adw-menu</h2>
+    <adw-menu>
+      <adw-menu-item>
+        <radix-icons-timer slot="icon"></radix-icons-timer>
+        <button>Button</button>
+      </adw-menu-item>
+      <adw-menu-item>
+        <radix-icons-timer slot="icon"></radix-icons-timer>
+        <button>Button</button>
+      </adw-menu-item>
+      <adw-menu-item>
+        <radix-icons-check slot="icon"></radix-icons-check>
+        <a href="#">Link</a>
+      </adw-menu-item>
+    </adw-menu>
+    <h2>adw-dropdown</h2>
+    <adw-dropdown>
+      <adw-button variant="primary" slot="trigger">
+        <button>Open Menu</button>
+      </adw-button>
+      <adw-menu>
+        <adw-menu-item>
+          <radix-icons-timer slot="icon"></radix-icons-timer>
+          <button>Item</button>
+        </adw-menu-item>
+        <adw-menu-item>
+          <a href="#">Long Long Item</a>
+        </adw-menu-item>
+        <adw-menu-item disabled>
+          <button>Disabled Item</button>
+        </adw-menu-item>
+        <adw-menu-item>
+          <button>Normal Item</button>
+        </adw-menu-item>
+        <adw-menu-item loading>
+          <button>Loading Item</button>
+        </adw-menu-item>
+      </adw-menu>
+    </adw-dropdown>
+    <h2>adw-progress</h2>
+    <div class="list">
+      <adw-progress></adw-progress>
+      <adw-progress value="0.7"></adw-progress>
+      <adw-progress value="1"></adw-progress>
+      <adw-progress id="progress_demo" value="0"></adw-progress>
     </div>
+    <h2>adw-number-input</h2>
+    <adw-input>
+      <input placeholder="type=text" />
+    </adw-input>
+    <adw-input>
+      <input type="number" placeholder="type=number" />
+    </adw-input>
+    <adw-input>
+      <input type="number" step="0.2" />
+    </adw-input>
+    <h2>adw-select</h2>
+    <adw-select>
+      <select>
+        <option>Option A</option>
+        <option>Option B</option>
+        <option>Option C</option>
+      </select>
+    </adw-select>
+    <h2>adw-switch</h2>
+    <div class="list">
+      <adw-switch></adw-switch>
+      <adw-switch checked></adw-switch>
+      <adw-switch readonly></adw-switch>
+      <adw-switch checked readonly></adw-switch>
+      <adw-switch disabled></adw-switch>
+      <adw-switch checked disabled></adw-switch>
+    </div>
+    <script>
+      customElements.whenDefined("adw-progress").then(() => {
+        const progressDemo = document.getElementById("progress_demo");
+
+        const intervalId = setInterval(() => {
+          if (!progressDemo) {
+            clearInterval(intervalId);
+            return;
+          }
+
+          progressDemo.value += 0.01;
+          if (progressDemo.value > 1) {
+            progressDemo.value = 0;
+          }
+        }, 100);
+      });
+    </script>
   </body>
 </html>

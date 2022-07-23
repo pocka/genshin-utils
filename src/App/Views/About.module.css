@@ -1,0 +1,47 @@
+.container {
+  max-width: calc(60 * var(--adw-unit));
+  margin: 16px auto;
+  padding: 8px;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 32px 16px;
+  font-size: var(--adw-fontsize-medium);
+}
+
+.label {
+  margin: 0;
+  padding: 0;
+
+  color: hsl(
+    var(--adw-color-fg-hue),
+    var(--adw-color-fg-saturation),
+    calc(
+      var(--adw-color-fg-lightness) * 0.6 + var(--adw-color-bg-lightness) * 0.4
+    )
+  );
+  text-align: right;
+  text-align: end;
+}
+
+.value {
+  margin: 0;
+  padding: 0;
+
+  color: hsl(
+    var(--adw-color-fg-hue),
+    var(--adw-color-fg-saturation),
+    var(--adw-color-fg-lightness)
+  );
+}
+
+.link {
+  word-break: break-all;
+
+  color: hsl(
+    var(--adw-color-primary-hue),
+    var(--adw-color-primary-saturation),
+    calc(
+      (var(--adw-color-primary-lightness) + var(--adw-color-fg-lightness)) * 0.5
+    )
+  );
+}

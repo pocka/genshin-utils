@@ -1,0 +1,59 @@
+.form,
+.field,
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form {
+  gap: 20px;
+  max-width: calc(60 * var(--adw-unit));
+  margin: 0 auto;
+  margin-top: 16px;
+  padding: 8px;
+}
+
+.field {
+  gap: 8px;
+}
+
+.fieldGroup {
+  gap: 12px;
+}
+
+.suffixField {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  gap: calc(0.4 * var(--adw-unit));
+}
+.suffixField > adw-input {
+  max-width: calc(16 * var(--adw-unit));
+}
+.suffixField > label {
+  font-size: var(--adw-fontsize-small);
+}
+
+.label {
+  font-weight: var(--adw-fontweight-bold);
+  line-height: var(--adw-lineheight-medium);
+  font-size: var(--adw-fontsize-medium);
+
+  color: hsl(
+    var(--adw-color-fg-hue),
+    var(--adw-color-fg-saturation),
+    calc(var(--adw-color-fg-lightness) + var(--adw-lightness-step))
+  );
+}
+
+.duration {
+  font-size: var(--adw-fontsize-small);
+}
+
+.error {
+  font-size: var(--adw-fontsize-small);
+  font-weight: var(--adw-fontweight-bold);
+
+  text-decoration: underline;
+}

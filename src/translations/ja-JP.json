@@ -1,9 +1,4 @@
 {
-  "shell": {
-    "disclaimer": "このアプリケーションは非公式のものであり、 miHoYo Limited とは関係がありません。",
-    "thirdPartyNotice": "ライブラリライセンス",
-    "sourceCode": "ソースコード"
-  },
   "configPage": {
     "title": "設定",
     "description": "アプリケーションの設定が行えます。",
@@ -26,14 +21,15 @@
         "checking": "通知が利用できるか確認中です...",
         "notSupported": "このブラウザでは Notifications API が利用できないためブラウザ通知機能は使えません。",
         "denied": "通知APIへのアクセスが拒否されました。",
-        "permissionRequesting": "通知APIへのアクセスを申請しています..."
+        "permissionRequesting": "通知APIへのアクセスを申請しています...",
+        "requestPermission": "通知APIを有効化"
       }
     },
     "ui": {
       "title": "ユーザインタフェース",
       "language": {
         "label": "表示言語",
-        "description": "アプリケーションで表示する言語です。翻訳されていない部分は英語で表示されます。"
+        "description": "アプリケーションで表示する言語です。未翻訳の部分は英語で表示されます。"
       },
       "theme": {
         "label": "UIテーマ",
@@ -42,12 +38,6 @@
       "systemDefaultTheme": "システム設定",
       "light": "ライト",
       "dark": "ダーク",
-      "wakeLock": {
-        "label": "画面ロック",
-        "description": "このページを開いている間、デバイスの画面が暗転したりロックするのを防ぐことができます。タブを閉じる、バックグラウンドに行く等すると解除されます。",
-        "checking": "WakeLock APIが利用できるか確認中です...",
-        "notSupported": "このブラウザでは WakeLock API が利用できないため、画面ロック機能は使えません。"
-      },
       "feedbackVibration": {
         "label": "操作時の振動フィードバック",
         "description": "主要なアクションや、画面が大きく変わらない操作時に短いバイブレーションを鳴らして操作のフィードバックを返します。バイブレーション機能がないデバイスでは何もおこりません。",
@@ -57,15 +47,13 @@
   },
   "randomEventCounterPage": {
     "title": "ランダムイベントカウンタ",
-    "description": "ランダムイベントの残り報酬受取可能回数を記録・カウントできます。",
+    "description": "ランダムイベントの残り報酬受取可能回数を記録・カウントします。",
+    "lastClaimedLabel": "直前の操作",
+    "ago": "%s前",
     "actions": {
-      "reset": "リセット",
-      "undo": "1つ戻す",
-      "click": "クリック",
-      "tap": "タップ"
-    },
-    "buttonDescription": "ここを%sして1つ消費",
-    "noMoreLeft": "本日の報酬はすべて受取済みです"
+      "claim": "受け取る",
+      "undo": "1つ戻す"
+    }
   },
   "timerPage": {
     "title": "タイマー",
@@ -79,61 +67,46 @@
       "start": "開始",
       "delete": "削除",
       "stop": "キャンセル",
-      "clear": "クリア"
+      "clear": "クリア",
+      "menu": "メニュー",
+      "presets": "プリセットから作成"
     },
     "timerCard": {
       "duration": "長さ: %s",
       "remains": "残り%s",
       "ended": "%s前に終了"
-    },
-    "active": {
-      "heading": "稼働中のタイマー",
-      "empty": {
-        "title": "稼働中のタイマーはありません",
-        "description": "カウント中、及びカウント終了後リセットされていないタイマーがここに表示されます。"
-      }
-    },
-    "inactive": {
-      "heading": "未稼働のタイマー",
-      "empty": {
-        "title": "未稼働のタイマーはありません",
-        "description": "すべてのタイマーが稼働中です。"
-      }
     }
   },
   "newTimerPage": {
     "title": "タイマーの作成",
     "form": {
-      "general": {
-        "title": "一般",
-        "name": {
-          "label": "名前",
-          "description": "タイマーを識別する表示名。"
-        }
+      "name": {
+        "label": "名前",
+        "placeholder": "聖遺物リポップ"
       },
       "duration": {
         "title": "タイマーの長さ",
         "tips": "タイマーの長さは%sになります。",
         "day": {
           "label": "日",
-          "description": "何日間タイマーをかけるか。"
+          "placeholder": ""
         },
         "hour": {
           "label": "時間",
-          "description": "何時間タイマーをかけるか。"
+          "placeholder": ""
         },
         "minute": {
           "label": "分",
-          "description": "何分間タイマーをかけるか。"
+          "placeholder": ""
         }
       },
-      "submit": "作成する"
+      "submit": "作成する",
+      "errors": {
+        "emptyName": "名前を入力してください",
+        "negativeDuration": "タイマーの時間は0以下にできません。",
+        "zeroDuration": "1分以上の時間を指定してください。"
+      }
     }
-  },
-  "validation": {
-    "required": "%sは必須です。",
-    "int": "%sには有効な整数を入力してください。",
-    "gte": "%sには%s以上の数値を入力してください。"
   },
   "notifications": {
     "timer": {
@@ -142,5 +115,20 @@
       "open": "タイマー一覧",
       "dismiss": "閉じる"
     }
+  },
+  "appMenu": {
+    "wakeLock": "画面ロック防止",
+    "wakeLockNotSupported": "このブラウザは WakeLock API をサポートしていないため利用できません。",
+    "preference": "設定",
+    "about": "このアプリについて"
+  },
+  "aboutPage": {
+    "title": "このアプリについて",
+    "version": "バージョン",
+    "license": "ライセンス",
+    "repository": "ソースコード",
+    "author": "作者",
+    "issues": "バグ報告・一覧",
+    "thirdPartyNotice": "利用ライブラリ"
   }
 }

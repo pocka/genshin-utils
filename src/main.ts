@@ -1,23 +1,20 @@
-import "./App/App.css";
-
 import { Elm } from "./App/App.elm";
 import type { GameServer } from "./App/Profile";
-import * as Notifications from "./Notifications";
 import * as Profile from "./App/Profile";
-import * as WakeLock from "./App/WakeLock";
-import * as Vibration from "./Vibration";
+import * as WakeLock from "./Browser/Extra/WakeLock";
+import * as Notifications from "./Browser/Extra/Notifications";
+import * as Vibration from "./Browser/Extra/Vibration";
 import * as Translation from "./App/Translation";
 import servers from "./servers.json";
 import enTranslation from "./translations/en-GB.json";
 
-import configPageCss from "./App/Pages/Config.module.css";
-import dashboardPageCss from "./App/Pages/Dashboard.module.css";
-import notFoundPageCss from "./App/Pages/NotFound.module.css";
-import randomEventCounterPageCss from "./App/Pages/RandomEventCounter.module.css";
-import newTimerPageCss from "./App/Pages/NewTimer.module.css";
-import timerPageCss from "./App/Pages/Timer.module.css";
-import layoutCss from "./App/Layout.module.css";
-import uiCommonCss from "./App/UI/Common.module.css";
+import aboutCss from "./App/Views/About.module.css";
+import configCss from "./App/Views/Config.module.css";
+import layoutCss from "./App/Views/Layout.module.css";
+import randomEventCss from "./App/Views/RandomEventCounter.module.css";
+import notFoundCss from "./App/Views/NotFound.module.css";
+import newTimerCss from "./App/Views/NewTimer.module.css";
+import timerCss from "./App/Views/Timer.module.css";
 
 import "./Adw";
 import "./RadixIcons";
@@ -47,6 +44,10 @@ if ("serviceWorker" in navigator) {
 async function main(): Promise<void> {
   const profile = await Profile.load();
 
+  if (profile) {
+    document.documentElement.setAttribute("data-adw-theme", profile.theme);
+  }
+
   const app = Elm.App.App.init<{
     cssModules: Record<string, Record<string, string>>;
     servers: readonly GameServer[];
@@ -58,14 +59,13 @@ async function main(): Promise<void> {
   }>({
     flags: {
       cssModules: {
-        "App.Layout": layoutCss,
-        "App.Pages.Config": configPageCss,
-        "App.Pages.Dashboard": dashboardPageCss,
-        "App.Pages.NotFound": notFoundPageCss,
-        "App.Pages.RandomEventCounter": randomEventCounterPageCss,
-        "App.Pages.Timer": timerPageCss,
-        "App.Pages.NewTimer": newTimerPageCss,
-        "App.UI.Common": uiCommonCss,
+        "Views.Timer": timerCss,
+        "Views.NewTimer": newTimerCss,
+        "Views.RandomEventCounter": randomEventCss,
+        "Views.Layout": layoutCss,
+        "Views.NotFound": notFoundCss,
+        "Views.About": aboutCss,
+        "Views.Config": configCss,
       },
       servers,
       packageInfo: import.meta.env.PACKAGE_INFO,

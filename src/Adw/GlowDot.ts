@@ -31,6 +31,8 @@ export class AdwGlowDot extends LitElement {
           calc(var(--adw-color-border-lightness) + var(--adw-lightness-step))
         );
         border-radius: 50%;
+
+        transition: background-color 0.1s ease-out, box-shadow 0.1s ease-out;
       }
 
       :host([glowing]) {
@@ -63,6 +65,10 @@ export class AdwGlowDot extends LitElement {
 
   constructor() {
     super();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
 
     // This is neither interaction element nor semantic element.
     this.setAttribute("aria-hidden", "true");

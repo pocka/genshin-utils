@@ -1,10 +1,11 @@
 port module App.Translation exposing (IncomingEvent(..), Translation, decoder, on, request)
 
-import App.Language as Language exposing (Language)
-import App.Pages.ConfigTranslation
-import App.Pages.NewTimerTranslation
-import App.Pages.RandomEventCounterTranslation
-import App.Pages.TimerTranslation
+import App.Types.Language as Language exposing (Language)
+import App.Views.AboutTranslation
+import App.Views.ConfigTranslation
+import App.Views.NewTimerTranslation
+import App.Views.RandomEventCounterTranslation
+import App.Views.TimerTranslation
 import Json.Decode as Decode
 import Json.Encode as Encode
 import Translation exposing (Text, textDecoder)
@@ -86,36 +87,22 @@ on f =
 -- DATA
 
 
-type alias Shell =
-    { disclaimer : Text
-    , thirdPartyNotice : Text
-    , sourceCode : Text
+type alias AppMenu =
+    { wakeLock : Text
+    , wakeLockNotSupported : Text
+    , preference : Text
+    , about : Text
     }
 
 
-shellDecoder : Decode.Decoder Shell
-shellDecoder =
-    Decode.map3
-        Shell
-        (Decode.field "disclaimer" textDecoder)
-        (Decode.field "thirdPartyNotice" textDecoder)
-        (Decode.field "sourceCode" textDecoder)
-
-
-type alias Validation =
-    { required : Text
-    , int : Text
-    , gte : Text
-    }
-
-
-validationDecoder : Decode.Decoder Validation
-validationDecoder =
-    Decode.map3
-        Validation
-        (Decode.field "required" textDecoder)
-        (Decode.field "int" textDecoder)
-        (Decode.field "gte" textDecoder)
+appMenuDecoder : Decode.Decoder AppMenu
+appMenuDecoder =
+    Decode.map4
+        AppMenu
+        (Decode.field "wakeLock" textDecoder)
+        (Decode.field "wakeLockNotSupported" textDecoder)
+        (Decode.field "preference" textDecoder)
+        (Decode.field "about" textDecoder)
 
 
 type alias Notification =
@@ -149,13 +136,13 @@ notificationsDecoder =
 
 
 type alias Translation =
-    { configPage : App.Pages.ConfigTranslation.Translation
-    , shell : Shell
-    , randomEventCounterPage : App.Pages.RandomEventCounterTranslation.Translation
-    , timerPage : App.Pages.TimerTranslation.Translation
-    , newTimerPage : App.Pages.NewTimerTranslation.Translation
-    , validation : Validation
+    { configPage : App.Views.ConfigTranslation.Translation
+    , randomEventCounterPage : App.Views.RandomEventCounterTranslation.Translation
+    , timerPage : App.Views.TimerTranslation.Translation
+    , newTimerPage : App.Views.NewTimerTranslation.Translation
     , notifications : Notifications
+    , appMenu : AppMenu
+    , aboutPage : App.Views.AboutTranslation.Translation
     }
 
 
@@ -163,10 +150,10 @@ decoder : Decode.Decoder Translation
 decoder =
     Decode.map7
         Translation
-        (Decode.field "configPage" App.Pages.ConfigTranslation.decoder)
-        (Decode.field "shell" shellDecoder)
-        (Decode.field "randomEventCounterPage" App.Pages.RandomEventCounterTranslation.decoder)
-        (Decode.field "timerPage" App.Pages.TimerTranslation.decoder)
-        (Decode.field "newTimerPage" App.Pages.NewTimerTranslation.decoder)
-        (Decode.field "validation" validationDecoder)
+        (Decode.field "configPage" App.Views.ConfigTranslation.decoder)
+        (Decode.field "randomEventCounterPage" App.Views.RandomEventCounterTranslation.decoder)
+        (Decode.field "timerPage" App.Views.TimerTranslation.decoder)
+        (Decode.field "newTimerPage" App.Views.NewTimerTranslation.decoder)
         (Decode.field "notifications" notificationsDecoder)
+        (Decode.field "appMenu" appMenuDecoder)
+        (Decode.field "aboutPage" App.Views.AboutTranslation.decoder)

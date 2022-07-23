@@ -18,6 +18,18 @@ authorDecoder =
         ]
 
 
+type alias Bugs =
+    { url : Maybe String
+    }
+
+
+bugsDecoder : Decode.Decoder Bugs
+bugsDecoder =
+    Decode.map
+        Bugs
+        (Decode.maybe (Decode.field "url" Decode.string))
+
+
 type alias PackageJson =
     { version : String
     , license : String
@@ -25,6 +37,7 @@ type alias PackageJson =
     , contributors : List Author
     , homepage : Url.Url
     , repository : Url.Url
+    , bugs : Bugs
     }
 
 
@@ -47,6 +60,9 @@ empty =
     , contributors = []
     , homepage = dummyUrl
     , repository = dummyUrl
+    , bugs =
+        { url = Nothing
+        }
     }
 
 
@@ -74,7 +90,7 @@ repositoryFieldDecoder =
 
 packageJsonDecoder : Decode.Decoder PackageJson
 packageJsonDecoder =
-    Decode.map6
+    Decode.map7
         PackageJson
         (Decode.field "version" Decode.string)
         (Decode.field "license" Decode.string)
@@ -82,3 +98,4 @@ packageJsonDecoder =
         (Decode.field "contributors" (Decode.list authorDecoder))
         (Decode.field "homepage" urlDecoder)
         (Decode.field "repository" repositoryFieldDecoder)
+        (Decode.field "bugs" bugsDecoder)

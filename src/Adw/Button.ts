@@ -1,12 +1,15 @@
-import { css, html, LitElement, PropertyValues } from "lit";
+import { css, html } from "lit";
 import { property } from "lit/decorators/property.js";
+import { ref } from "lit/directives/ref.js";
+
+import { AdwAction } from "./Action";
 
 /**
  * Styles a slotted element to button-like looking.
  * This element itself does not act as button, but the slotted element does.
  * This element accept either `<button>` element or `<a>` element with `href` attribute set.
  */
-export class AdwButton extends LitElement {
+export class AdwButton extends AdwAction {
   static defaultTagName = "adw-button" as const;
 
   static get styles() {
@@ -66,6 +69,7 @@ export class AdwButton extends LitElement {
         color: hsl(var(--_fg-hue), var(--_fg-saturation), var(--_fg-lightness));
         cursor: pointer;
         font-weight: var(--adw-fontweight-bold);
+        text-align: center;
         text-decoration: none;
         user-select: none;
       }
@@ -83,6 +87,7 @@ export class AdwButton extends LitElement {
       :host([size="large"]) > ::slotted(button),
       :host([size="large"]) > ::slotted(a[href]) {
         font-size: var(--adw-fontsize-large);
+        padding: var(--adw-spacing-small) var(--adw-spacing-medium);
       }
 
       ::slotted(button:hover),
@@ -112,6 +117,14 @@ export class AdwButton extends LitElement {
         outline: none;
       }
 
+      :host([icon-only]) > ::slotted(button),
+      :host([icon-only]) > ::slotted(a[href]) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 1 / 1;
+      }
+
       :host([disabled]) {
         --_bg-saturation: 1%;
         --_bg-lightness: calc(
@@ -131,7 +144,7 @@ export class AdwButton extends LitElement {
           var(--_fg-saturation),
           calc(var(--_fg-lightness) + var(--adw-lightness-step) * 1.5)
         );
-        pointer-events: none;
+        cursor: default;
       }
 
       :host([loading]) > ::slotted(button),
@@ -189,49 +202,14 @@ export class AdwButton extends LitElement {
 
   @property({
     type: Boolean,
-    attribute: true,
+    attribute: "icon-only",
     reflect: true,
   })
-  disabled: boolean = false;
-
-  @property({
-    type: Boolean,
-    attribute: true,
-    reflect: true,
-  })
-  loading: boolean = false;
-
-  updated(changedProperties: PropertyValues<this>) {
-    if (changedProperties.has("disabled")) {
-      this.setAttribute("aria-disabled", String(this.disabled));
-    }
-
-    if (changedProperties.has("loading")) {
-      this.setAttribute("aria-busy", String(this.loading));
-    }
-  }
-
-  constructor() {
-    super();
-
-    this.addEventListener(
-      "click",
-      (ev) => {
-        if (this.disabled || this.loading) {
-          ev.preventDefault();
-          ev.stopPropagation();
-          return;
-        }
-      },
-      {
-        capture: true,
-      }
-    );
-  }
+  iconOnly: boolean = false;
 
   render() {
     return html`
-      <slot></slot>
+      <slot ${ref(this.actionSlot)}></slot>
       <div class="spinner"></div>
     `;
   }
