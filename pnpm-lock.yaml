@@ -8,7 +8,6 @@ specifiers:
   '@types/lodash.merge': ^4.6.6
   browserslist: ^4.19.1
   cssnano: ^5.0.14
-  elix: ^15.0.1
   elm: ^0.19.1-5
   elm-format: ^0.8.5
   elm-test: ^0.19.1-revision7
@@ -36,7 +35,6 @@ dependencies:
   '@fontsource/ubuntu': 4.5.0
   '@fontsource/ubuntu-mono': 4.5.0
   '@turtleui/webcomponents': 0.2.1
-  elix: 15.0.1
   lit: 2.2.6
   localforage: 1.10.0
   lodash.merge: 4.6.2
@@ -545,10 +543,6 @@ packages:
   /electron-to-chromium/1.4.33:
     resolution: {integrity: sha512-OVK1Ad3pHnmuXPhEfq85X8vUKr1UPNHryBnbKnyLcAfh8dPwoFjoDhDlP5KpPJIiymvSucZs48UBrE1250IxOw==}
     dev: true
-
-  /elix/15.0.1:
-    resolution: {integrity: sha512-hgL6EDdMO/JBJLmDfaM8AL0f3zQXDIwkjQEhaLi9OTLV+3q445ErkBZuHGK9UzAoIq3I062ldDXRX48l1vfqCg==}
-    dev: false
 
   /elm-esm/1.1.2:
     resolution: {integrity: sha512-h4Ta4hk7kITgKiXHLX3BZMpEXg9mFRIK8T/lOAiPG9WsOEPJMZUnvPiYmiiyOMgbNw4GYhlvAp6gsDjAkEflLw==}
