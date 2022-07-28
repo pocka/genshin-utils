@@ -75,9 +75,31 @@ timerCard model timer =
                     ]
                     [ button [] [ Icon.icon Icon.DotsVertical [] ] ]
                 , Adw.Menu.menu [ id ("timer_entry_" ++ Timer.idToString timer.id) ]
-                    [ Adw.MenuItem.menuItem []
+                    [ Adw.MenuItem.menuItem
+                        [ disabled
+                            (case timer.state of
+                                Timer.Running _ ->
+                                    True
+
+                                _ ->
+                                    False
+                            )
+                        ]
                         [ Icon.icon Icon.Trash [ Adw.MenuItem.iconSlot ]
                         , button [ onClick (DeleteTimer timer) ] [ text (ta .delete) ]
+                        ]
+                    , Adw.MenuItem.menuItem
+                        [ disabled
+                            (case timer.state of
+                                Timer.Running _ ->
+                                    False
+
+                                _ ->
+                                    True
+                            )
+                        ]
+                        [ Icon.icon Icon.CrossCircled [ Adw.MenuItem.iconSlot ]
+                        , button [ onClick (StopTimer timer) ] [ text (ta .stop) ]
                         ]
                     ]
                 ]
@@ -146,9 +168,14 @@ timerCard model timer =
                             , span [] [ text (fmt [ remains ] dict.timerCard.remains) ]
                             ]
                         ]
+                    , menu
                     ]
-                , Adw.Button.button [ Adw.Button.size Adw.Button.Large ]
-                    [ button [ onClick (StopTimer timer) ] [ text (ta .stop) ]
+                , Adw.Button.button
+                    [ Adw.Button.size Adw.Button.Large
+                    , Adw.Button.variant Adw.Button.Primary
+                    , Adw.Button.disabled True
+                    ]
+                    [ button [ onClick (StopTimer timer) ] [ text (ta .clear) ]
                     ]
                 ]
 

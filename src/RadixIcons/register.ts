@@ -1,5 +1,6 @@
 import { RadixIconsBackpack } from "./Backpack";
 import { RadixIconsCheck } from "./Check";
+import { RadixIconsCrossCircled } from "./CrossCircled";
 import { RadixIconsDotsVertical } from "./DotsVertical";
 import { RadixIconsPencil2 } from "./Pencil2";
 import { RadixIconsTimer } from "./Timer";
@@ -13,6 +14,7 @@ export const components: readonly (CustomElementConstructor &
   RadixIconsComponent)[] = [
   RadixIconsBackpack,
   RadixIconsCheck,
+  RadixIconsCrossCircled,
   RadixIconsDotsVertical,
   RadixIconsPencil2,
   RadixIconsTimer,

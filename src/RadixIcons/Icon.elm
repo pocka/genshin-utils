@@ -7,6 +7,7 @@ type Icon
     = Timer
     | Backpack
     | Check
+    | CrossCircled
     | DotsVertical
     | Trash
     | Pencil2
@@ -23,6 +24,9 @@ toString kind =
 
         Check ->
             "check"
+
+        CrossCircled ->
+            "cross-circled"
 
         DotsVertical ->
             "dots-vertical"
