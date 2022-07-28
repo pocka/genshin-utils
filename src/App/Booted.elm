@@ -119,6 +119,7 @@ type Msg
     | SetLanguage Language
     | SetFeedbackVibration Preference.OnOffFeature
     | SetBrowserNotification Preference.OnOffFeature
+    | UpdateTranslation Translation
     | RequestBrowserNotificationPermission
     | UpdateNewTimerFields (NewTimerFields -> NewTimerFields)
     | EmptyNewTimerFields
@@ -447,6 +448,13 @@ update msg model =
             ( model, Notifications.requestPermission )
 
         -- MISC
+        UpdateTranslation translation ->
+            let
+                { system } =
+                    model
+            in
+            ( { model | system = { system | translation = translation } }, Cmd.none )
+
         Delay ms nextMsg ->
             ( model, Task.perform (\_ -> nextMsg) (Process.sleep ms) )
 
@@ -479,4 +487,13 @@ subscriptions model =
         [ WakeLock.subscriptions model.wakeLock |> Sub.map WakeLockMsg
         , Notifications.subscriptions model.notification |> Sub.map NotificationMsg
         , Time.every 500.0 Tick
+        , Translation.on
+            (\ev ->
+                case ev of
+                    Translation.RecievedTranslation translation ->
+                        UpdateTranslation translation
+
+                    _ ->
+                        NoOp
+            )
         ]

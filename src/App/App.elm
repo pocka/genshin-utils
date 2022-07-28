@@ -184,9 +184,7 @@ init rawFlags url navKey =
 type Msg
     = LinkClicked Browser.UrlRequest
     | UrlChanged Url.Url
-    | UpdateTranslation App.Translation.Translation
     | BootedMsg Booted.Msg
-    | Noop
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -213,14 +211,6 @@ update msg model =
                     subModel
             in
             ( Booted (Route.fromUrl url) { subModel | system = { system | url = url } }, Cmd.none )
-
-        -- TODO: Move to Booted.elm
-        ( UpdateTranslation translation, Booted route subModel ) ->
-            let
-                { system } =
-                    subModel
-            in
-            ( Booted route { subModel | system = { system | translation = translation } }, Cmd.none )
 
         ( BootedMsg subMsg, Booted route subModel ) ->
             let
@@ -377,17 +367,7 @@ view model =
 subscriptions : Model -> Sub Msg
 subscriptions model =
     Sub.batch
-        [ App.Translation.on
-            (\ev ->
-                case ev of
-                    App.Translation.RecievedTranslation translation ->
-                        UpdateTranslation translation
-
-                    _ ->
-                        -- TODO: Handle error
-                        Noop
-            )
-        , case model of
+        [ case model of
             Booted _ subModel ->
                 Booted.subscriptions subModel |> Sub.map BootedMsg
 
