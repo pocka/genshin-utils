@@ -27,6 +27,8 @@
     auto-fill,
     minmax(calc(30 * var(--adw-unit)), 1fr)
   );
+  margin: 0;
+  padding: 0;
 }
 
 .item {
