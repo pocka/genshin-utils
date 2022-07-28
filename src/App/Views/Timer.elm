@@ -39,7 +39,7 @@ empty model =
         [ h2 [ class "emptyTitle" ] [ text (t .title) ]
         , p [ class "emptyDescription" ] [ text (t .description) ]
         , Adw.Button.button
-            [ Adw.Button.variant Adw.Button.Primary, Adw.Button.size Adw.Button.Large, disabled True ]
+            [ Adw.Button.variant Adw.Button.Primary, Adw.Button.size Adw.Button.Large ]
             [ a [ href "#timers/presets" ] [ text (ta .presets) ] ]
         , Adw.Button.button
             [ Adw.Button.size Adw.Button.Large ]
@@ -206,7 +206,7 @@ view model =
             [ div [ class "header" ]
                 [ div [ class "actions" ]
                     [ Adw.Button.button
-                        [ Adw.Button.variant Adw.Button.Primary, disabled True ]
+                        [ Adw.Button.variant Adw.Button.Primary ]
                         [ a [ href "#timers/presets" ] [ text (t (\d -> d.actions.presets)) ] ]
                     , Adw.Button.button
                         []

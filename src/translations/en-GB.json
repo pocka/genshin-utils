@@ -130,5 +130,10 @@
     "author": "Author",
     "issues": "Issue tracker",
     "thirdPartyNotice": "Third party notice"
+  },
+  "timerPresetsPage": {
+    "title": "Timer Presets",
+    "description": "Create a timer from pre-defined presets.",
+    "create": "Create"
   }
 }

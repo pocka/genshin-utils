@@ -9,6 +9,7 @@ import App.Route as Route exposing (Route(..))
 import App.Translation
 import App.Types.LaunchMode as LaunchMode exposing (LaunchMode(..))
 import App.Types.PlatformCapability as PlatformCapability exposing (PlatformCapability)
+import App.Types.TimerPreset as TimerPreset
 import App.UiTheme
 import App.Views.About
 import App.Views.Config
@@ -18,6 +19,7 @@ import App.Views.NewTimer
 import App.Views.NotFound
 import App.Views.RandomEventCounter
 import App.Views.Timer
+import App.Views.TimerPresets
 import Browser
 import Browser.Navigation
 import CssModules
@@ -58,6 +60,7 @@ type alias FlagDecodeResult =
     , mode : LaunchMode
     , vibrationApi : PlatformCapability
     , translation : Result Decode.Error App.Translation.Translation
+    , timerPresets : Result Decode.Error (List TimerPreset.TimerPreset)
     }
 
 
@@ -70,6 +73,7 @@ decodeFlags v =
     , mode = Decode.decodeValue (Decode.field "mode" LaunchMode.decoder) v |> Result.withDefault Production
     , vibrationApi = Decode.decodeValue (Decode.field "vibrationApi" PlatformCapability.decoder) v |> Result.withDefault PlatformCapability.NotSupported
     , translation = Decode.decodeValue (Decode.field "translation" App.Translation.decoder) v
+    , timerPresets = Decode.decodeValue (Decode.field "timerPresets" (Decode.list TimerPreset.decoder)) v
     }
 
 
@@ -85,6 +89,7 @@ type BootstrapError
     | FailedToDecodeServers String
     | FailedToDecodePackageMeta String
     | FailedToDecodeInitialTranslation String
+    | FailedToDecodeTimerPresets String
     | Unknown
 
 
@@ -106,6 +111,9 @@ bootstrapErrorCode error =
         FailedToDecodeInitialTranslation _ ->
             "E-104"
 
+        FailedToDecodeTimerPresets _ ->
+            "E-105"
+
         Unknown ->
             "E-999"
 
@@ -126,8 +134,8 @@ init rawFlags url navKey =
     in
     case ( flags.cssModules, flags.servers, flags.packageInfo ) of
         ( Ok cssModules, Ok servers, Ok packageInfo ) ->
-            case flags.translation of
-                Ok translation ->
+            case ( flags.translation, flags.timerPresets ) of
+                ( Ok translation, Ok timerPresets ) ->
                     case servers of
                         [] ->
                             ( failedToBoot NoGameServersAvailable, Cmd.none )
@@ -142,8 +150,14 @@ init rawFlags url navKey =
                                                 profile
 
                                             _ ->
-                                                { server = head, theme = App.UiTheme.SystemDefault, randomEvent = Nothing, preference = Preference.default, timers = [] }
+                                                { server = head
+                                                , theme = App.UiTheme.SystemDefault
+                                                , randomEvent = Nothing
+                                                , preference = Preference.default
+                                                , timers = []
+                                                }
                                     , servers = servers
+                                    , timerPresets = timerPresets
                                     }
 
                                 system : Booted.System
@@ -164,8 +178,11 @@ init rawFlags url navKey =
                             in
                             ( Booted (Route.fromUrl url) model, Cmd.map BootedMsg cmd )
 
-                Err error ->
+                ( Err error, _ ) ->
                     ( failedToBoot (FailedToDecodeInitialTranslation (Decode.errorToString error)), Cmd.none )
+
+                ( _, Err error ) ->
+                    ( failedToBoot (FailedToDecodeTimerPresets (Decode.errorToString error)), Cmd.none )
 
         ( Err error, _, _ ) ->
             ( failedToBoot (FailedToDecodeCssModules (Decode.errorToString error)), Cmd.none )
@@ -274,6 +291,13 @@ bootError mode error =
                       ]
                     )
 
+                ( Development, FailedToDecodeTimerPresets message ) ->
+                    ( "Failed to decode timer presets"
+                    , [ p [ class "app--error--description" ] [ text "Cannot parse `timerPresets` flag. Check syntax and structure of the `timerPresets.json` file." ]
+                      , pre [ class "app--error--details" ] [ text message ]
+                      ]
+                    )
+
                 ( _, Unknown ) ->
                     ( "Failed to launch application"
                     , [ p [ class "app--error--description" ] [ text "Sorry, application encountered an unexpected error during booting process." ]
@@ -329,6 +353,9 @@ view model =
 
                         Route.Timer ->
                             t (\d -> d.timerPage.title)
+
+                        Route.TimerPresets ->
+                            t (\d -> d.timerPresetsPage.title)
             in
             { title = title ++ " - Genshin Utils"
             , body =
@@ -352,6 +379,9 @@ view model =
 
                         Route.Configuration ->
                             App.Views.Config.view subModel
+
+                        Route.TimerPresets ->
+                            App.Views.TimerPresets.view subModel
                     ]
                     |> List.map (Html.map BootedMsg)
             }

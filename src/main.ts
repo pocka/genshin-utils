@@ -7,6 +7,7 @@ import * as Vibration from "./Browser/Extra/Vibration";
 import * as Translation from "./App/Translation";
 import servers from "./servers.json";
 import enTranslation from "./translations/en-GB.json";
+import timerPresets from "./timerPresets.json";
 
 import aboutCss from "./App/Views/About.module.css";
 import configCss from "./App/Views/Config.module.css";
@@ -15,6 +16,7 @@ import randomEventCss from "./App/Views/RandomEventCounter.module.css";
 import notFoundCss from "./App/Views/NotFound.module.css";
 import newTimerCss from "./App/Views/NewTimer.module.css";
 import timerCss from "./App/Views/Timer.module.css";
+import timerPresetsCss from "./App/Views/TimerPresets.module.css";
 
 import "./Adw";
 import "./RadixIcons";
@@ -56,6 +58,12 @@ async function main(): Promise<void> {
     profile: Profile.Profile | null;
     vibrationApi: boolean;
     translation: unknown;
+    timerPresets: ReadonlyArray<{
+      name: { default: string };
+      duration:
+        | { day?: number; hour?: number; minute?: number; second?: number }
+        | number;
+    }>;
   }>({
     flags: {
       cssModules: {
@@ -66,6 +74,7 @@ async function main(): Promise<void> {
         "Views.NotFound": notFoundCss,
         "Views.About": aboutCss,
         "Views.Config": configCss,
+        "Views.TimerPresets": timerPresetsCss,
       },
       servers,
       packageInfo: import.meta.env.PACKAGE_INFO,
@@ -73,6 +82,7 @@ async function main(): Promise<void> {
       profile,
       vibrationApi: "vibrate" in navigator,
       translation: enTranslation,
+      timerPresets,
     },
   });
 

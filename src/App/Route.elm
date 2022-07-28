@@ -11,6 +11,7 @@ type Route
     | RandomEventCounter
     | Timer
     | NewTimer
+    | TimerPresets
 
 
 hash : Route -> String
@@ -33,6 +34,9 @@ hash route =
 
         NewTimer ->
             "#timers/new"
+
+        TimerPresets ->
+            "#timers/presets"
 
 
 fragmentToRoute : Maybe String -> Route
@@ -58,6 +62,9 @@ fragmentToRoute fragment =
 
         Just "timers/new" ->
             NewTimer
+
+        Just "timers/presets" ->
+            TimerPresets
 
         _ ->
             NotFound

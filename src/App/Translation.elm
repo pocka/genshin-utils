@@ -5,6 +5,7 @@ import App.Views.AboutTranslation
 import App.Views.ConfigTranslation
 import App.Views.NewTimerTranslation
 import App.Views.RandomEventCounterTranslation
+import App.Views.TimerPresetsTranslation
 import App.Views.TimerTranslation
 import Json.Decode as Decode
 import Json.Encode as Encode
@@ -143,12 +144,13 @@ type alias Translation =
     , notifications : Notifications
     , appMenu : AppMenu
     , aboutPage : App.Views.AboutTranslation.Translation
+    , timerPresetsPage : App.Views.TimerPresetsTranslation.Translation
     }
 
 
 decoder : Decode.Decoder Translation
 decoder =
-    Decode.map7
+    Decode.map8
         Translation
         (Decode.field "configPage" App.Views.ConfigTranslation.decoder)
         (Decode.field "randomEventCounterPage" App.Views.RandomEventCounterTranslation.decoder)
@@ -157,3 +159,4 @@ decoder =
         (Decode.field "notifications" notificationsDecoder)
         (Decode.field "appMenu" appMenuDecoder)
         (Decode.field "aboutPage" App.Views.AboutTranslation.decoder)
+        (Decode.field "timerPresetsPage" App.Views.TimerPresetsTranslation.decoder)

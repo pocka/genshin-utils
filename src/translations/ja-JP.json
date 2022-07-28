@@ -130,5 +130,10 @@
     "author": "作者",
     "issues": "バグ報告・一覧",
     "thirdPartyNotice": "利用ライブラリ"
+  },
+  "timerPresetsPage": {
+    "title": "タイマープリセット",
+    "description": "タイマーを既存のプリセットを基に作成します。",
+    "create": "作成"
   }
 }

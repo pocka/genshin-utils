@@ -34,9 +34,36 @@ toInt d =
             x
 
 
+fragmentDecoder : Decode.Decoder Fragments
+fragmentDecoder =
+    Decode.map4
+        Fragments
+        (Decode.maybe (Decode.field "day" Decode.int) |> Decode.map (Maybe.withDefault 0))
+        (Decode.maybe (Decode.field "hour" Decode.int) |> Decode.map (Maybe.withDefault 0))
+        (Decode.maybe (Decode.field "minute" Decode.int) |> Decode.map (Maybe.withDefault 0))
+        (Decode.maybe (Decode.field "second" Decode.int) |> Decode.map (Maybe.withDefault 0))
+
+
 decoder : Decode.Decoder Duration
 decoder =
-    Decode.int |> Decode.map fromInt
+    Decode.oneOf
+        [ Decode.int |> Decode.map fromInt
+        , Decode.andThen
+            (\fragments ->
+                let
+                    d =
+                        fromFragments fragments
+                in
+                case d of
+                    Duration x ->
+                        if x <= 0 then
+                            Decode.fail "Duration must be greater than 0."
+
+                        else
+                            Decode.succeed d
+            )
+            fragmentDecoder
+        ]
 
 
 encode : Duration -> Encode.Value

@@ -11,6 +11,7 @@ import App.Translation as Translation exposing (Translation)
 import App.Types.Duration as Duration exposing (Duration)
 import App.Types.Language exposing (Language)
 import App.Types.PlatformCapability exposing (PlatformCapability)
+import App.Types.TimerPreset exposing (TimerPreset)
 import App.UiTheme exposing (UiTheme)
 import Browser.Extra.Notifications as Notifications
 import Browser.Extra.Vibration as Vibration exposing (vibrate)
@@ -31,6 +32,7 @@ import Url
 type alias AppData =
     { profile : Profile
     , servers : List ReferenceServer
+    , timerPresets : List TimerPreset
     }
 
 
@@ -104,6 +106,7 @@ type Msg
     = StartTimer Timer
     | StopTimer Timer
     | DeleteTimer Timer
+    | CreateTimerFromPreset TimerPreset
     | ConsumeRandomEventReward
     | UndoRandomEventReward
     | Tick Time.Posix
@@ -235,6 +238,24 @@ update msg model =
         DeleteTimer timer ->
             ( updateProfile (\p -> { p | timers = List.filter (\t -> not (t.id == timer.id)) p.timers }) model
             , Cmd.none
+            )
+                |> chain (PersistProfile model)
+
+        CreateTimerFromPreset preset ->
+            ( updateProfile
+                (\p ->
+                    { p
+                        | timers =
+                            { id = Timer.posixToId model.system.now
+                            , name = preset.name model.app.profile.preference.language
+                            , duration = preset.duration
+                            , state = Timer.Idle
+                            }
+                                :: p.timers
+                    }
+                )
+                model
+            , Browser.Navigation.pushUrl model.system.navKey (App.Route.hash App.Route.Timer)
             )
                 |> chain (PersistProfile model)
 

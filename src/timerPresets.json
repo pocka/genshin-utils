@@ -1,0 +1,39 @@
+[
+  {
+    "name": {
+      "default": "Expedition (12hrs)",
+      "ja-JP": "探索派遣 (12時間)"
+    },
+    "duration": {
+      "hour": 12
+    }
+  },
+  {
+    "name": {
+      "default": "Expedition (20hrs)",
+      "ja-JP": "探索派遣 (20時間)"
+    },
+    "duration": {
+      "hour": 20
+    }
+  },
+  {
+    "name": {
+      "default": "Parametric Transformer",
+      "ja-JP": "参量物質変化器"
+    },
+    "duration": {
+      "day": 7,
+      "hour": -2
+    }
+  },
+  {
+    "name": {
+      "default": "Mystic Enhancement Ore x5 (forging)",
+      "ja-JP": "仕上げ用魔鉱x5 (鍛造)"
+    },
+    "duration": {
+      "minute": 15
+    }
+  }
+]
