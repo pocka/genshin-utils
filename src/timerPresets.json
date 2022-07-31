@@ -19,6 +19,15 @@
   },
   {
     "name": {
+      "default": "Expedition (20hrs, with talents reduce)",
+      "ja-JP": "探索派遣 (20時間, 短縮天賦あり)"
+    },
+    "duration": {
+      "hour": "15"
+    }
+  },
+  {
+    "name": {
       "default": "Parametric Transformer",
       "ja-JP": "参量物質変化器"
     },
