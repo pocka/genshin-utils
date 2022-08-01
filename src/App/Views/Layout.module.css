@@ -1,5 +1,5 @@
 .main {
-  margin-bottom: calc(8 * var(--adw-unit));
+  padding-bottom: calc(8 * var(--adw-unit));
 }
 
 .nav {
