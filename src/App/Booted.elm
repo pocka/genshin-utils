@@ -365,6 +365,7 @@ update msg model =
             , Cmd.none
             )
                 |> chain (PersistProfile model)
+                |> chain (SendNotification model)
 
         -- Profile changes
         SetUiTheme theme ->
